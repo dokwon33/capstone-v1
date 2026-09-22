@@ -1,0 +1,9 @@
+{
+  "개요": {"intent": "neutral", "terms": "overview mechanism architecture principle"},
+  "적용 범위": {"intent": "neutral", "terms": "applicability supported workload integration scope"},
+  "한계": {"intent": "negative", "terms": "limitations failure overhead assumptions trade-offs"},
+  "실험 조건": {"intent": "neutral", "terms": "experimental setup model hardware workload baseline metrics"},
+  "실증 수준": {"intent": "neutral", "terms": "implementation prototype validation demonstration evaluation"},
+  "실험 환경(문맥 길이·모델 규모)": {"intent": "neutral", "terms": "context length model size hardware serving workload"},
+  "도메인 관련 한계": {"intent": "negative", "terms": "enterprise document question answering long context serving limitations overhead"}
+}

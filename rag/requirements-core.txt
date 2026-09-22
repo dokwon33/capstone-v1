@@ -1,0 +1,5 @@
+# Versions actually present in the offline test environment. No root lockfile is changed.
+numpy==2.3.5
+pydantic==2.13.4
+PyMuPDF==1.26.7
+pytest==9.0.2

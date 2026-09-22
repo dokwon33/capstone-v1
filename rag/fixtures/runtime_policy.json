@@ -1,0 +1,12 @@
+{
+  "top_k": 5,
+  "max_rewrite": 2,
+  "search_retries": 2,
+  "llm_max_attempts": 3,
+  "recursion_limit": 25,
+  "use_cache": true,
+  "generator_model": "SYNTHETIC-fixture-generator-not-a-real-model",
+  "judge_model": "SYNTHETIC-fixture-judge-not-a-real-model",
+  "grade_temperature": 0,
+  "generator_temperature": 0
+}

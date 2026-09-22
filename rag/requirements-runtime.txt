@@ -1,0 +1,13 @@
+# Add to the team's approved isolated environment; these integrations require validation.
+# Not an assertion that this delivery environment installed or executed these packages.
+-r requirements-core.txt
+langgraph>=1.0.10,<2
+langchain-core>=1,<2
+langchain>=1,<2
+transformers>=5,<6
+torch>=2.6,<3
+huggingface-hub>=1,<2
+safetensors>=0.4,<1
+sentencepiece>=0.2,<1
+# Add the provider-specific LangChain package used by config.py outside this B package.
+# Freeze the successfully validated environment before production execution.
