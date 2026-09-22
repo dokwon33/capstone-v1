@@ -1,0 +1,567 @@
+{
+  "selected_techs": {
+    "TurboQuant": {
+      "camp": "SW",
+      "doc_ids": [
+        "turboquant"
+      ],
+      "reason": "낮은 비트의 저장 표현과 양자화 오차 제어로 KV 저장량을 줄이는 접근"
+    },
+    "ITME": {
+      "camp": "HW",
+      "doc_ids": [
+        "itme"
+      ],
+      "reason": "CXL 기반 분리형 하이브리드 메모리 계층으로 KV 보관·이동 계층을 확장하는 접근"
+    }
+  },
+  "domain": "GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스",
+  "retry_count": 2,
+  "tech_profiles": {
+    "TurboQuant": {
+      "overview": "[가상] KV를 낮은 비트로 저장하는 양자화 기법이다.",
+      "scope": "[가상] 조건 A의 구현 실험",
+      "limitations": [
+        "[가상] 조건 B에서 추가 연산 필요"
+      ],
+      "evidence_ids": [
+        "TR-TQ-r0-01",
+        "TR-TQ-r0-02"
+      ]
+    },
+    "ITME": {
+      "overview": "[가상] CXL 기반 하이브리드 메모리로 KV 보관 계층을 확장한다.",
+      "scope": "[가상] 시뮬레이션 기반 평가",
+      "limitations": [
+        "[가상] 실제 장비 검증 범위 미확인"
+      ],
+      "evidence_ids": [
+        "TR-IT-r0-01"
+      ]
+    }
+  },
+  "trl": {
+    "TurboQuant": {
+      "level": null,
+      "range": "3~4",
+      "target": "논문 구현",
+      "rationale": "[가상] 구현 실험은 있으나 운영 환경 검증은 확인하지 못했다.",
+      "environment": "실험실",
+      "unverified": [
+        "운영 환경 적용"
+      ],
+      "evidence_ids": [
+        "TR-TQ-r0-01"
+      ],
+      "confidence": "mid",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "TurboQuant",
+          "intent": "neutral",
+          "query": "TurboQuant productization",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 3
+        }
+      ],
+      "note": "공개 정보 기반 추정"
+    },
+    "ITME": {
+      "level": null,
+      "range": null,
+      "target": "논문 설계",
+      "rationale": "[가상] 시뮬레이션 근거만 있어 단계를 확정하지 않았다.",
+      "environment": "시뮬레이션",
+      "unverified": [
+        "실제 장비 검증"
+      ],
+      "evidence_ids": [
+        "TR-IT-r0-01"
+      ],
+      "confidence": "low",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "ITME",
+          "intent": "neutral",
+          "query": "ITME CXL product",
+          "tool": "web",
+          "status": "failed",
+          "n_results": 0
+        }
+      ],
+      "note": "공개 정보 기반 추정"
+    }
+  },
+  "market_result": {
+    "TurboQuant": {
+      "summary": "[가상] 구현 공개 소식이 있으나 통합 추가 작업이 보고된다 [MK-TQ-r0-01, MK-TQ-r0-02].",
+      "findings": [
+        "MK-TQ-r0-01",
+        "MK-TQ-r0-02",
+        "MK-TQ-r0-03"
+      ],
+      "uncertainty": "시장 규모 수치는 확인하지 못했다.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "TurboQuant",
+          "intent": "positive",
+          "query": "TurboQuant adoption",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 3
+        }
+      ]
+    },
+    "ITME": {
+      "summary": "[가상] CXL 범주 수요는 설명되나 ITME 자체의 채택은 확인하지 못했다 [MK-IT-r0-01, MK-IT-r0-03].",
+      "findings": [
+        "MK-IT-r0-01",
+        "MK-IT-r0-02",
+        "MK-IT-r0-03"
+      ],
+      "uncertainty": "ITME 직접 채택 근거 미확인.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "ITME",
+          "intent": "negative",
+          "query": "ITME CXL cost",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 3
+        }
+      ]
+    }
+  },
+  "stakeholder_result": {
+    "TurboQuant": {
+      "summary": "[가상] 개발자 재현 경험과 경쟁 진영의 품질 우려가 함께 있다 [SH-TQ-r0-01, SH-TQ-r0-02].",
+      "findings": [
+        "SH-TQ-r0-01",
+        "SH-TQ-r0-02",
+        "SH-TQ-r0-03"
+      ],
+      "uncertainty": "도입 기업의 직접 설명은 확인하지 못했다.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "TurboQuant",
+          "intent": "negative",
+          "query": "TurboQuant criticism",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 3
+        }
+      ]
+    },
+    "ITME": {
+      "summary": "[가상] CXL 공급사의 기대가 전해진다 [SH-IT-r0-01].",
+      "findings": [
+        "SH-IT-r0-01"
+      ],
+      "uncertainty": "ITME 관련 이해관계자 반응은 확인하지 못했다.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "ITME",
+          "intent": "negative",
+          "query": "ITME criticism",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 3
+        },
+        {
+          "round": 1,
+          "tech": "ITME",
+          "intent": "neutral",
+          "query": "ITME CXL developer",
+          "tool": "web",
+          "status": "ok",
+          "n_results": 0
+        }
+      ]
+    }
+  },
+  "domain_result": {
+    "TurboQuant": {
+      "summary": "[가상] 조건 A의 문맥 길이에서 실험했으나 서빙 통합에 커널 수정이 필요하다 [DM-TQ-r0-01, DM-TQ-r0-03].",
+      "findings": [
+        "DM-TQ-r0-01",
+        "DM-TQ-r0-02",
+        "DM-TQ-r0-03"
+      ],
+      "uncertainty": "동시 요청 조건의 지연은 확인하지 못했다.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "TurboQuant",
+          "intent": "negative",
+          "query": "TurboQuant limitations",
+          "tool": "rag",
+          "status": "ok",
+          "n_results": 3
+        }
+      ]
+    },
+    "ITME": {
+      "summary": "[가상] 조건 C의 구성에서 실험했고 범주 수준에서 접근 지연이 한계로 거론된다 [DM-IT-r0-01, DM-IT-r0-03].",
+      "findings": [
+        "DM-IT-r0-01",
+        "DM-IT-r0-02",
+        "DM-IT-r0-03"
+      ],
+      "uncertainty": "기업 문서 QA 품질 검증은 확인하지 못했다.",
+      "queries": [
+        {
+          "round": 0,
+          "tech": "ITME",
+          "intent": "negative",
+          "query": "ITME limitations",
+          "tool": "rag",
+          "status": "ok",
+          "n_results": 3
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "id": "TR-TQ-r0-01",
+      "round": 0,
+      "source_key": "turboquant",
+      "locator": "p10#c02",
+      "origin_key": "turboquant",
+      "claim": "[가상 fixture] TurboQuant 원문은 조건 A의 구현 실험 결과를 보고한다.",
+      "tech": "TurboQuant",
+      "perspective": "TRL",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). TurboQuant (가상 서지)."
+    },
+    {
+      "id": "TR-TQ-r0-02",
+      "round": 0,
+      "source_key": "turboquant",
+      "locator": "p14#c01",
+      "origin_key": "turboquant",
+      "claim": "[가상 fixture] TurboQuant 원문은 조건 B에서 추가 연산이 필요하다고 적는다.",
+      "tech": "TurboQuant",
+      "perspective": "TRL",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "negative",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). TurboQuant (가상 서지)."
+    },
+    {
+      "id": "TR-IT-r0-01",
+      "round": 0,
+      "source_key": "itme",
+      "locator": "p6#c03",
+      "origin_key": "itme",
+      "claim": "[가상 fixture] ITME 원문은 시뮬레이션 기반 평가를 보고한다.",
+      "tech": "ITME",
+      "perspective": "TRL",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). ITME (가상 서지)."
+    },
+    {
+      "id": "MK-TQ-r0-01",
+      "round": 0,
+      "source_key": "https://news.example.com/tq-a",
+      "locator": null,
+      "origin_key": "https://news.example.com/tq-a",
+      "claim": "[가상 fixture] 기사 A는 TurboQuant 구현이 공개되었다고 전한다.",
+      "tech": "TurboQuant",
+      "perspective": "market",
+      "scope": "direct",
+      "source_type": "news",
+      "stance": "positive",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://news.example.com/tq-a 가상 자료. https://news.example.com/tq-a"
+    },
+    {
+      "id": "MK-TQ-r0-02",
+      "round": 0,
+      "source_key": "https://forum.example.com/tq-b",
+      "locator": null,
+      "origin_key": "https://forum.example.com/tq-b",
+      "claim": "[가상 fixture] 게시글 B는 TurboQuant 통합에 추가 작업이 필요하다고 적는다.",
+      "tech": "TurboQuant",
+      "perspective": "market",
+      "scope": "direct",
+      "source_type": "community",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://forum.example.com/tq-b 가상 자료. https://forum.example.com/tq-b"
+    },
+    {
+      "id": "MK-TQ-r0-03",
+      "round": 0,
+      "source_key": "https://vendor.example.com/tq-c",
+      "locator": null,
+      "origin_key": "https://vendor.example.com/tq-c",
+      "claim": "[가상 fixture] 벤더 자료 C는 KV cache 양자화 기능 수요를 설명한다.",
+      "tech": "TurboQuant",
+      "perspective": "market",
+      "scope": "category",
+      "source_type": "vendor",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://vendor.example.com/tq-c 가상 자료. https://vendor.example.com/tq-c"
+    },
+    {
+      "id": "MK-TQ-r0-04",
+      "round": 0,
+      "source_key": "https://unused.example.com/tq-d",
+      "locator": null,
+      "origin_key": "https://unused.example.com/tq-d",
+      "claim": "[가상 fixture] 참조되지 않는 근거다. REFERENCE에 나오면 안 된다.",
+      "tech": "TurboQuant",
+      "perspective": "market",
+      "scope": "direct",
+      "source_type": "news",
+      "stance": "neutral",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://unused.example.com/tq-d 가상 자료. https://unused.example.com/tq-d"
+    },
+    {
+      "id": "MK-IT-r0-01",
+      "round": 0,
+      "source_key": "https://report.example.com/cxl-a",
+      "locator": null,
+      "origin_key": "https://report.example.com/cxl-a",
+      "claim": "[가상 fixture] 보고서 A는 CXL 메모리 확장 수요를 설명한다.",
+      "tech": "ITME",
+      "perspective": "market",
+      "scope": "category",
+      "source_type": "report",
+      "stance": "neutral",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://report.example.com/cxl-a 가상 자료. https://report.example.com/cxl-a"
+    },
+    {
+      "id": "MK-IT-r0-02",
+      "round": 0,
+      "source_key": "https://news.example.com/cxl-b",
+      "locator": null,
+      "origin_key": "https://news.example.com/cxl-b",
+      "claim": "[가상 fixture] 기사 B는 CXL 장치 도입 비용을 장벽으로 든다.",
+      "tech": "ITME",
+      "perspective": "market",
+      "scope": "category",
+      "source_type": "news",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://news.example.com/cxl-b 가상 자료. https://news.example.com/cxl-b"
+    },
+    {
+      "id": "MK-IT-r0-03",
+      "round": 0,
+      "source_key": "itme",
+      "locator": "p12#c01",
+      "origin_key": "itme",
+      "claim": "[가상 fixture] ITME 원문은 상용 제품 적용을 다루지 않는다.",
+      "tech": "ITME",
+      "perspective": "market",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). ITME (가상 서지)."
+    },
+    {
+      "id": "SH-TQ-r0-01",
+      "round": 0,
+      "source_key": "https://blog.example.com/dev-a",
+      "locator": null,
+      "origin_key": "https://blog.example.com/dev-a",
+      "claim": "[가상 fixture] 개발자 글 A는 TurboQuant 재현 경험을 공유한다.",
+      "tech": "TurboQuant",
+      "perspective": "stakeholder",
+      "scope": "direct",
+      "source_type": "community",
+      "stance": "positive",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://blog.example.com/dev-a 가상 자료. https://blog.example.com/dev-a"
+    },
+    {
+      "id": "SH-TQ-r0-02",
+      "round": 0,
+      "source_key": "https://news.example.com/comp-b",
+      "locator": null,
+      "origin_key": "https://news.example.com/comp-b",
+      "claim": "[가상 fixture] 기사 B에서 경쟁 진영은 양자화 품질 저하 가능성을 지적한다.",
+      "tech": "TurboQuant",
+      "perspective": "stakeholder",
+      "scope": "category",
+      "source_type": "news",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://news.example.com/comp-b 가상 자료. https://news.example.com/comp-b"
+    },
+    {
+      "id": "SH-TQ-r0-03",
+      "round": 0,
+      "source_key": "https://vendor.example.com/tq-e",
+      "locator": null,
+      "origin_key": "https://vendor.example.com/tq-e",
+      "claim": "[가상 fixture] 저자 측 자료 E는 통합 계획을 밝힌다.",
+      "tech": "TurboQuant",
+      "perspective": "stakeholder",
+      "scope": "direct",
+      "source_type": "vendor",
+      "stance": "positive",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://vendor.example.com/tq-e 가상 자료. https://vendor.example.com/tq-e"
+    },
+    {
+      "id": "SH-IT-r0-01",
+      "round": 0,
+      "source_key": "https://news.example.com/cxl-c",
+      "locator": null,
+      "origin_key": "https://news.example.com/cxl-c",
+      "claim": "[가상 fixture] 기사 C는 CXL 공급사의 기대를 전한다.",
+      "tech": "ITME",
+      "perspective": "stakeholder",
+      "scope": "category",
+      "source_type": "news",
+      "stance": "neutral",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://news.example.com/cxl-c 가상 자료. https://news.example.com/cxl-c"
+    },
+    {
+      "id": "DM-TQ-r0-01",
+      "round": 0,
+      "source_key": "turboquant",
+      "locator": "p11#c01",
+      "origin_key": "turboquant",
+      "claim": "[가상 fixture] TurboQuant 원문 실험은 조건 A의 문맥 길이를 사용한다.",
+      "tech": "TurboQuant",
+      "perspective": "domain",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). TurboQuant (가상 서지)."
+    },
+    {
+      "id": "DM-TQ-r0-02",
+      "round": 0,
+      "source_key": "pagedattention",
+      "locator": "p3#c02",
+      "origin_key": "pagedattention",
+      "claim": "[가상 fixture] PagedAttention 논문은 KV 메모리 단편화가 서빙 병목이라고 적는다.",
+      "tech": "TurboQuant",
+      "perspective": "domain",
+      "scope": "category",
+      "source_type": "paper",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). PagedAttention / vLLM (가상 서지)."
+    },
+    {
+      "id": "DM-TQ-r0-03",
+      "round": 0,
+      "source_key": "https://forum.example.com/tq-f",
+      "locator": null,
+      "origin_key": "https://forum.example.com/tq-f",
+      "claim": "[가상 fixture] 게시글 F는 TurboQuant를 서빙 프레임워크에 넣을 때 커널 수정이 필요하다고 적는다.",
+      "tech": "TurboQuant",
+      "perspective": "domain",
+      "scope": "direct",
+      "source_type": "community",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://forum.example.com/tq-f 가상 자료. https://forum.example.com/tq-f"
+    },
+    {
+      "id": "DM-IT-r0-01",
+      "round": 0,
+      "source_key": "itme",
+      "locator": "p7#c01",
+      "origin_key": "itme",
+      "claim": "[가상 fixture] ITME 원문 실험은 조건 C의 하드웨어 구성을 사용한다.",
+      "tech": "ITME",
+      "perspective": "domain",
+      "scope": "direct",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": true,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). ITME (가상 서지)."
+    },
+    {
+      "id": "DM-IT-r0-02",
+      "round": 0,
+      "source_key": "lmcache",
+      "locator": "p5#c03",
+      "origin_key": "lmcache",
+      "claim": "[가상 fixture] LMCache 논문은 KV 오프로딩 시 전송 지연을 다룬다.",
+      "tech": "ITME",
+      "perspective": "domain",
+      "scope": "category",
+      "source_type": "paper",
+      "stance": "neutral",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 저자 (2026). LMCache (가상 서지)."
+    },
+    {
+      "id": "DM-IT-r0-03",
+      "round": 0,
+      "source_key": "https://news.example.com/cxl-d",
+      "locator": null,
+      "origin_key": "https://news.example.com/cxl-d",
+      "claim": "[가상 fixture] 기사 D는 CXL 메모리 접근 지연을 한계로 든다.",
+      "tech": "ITME",
+      "perspective": "domain",
+      "scope": "category",
+      "source_type": "news",
+      "stance": "negative",
+      "self_reported": false,
+      "date": "2026-01-15",
+      "ref": "가상 발행처 (2026-01-15). https://news.example.com/cxl-d 가상 자료. https://news.example.com/cxl-d"
+    }
+  ],
+  "validation": {
+    "passed": false,
+    "issues": [
+      {
+        "target": "market_eval",
+        "tech": "TurboQuant",
+        "type": "missing_negative",
+        "detail": "[가상] 부정 의도 검색 기록 없음"
+      }
+    ],
+    "retry_targets": [
+      "market_eval"
+    ],
+    "closed": []
+  }
+}
