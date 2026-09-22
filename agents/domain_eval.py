@@ -8,7 +8,9 @@
 - search_fn(query, *, tech, intent, round_) -> (results, QueryLog)  : 트랙 C, tools/search.web_search
   results: [{"url", "title", "published_date"?, "document"}]. document는 래퍼가 <document>로 감싼 본문
 QueryLog는 검색 래퍼가 만든다. 이 에이전트는 받은 로그를 누적만 한다 (DEVELOPMENT_RULES 5절).
-재조사 모드 판단(plan_mode, retry_templates)은 트랙 D의 _eval_base.py가 구현되면 그쪽으로 옮긴다.
+재조사 모드 판정(select_eval_mode 등)과 Evidence 순번(next_evidence_sequence)은
+트랙 D의 agents/_eval_base.py 공통 로직을 쓴다. 쿼리 템플릿 선택(retry_templates)은
+domain_eval 고유 로직이라 여기 남긴다.
 """
 import logging
 from typing import Literal
@@ -16,8 +18,18 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 import config
-from agents._e_utils import EvidenceIdGen, as_document, cited_ids, get_generator, normalize_url, strip_unknown_cites, web_ref
-from common.issues import EVIDENCE_ISSUES, REWRITE_ONLY
+from agents._e_utils import as_document, cited_ids, get_generator, normalize_url, strip_unknown_cites, web_ref
+from agents._eval_base import (
+    SUPPLEMENT_SEARCH,
+    get_previous_result,
+    get_round,
+    get_tech_issues,
+    is_closed,
+    merge_query_logs,
+    next_evidence_sequence,
+    select_eval_mode,
+)
+from common.ids import make_evidence_id
 from prompts import domain_eval as P
 from prompts.common import with_common
 
@@ -62,7 +74,15 @@ def _default_search():
     return fn
 
 
-def _run_rag(tech: str, round_: int, rag_fn, idgen: EvidenceIdGen) -> tuple[list[dict], list[str]]:
+def _next_ids(existing_evidence: list[dict], tech: str, round_: int):
+    """D의 next_evidence_sequence로 시작 순번을 구하고, 같은 tech·round 안에서 이어서 매긴다."""
+    seq = next_evidence_sequence(existing_evidence, AGENT, tech, round_)
+    while True:
+        yield make_evidence_id(AGENT, tech, round_, seq)
+        seq += 1
+
+
+def _run_rag(tech: str, round_: int, rag_fn, ids) -> tuple[list[dict], list[str]]:
     """RAG 2개 aspect를 실행해 (evidence, 불확실성 메모)를 반환한다.
 
     RAG 부족 판정이어도 웹 검색을 추가 호출하지 않는다 (설계서 3-3).
@@ -72,7 +92,7 @@ def _run_rag(tech: str, round_: int, rag_fn, idgen: EvidenceIdGen) -> tuple[list
         res = rag_fn(tech=tech, aspect=aspect, round_=round_)
         for ev in res["evidence"]:
             # 여러 aspect의 순번이 겹치지 않도록 호출자가 다시 번호를 매긴다 (설계서 3-3)
-            evidence.append({**ev, "id": idgen.next(tech), "round": round_, "tech": tech, "perspective": "domain", "source_type": "paper"})
+            evidence.append({**ev, "id": next(ids), "round": round_, "tech": tech, "perspective": "domain", "source_type": "paper"})
         if res["grade"] == "insufficient":
             notes.append(f"Doc Pool 조사 항목 '{aspect}': {res.get('uncertainty') or '근거 부족'} (confidence=low)")
     return evidence, notes
@@ -96,7 +116,7 @@ def _run_web(tech: str, round_: int, templates: list[tuple[str, str]], search_fn
     return results, queries, notes
 
 
-def _extract_web_evidence(state: dict, tech: str, round_: int, results: list[dict], llm, idgen: EvidenceIdGen) -> list[dict]:
+def _extract_web_evidence(state: dict, tech: str, round_: int, results: list[dict], llm, ids) -> list[dict]:
     if not results:
         return []
     # 본문은 래퍼가 <document>로 감싼 그대로 넣는다. 본문 길이 제한도 래퍼 몫이다
@@ -116,7 +136,7 @@ def _extract_web_evidence(state: dict, tech: str, round_: int, results: list[dic
         date = item.date or (r.get("published_date") or "")[:10] or "n.d."
         evidence.append(
             {
-                "id": idgen.next(tech),
+                "id": next(ids),
                 "round": round_,
                 "source_key": source_key,
                 "locator": None,
@@ -184,18 +204,22 @@ def _write_result(state: dict, tech: str, pool: list[dict], llm, notes: list[str
 
 
 def plan_mode(state: dict, tech: str) -> tuple[str, list[dict]]:
-    """기술별 동작 모드: initial / search / rewrite / keep (설계서 3-2 '재조사 동작 방식')."""
-    prev = (state.get("domain_result") or {}).get(tech)
-    validation = state.get("validation")
-    if prev is None or not validation:
+    """기술별 동작 모드: initial / search / rewrite / keep (설계서 3-2 '재조사 동작 방식').
+
+    D의 agents._eval_base 공통 함수를 조합한다. select_eval_mode 자체는
+    "이슈 없음"과 "첫 실행"을 구분하지 않으므로(둘 다 INITIAL), 이전 결과 유무로
+    keep을 먼저 가른다. closed는 select_eval_mode보다 우선한다 — 설계서 5장
+    "validation.closed에 기록된 (에이전트, 기술)은 보완 검색 없이 재작성만 수행함".
+    """
+    prev = get_previous_result(state, "domain_result", tech)
+    if prev is None:
         return "initial", []
-    issues = [i for i in validation.get("issues", []) if i.get("target") == AGENT and i.get("tech") == tech]
-    closed = any(c["agent"] == AGENT and c["tech"] == tech for c in validation.get("closed", []))
-    if any(i["type"] in EVIDENCE_ISSUES for i in issues) and not closed:
-        return "search", issues
-    if any(i["type"] in REWRITE_ONLY for i in issues):
+    issues = get_tech_issues(state, AGENT, tech)
+    if not issues:
+        return "keep", []
+    if is_closed(state, AGENT, tech):
         return "rewrite", issues
-    return "keep", issues
+    return ("search" if select_eval_mode(state, AGENT, tech) == SUPPLEMENT_SEARCH else "rewrite"), issues
 
 
 def retry_templates(issues: list[dict]) -> list[tuple[str, str]]:
@@ -223,9 +247,9 @@ def _revision_text(prev: dict, issues: list[dict]) -> str:
 
 def build_domain_eval(llm=None, rag_fn=None, search_fn=None):
     def domain_eval(state: dict) -> dict:
-        round_ = state.get("retry_count", 0)
-        idx = {e["id"]: e for e in state.get("evidence") or []}
-        idgen = EvidenceIdGen(AGENT, round_, list(idx))
+        round_ = get_round(state)
+        existing_evidence = state.get("evidence") or []
+        idx = {e["id"]: e for e in existing_evidence}
         prev_results = state.get("domain_result") or {}
         results, new_evidence = {}, []
         rag, search, search_resolved = rag_fn, search_fn, search_fn is not None
@@ -246,21 +270,23 @@ def build_domain_eval(llm=None, rag_fn=None, search_fn=None):
 
             if not search_resolved:
                 search, search_resolved = _default_search(), True
+            # 이 tech·round의 새 Evidence는 여기서 이어서 번호를 매긴다 (D의 next_evidence_sequence)
+            ids = _next_ids(existing_evidence + new_evidence, tech, round_)
             if mode == "initial":
                 if rag is None:
                     from rag.subgraph import run_rag as rag
-                rag_ev, rag_notes = _run_rag(tech, round_, rag, idgen)
+                rag_ev, rag_notes = _run_rag(tech, round_, rag, ids)
                 hits, queries, web_notes = _run_web(tech, round_, P.WEB_INITIAL, search)
-                fresh = rag_ev + _extract_web_evidence(state, tech, round_, hits, llm, idgen)
+                fresh = rag_ev + _extract_web_evidence(state, tech, round_, hits, llm, ids)
                 pool, notes, revision, prev_queries = fresh, rag_notes + web_notes, "", []
             else:  # search: 재조사 보완 검색은 웹만 사용한다 (설계서 5장)
                 hits, queries, notes = _run_web(tech, round_, retry_templates(issues), search)
-                fresh = _extract_web_evidence(state, tech, round_, hits, llm, idgen)
+                fresh = _extract_web_evidence(state, tech, round_, hits, llm, ids)
                 pool = [idx[i] for i in prev["findings"] if i in idx] + fresh
                 revision, prev_queries = _revision_text(prev, issues), prev["queries"]
 
             res = _write_result(state, tech, pool, llm, notes, revision)
-            results[tech] = {**res, "queries": prev_queries + queries}
+            results[tech] = {**res, "queries": merge_query_logs(prev_queries, queries)}
             new_evidence += fresh
 
         return {"domain_result": results, "evidence": new_evidence}

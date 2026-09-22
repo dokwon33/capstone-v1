@@ -1,14 +1,14 @@
 """트랙 E 공용 도구 (domain_eval · synthesis · report_writer).
 
-계약 파일(common/*, prompts/common.py, config.py)에 없는 보조 함수만 둔다.
+계약 파일(common/*, prompts/common.py, config.py)에도, D의 agents/_eval_base.py
+공통 로직에도 없는 보조 함수만 둔다 (REFERENCE·인용 표기, URL 정규화 등 보고서 계열).
+Evidence 순번·재조사 모드 판정·QueryLog 병합은 agents/_eval_base.py(D)를 쓴다.
 다른 트랙도 필요하면 A와 협의해 common/으로 옮긴다.
 """
 import re
-from collections import defaultdict
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import config
-from common.ids import AGENT_ABBR, TECH_ABBR, make_evidence_id
 
 RESULT_KEYS = ("market_result", "stakeholder_result", "domain_result")
 KEY_TO_PERSPECTIVE = {"market_result": "market", "stakeholder_result": "stakeholder", "domain_result": "domain"}
@@ -36,30 +36,6 @@ def as_document(text: str, **attrs: str) -> str:
     """State 값(근거 목록 등)을 프롬프트에 넣을 때 <document> 태그로 감싼다."""
     attr = "".join(f' {k}="{v}"' for k, v in attrs.items())
     return f"<document{attr}>\n{text}\n</document>"
-
-
-# ---------------------------------------------------------------- Evidence ID
-
-
-class EvidenceIdGen:
-    """에이전트·기술·라운드 안에서 순번을 이어서 매긴다 (common.ids.make_evidence_id 사용).
-
-    여러 aspect 호출의 Evidence를 한 생성기로 번호 매기면 중복이 생기지 않는다.
-    """
-
-    def __init__(self, agent: str, round_: int, existing_ids=()):
-        self.agent, self.round = agent, round_
-        self._next = defaultdict(lambda: 1)
-        for eid in existing_ids:
-            m = ID_PATTERN.fullmatch(eid)
-            if m and m.group(1) == AGENT_ABBR[agent] and int(m.group(3)) == round_:
-                self._next[m.group(2)] = max(self._next[m.group(2)], int(m.group(4)) + 1)
-
-    def next(self, tech: str) -> str:
-        abbr = TECH_ABBR[tech]
-        seq = self._next[abbr]
-        self._next[abbr] += 1
-        return make_evidence_id(self.agent, tech, self.round, seq)
 
 
 # ---------------------------------------------------------------- 참조 근거
