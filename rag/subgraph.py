@@ -20,6 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol, TypedDict
 
+from pydantic import ValidationError
+
 from .contracts import Contracts, EvidenceAllocator
 from .embeddings import Encoder, TokenCounter
 from .llm import TEMPLATES, RagLLM, make_query
@@ -112,6 +114,55 @@ class JsonlAudit:
 
 def _normal(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
+
+
+def _source_quote(quote: str, source: str) -> str | None:
+    """Return the exact source span while tolerating PDF-only whitespace/hyphenation."""
+    if quote in source:
+        return quote
+
+    def comparable(text: str) -> tuple[str, list[tuple[int, int]]]:
+        chars: list[str] = []
+        spans: list[tuple[int, int]] = []
+        i = 0
+        while i < len(text):
+            # PDF text layers commonly split one word as ``distor-\ntion``.
+            if (
+                text[i] == "-"
+                and i > 0
+                and text[i - 1].isalnum()
+                and i + 1 < len(text)
+                and text[i + 1].isspace()
+            ):
+                j = i + 1
+                saw_newline = False
+                while j < len(text) and text[j].isspace():
+                    saw_newline = saw_newline or text[j] in "\r\n"
+                    j += 1
+                if saw_newline and j < len(text) and text[j].isalnum():
+                    i = j
+                    continue
+            if text[i].isspace():
+                j = i + 1
+                while j < len(text) and text[j].isspace():
+                    j += 1
+                if chars and chars[-1] != " " and j < len(text):
+                    chars.append(" ")
+                    spans.append((i, j))
+                i = j
+                continue
+            chars.append(text[i])
+            spans.append((i, i + 1))
+            i += 1
+        return "".join(chars), spans
+
+    needle, _ = comparable(quote.strip())
+    haystack, spans = comparable(source)
+    start = haystack.find(needle) if needle else -1
+    if start < 0:
+        return None
+    end = start + len(needle) - 1
+    return source[spans[start][0] : spans[end][1]]
 
 
 def deduplicate_hits(hits: list[Hit]) -> list[Hit]:
@@ -303,13 +354,20 @@ class RagNodes(RetrievalNodes):
         self.llm = llm
 
     def grade(self, state: RagState) -> dict:
-        relevant, grades = [], []
+        relevant, grades, dropped = [], [], []
         for hit in state["docs"]:
-            raw = self.llm.grade(state["request"], state["query"], hit)
             try:
+                raw = self.llm.grade(state["request"], state["query"], hit)
                 verdict = BinaryGrade.model_validate(raw)
-            except ValueError as exc:
-                raise StructuredOutputError(str(exc)) from exc
+            except (StructuredOutputError, ValidationError) as exc:
+                dropped.append(
+                    {
+                        "chunk_id": hit.chunk.chunk_id,
+                        "reason": "invalid structured grade",
+                        "error_type": type(exc).__name__,
+                    }
+                )
+                continue
             grades.append(
                 {"chunk_id": hit.chunk.chunk_id, "binary_score": verdict.binary_score}
             )
@@ -322,6 +380,7 @@ class RagNodes(RetrievalNodes):
                 "thread_id": state["thread_id"],
                 "query": state["query"],
                 "grades": grades,
+                "dropped": dropped,
             }
         )
         # extract is the sole runtime writer of grade after scope/quote deduplication.
@@ -330,16 +389,24 @@ class RagNodes(RetrievalNodes):
     def extract(self, state: RagState) -> dict:
         claims, dropped = [], []
         for hit in state["relevant"]:
-            raw = self.llm.claim(state["request"], hit)
             try:
+                raw = self.llm.claim(state["request"], hit)
                 draft = ClaimDraft.model_validate(raw)
-            except ValueError as exc:
-                raise StructuredOutputError(str(exc)) from exc
-            if draft.quote not in hit.chunk.text:
+            except (StructuredOutputError, ValidationError) as exc:
                 dropped.append(
                     {
                         "chunk_id": hit.chunk.chunk_id,
-                        "reason": "quote is not a contiguous verbatim span of the retrieved chunk",
+                        "reason": "invalid structured claim",
+                        "error_type": type(exc).__name__,
+                    }
+                )
+                continue
+            source_quote = _source_quote(draft.quote, hit.chunk.text)
+            if source_quote is None:
+                dropped.append(
+                    {
+                        "chunk_id": hit.chunk.chunk_id,
+                        "reason": "quote is not recoverable from the retrieved chunk",
                     }
                 )
                 continue
@@ -351,6 +418,8 @@ class RagNodes(RetrievalNodes):
                     }
                 )
                 continue
+            if source_quote != draft.quote:
+                draft = draft.model_copy(update={"quote": source_quote})
             claims.append((hit, draft))
         if dropped:
             self.audit(
@@ -381,11 +450,21 @@ class RagNodes(RetrievalNodes):
 
     def rewrite(self, state: RagState) -> dict:
         attempt = state["rewrite_count"] + 1
-        raw = self.llm.rewrite(state["request"], state["query"], attempt)
         try:
+            raw = self.llm.rewrite(state["request"], state["query"], attempt)
             result = RewriteTerms.model_validate(raw)
-        except ValueError as exc:
-            raise StructuredOutputError(str(exc)) from exc
+        except (StructuredOutputError, ValidationError) as exc:
+            self.audit(
+                {
+                    "event": "rag_rewrite_dropped",
+                    "thread_id": state["thread_id"],
+                    "agent_id": state["request"].agent_id,
+                    "aspect": state["request"].aspect,
+                    "reason": "invalid structured rewrite",
+                    "error_type": type(exc).__name__,
+                }
+            )
+            return {"rewrite_count": self.policy.max_rewrite}
         other = "ITME" if state["tech"] == "TurboQuant" else "TurboQuant"
         if any(
             not t.strip()

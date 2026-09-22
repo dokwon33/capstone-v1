@@ -11,6 +11,7 @@ from rag.subgraph import (
     deduplicate_claims,
     deduplicate_hits,
     get_run_rag_adapter,
+    _source_quote,
     run_rag,
 )
 
@@ -132,8 +133,50 @@ def test_invalid_binary_score_rejected():
             return {"binary_score": "maybe"}
 
     nodes, _, _, _ = make_nodes([[hit(1)]], InvalidLLM())
-    with pytest.raises(StructuredOutputError):
-        run_nodes(nodes)
+    result, state = run_nodes(nodes)
+    assert result.result["grade"] == "insufficient"
+    assert result.result["evidence"] == []
+    assert state["rewrite_count"] == 2
+
+
+def test_invalid_claim_drops_only_bad_chunk():
+    class PartiallyInvalidLLM(ScriptedLLM):
+        def claim(self, request, hit_):
+            if hit_.chunk.chunk_id.endswith("1"):
+                return {"quote": "SYNTHETIC evidence 1", "stance": "invalid", "scope": "direct"}
+            return super().claim(request, hit_)
+
+    nodes, events, _, _ = make_nodes([[hit(1), hit(2), hit(3)]], PartiallyInvalidLLM())
+    result, _ = run_nodes(nodes)
+    assert result.result["grade"] == "sufficient"
+    assert len(result.result["evidence"]) == 2
+    assert any(e["event"] == "rag_claim_dropped" for e in events)
+
+
+def test_pdf_whitespace_and_line_hyphenation_quote_is_restored_to_source():
+    source = "The distortion rate remains\nnear-optimal under the tested setup."
+    assert _source_quote("distortion rate remains near-optimal", source) == (
+        "distortion rate remains\nnear-optimal"
+    )
+    hyphenated = "The distor-\ntion rate is bounded."
+    assert _source_quote("distortion rate is bounded", hyphenated) == (
+        "distor-\ntion rate is bounded"
+    )
+
+
+def test_invalid_rewrite_finishes_as_insufficient_instead_of_raising():
+    class InvalidRewriteLLM(ScriptedLLM):
+        def rewrite(self, *args):
+            return {"terms": []}
+
+    nodes, events, _, retriever = make_nodes([[]], InvalidRewriteLLM())
+    result, state = run_nodes(nodes)
+    assert result.result["grade"] == "insufficient"
+    assert state["rewrite_count"] == 2
+    # The graph performs one final retrieval after rewrite is closed, but does not
+    # keep retrying malformed rewrite output or raise to the parent graph.
+    assert len(retriever.calls) == 2
+    assert any(e["event"] == "rag_rewrite_dropped" for e in events)
 
 
 def test_invented_quote_not_evidence():
