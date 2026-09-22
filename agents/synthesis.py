@@ -4,12 +4,13 @@
 쓰는 키: synthesis
 """
 import logging
+import re
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 import config
-from agents._e_utils import KEY_TO_PERSPECTIVE, evidence_index, get_generator, referenced_ids, strip_unknown_cites
+from agents._e_utils import KEY_TO_PERSPECTIVE, cited_ids, evidence_index, get_generator, referenced_ids, strip_unknown_cites
 from prompts import synthesis as P
 from prompts.common import with_common
 from tools.search import format_document
@@ -60,36 +61,28 @@ def _build_context(state: dict) -> tuple[str, set[str]]:
     blocks = []
     for tech in config.TECHS:
         lines = [f"## {tech}"]
-        prof = (state.get("tech_profiles") or {}).get(tech)
-        if prof:
-            lines += [
-                "### 기술 개요 (tech_research)",
-                f"- 개요: {prof.get('overview', '')}",
-                f"- 적용 범위: {prof.get('scope', '')}",
-                f"- 한계: {'; '.join(prof.get('limitations') or [])}",
-                f"- 근거: {', '.join(prof.get('evidence_ids') or [])}",
-            ]
-        trl = (state.get("trl") or {}).get(tech)
-        if trl:
-            level = trl.get("range") or (f"TRL {trl['level']}" if trl.get("level") is not None else "미확정")
-            lines += [
-                "### TRL (TRL)",
-                f"- 추정 단계: {level} ({config.TRL_NOTE})",
-                f"- 판단 대상·환경: {trl.get('target', '')} / {trl.get('environment', '')}",
-                f"- 판단 이유: {trl.get('rationale', '')}",
-                f"- 미확인 조건: {'; '.join(trl.get('unverified') or [])}",
-                f"- 근거: {', '.join(trl.get('evidence_ids') or [])}",
-            ]
+        # 기술 개요·TRL 판단 문장은 근거 claim이 아니다. 넘기면 LLM이 그대로 옮겨 적어 judge의
+        # 근거 충실도 검사에서 걸린다 (2026-09-22 실행: TRL 단계·기술 정의 재서술로 보고서 미생성).
+        # 근거 id만 넘기고, 내용은 아래 근거 표의 claim으로만 쓰게 한다.
+        prof = (state.get("tech_profiles") or {}).get(tech) or {}
+        trl = (state.get("trl") or {}).get(tech) or {}
+        tr_ids = list(dict.fromkeys(list(prof.get("evidence_ids") or []) + list(trl.get("evidence_ids") or [])))
+        lines += [
+            "### 기술 조사·TRL (TRL)",
+            "- TRL 단계와 기술 설명은 보고서 3장·4.1절에서 따로 다룬다. 여기서는 아래 근거 claim만 쓴다.",
+            f"- 근거: {', '.join(tr_ids) or '없음'}",
+        ]
         for key, persp in KEY_TO_PERSPECTIVE.items():
             res = (state.get(key) or {}).get(tech)
             agent = key.replace("_result", "_eval")
             lines.append(f"### {persp}")
             if (agent, tech) in closed:
-                lines.append("- 상태: 평가 미형성/공개 정보 부재 (보완 검색 후 신규 출처 0건). 반대 의견으로 취급하지 않는다.")
+                # 종료 사실은 보고서 4장·6장에서 따로 다룬다. 종합에 "정보 부재" 같은 메타 서술을 쓰면
+                # 인용할 claim이 없어 judge에서 걸리므로, 언급하지 말라고만 알린다
+                lines.append("- 이 관점은 공개 정보 부재로 종료됐다. 종합에서 이 관점을 언급하지 않는다(반대 의견으로도 쓰지 않는다).")
             if res:
                 lines += [
                     f"- 요약: {res.get('summary', '')}",
-                    f"- 불확실성: {res.get('uncertainty', '')}",
                     f"- 근거: {', '.join(res.get('findings') or [])}",
                 ]
             else:
@@ -151,9 +144,32 @@ def validate_synthesis(out: SynthesisOut, allowed: set[str], idx: dict[str, dict
         text, removed = strip_unknown_cites(getattr(out.per_tech, tech), allowed)
         if removed:
             log.info("synthesis: per_tech[%s]에서 참조 불가 id 제거: %s", tech, removed)
-        per_tech[tech] = text
+        per_tech[tech] = keep_cited_sentences(text, tech, idx)
 
     return {"agreements": agreements, "conflicts": conflicts, "per_tech": per_tech}
+
+
+# 문장 경계: 마침표 뒤 공백(바로 뒤가 인용이면 앞 문장에 붙인다), 또는 인용 뒤 공백
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?。])\s+(?!\[)|(?<=\])\s+")
+
+
+def keep_cited_sentences(text: str, tech: str, idx: dict[str, dict]) -> str:
+    """per_tech에서 그 기술의 근거를 인용하지 않은 문장을 뺀다.
+
+    judge는 per_tech를 인용한 같은 기술 근거의 claim과만 대조하므로, 인용 없는 문장은
+    대조할 근거가 없어 unsupported_claim이 된다. 그런 문장이 judge까지 가지 않게 한다.
+    """
+    kept, dropped = [], []
+    for sentence in (s.strip() for s in _SENTENCE_SPLIT.split(text or "")):
+        if not sentence:
+            continue
+        if any(idx.get(i, {}).get("tech") == tech for i in cited_ids(sentence)):
+            kept.append(sentence)
+        else:
+            dropped.append(sentence)
+    if dropped:
+        log.info("synthesis: per_tech[%s]에서 인용 없는 문장 %d개 제외", tech, len(dropped))
+    return " ".join(kept)
 
 
 NO_EVIDENCE = {
@@ -162,24 +178,11 @@ NO_EVIDENCE = {
     "per_tech": {tech: "검토한 공개 자료에서 종합할 근거를 확인하지 못했다." for tech in config.TECHS},
 }
 
-EMPTY_SYNTHESIS = {
-    "agreements": [],
-    "conflicts": [],
-    "per_tech": {tech: "" for tech in config.TECHS},
-}
-
-
 def build_synthesis(llm=None):
     def synthesis(state: dict) -> dict:
-        prior_synthesis_issues = [
-            issue
-            for issue in (state.get("validation") or {}).get("issues", [])
-            if issue.get("target") == "synthesis"
-        ]
-        if prior_synthesis_issues:
-            log.info("synthesis: 이전 judge 이슈가 남아 빈 종합으로 낮춤")
-            return {"synthesis": EMPTY_SYNTHESIS}
-
+        # 직전 judge가 synthesis를 지적했으면 _revision_text로 그 지적을 넣어 다시 쓴다 (설계서 3-2:
+        # superiority_wording·unsupported_claim은 재작성). 빈 종합으로 낮추면 다음 라운드에 다시
+        # 새로 쓰면서 같은 문제가 마지막 라운드에 드러나고 보고서 5장도 비므로 쓰지 않는다.
         context, allowed = _build_context(state)
         if not allowed:
             # 참조할 근거가 없으면 종합할 내용도 없다. 새 사실을 만들지 않도록 LLM을 부르지 않는다

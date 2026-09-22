@@ -19,7 +19,7 @@ ID_PATTERN = re.compile(r"\b(TR|MK|SH|DM)-(TQ|IT)-r(\d+)-(\d{2,})\b")
 # 보고서 본문의 근거 인용 표기: [DM-TQ-r0-02] 또는 [DM-TQ-r0-02, MK-IT-r1-01]
 # 형식만 비슷한 잘못된 id(예: ZZ-TQ-r0-01)도 잡아서 지울 수 있게 넓게 매칭한다.
 _ID_LIKE = r"[A-Z]{2,}-[A-Z]{2,}-r\d+-\d+"
-_ID_LIST = rf"(?:{_ID_LIKE})(?:\s*[,;]\s*{_ID_LIKE})*"
+_ID_LIST = rf"(?:{_ID_LIKE})(?:\s*[,;~–]\s*{_ID_LIKE})*"
 # LLM이 (DM-TQ-r0-01)처럼 소괄호로 쓴 인용. 대괄호로 바꿔 final_check가 찾을 수 있게 한다
 _PAREN_CITE = re.compile(rf"\(\s*({_ID_LIST})\s*\)")
 # 붙어 있는 인용 묶음 [A][B], [A] [B, C]를 한 덩어리로 잡는다

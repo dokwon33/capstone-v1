@@ -51,8 +51,42 @@ def test_prompt_marks_closed_and_includes_revision_issues():
     build_synthesis(llm)(state)
     prompt = llm.prompts("SynthesisOut")[0]
 
-    assert "평가 미형성/공개 정보 부재" in prompt
+    assert "공개 정보 부재로 종료됐다" in prompt and "반대 의견으로도 쓰지 않는다" in prompt
     assert "우열 단정 문장" in prompt
     assert "다른 에이전트 몫" not in prompt
     assert "MK-TQ-r0-04" not in prompt  # 참조되지 않은 근거는 입력하지 않는다
     assert "<document" in prompt
+
+
+# ---------------------------------------------------------------- 근거 충실도 보강 (2026-09-22 실행: synthesis 때문에 보고서 미생성)
+from agents.synthesis import keep_cited_sentences  # noqa: E402
+
+
+def test_per_tech_keeps_only_sentences_citing_that_tech():
+    idx = {"TR-IT-r0-01": {"tech": "ITME"}, "DM-TQ-r0-01": {"tech": "TurboQuant"}}
+    text = "ITME는 CXL 기반 기술이다. TRL 5-7로 추정된다. 실증 데이터가 부족하다.[TR-IT-r0-01] 다른 기술 인용 [DM-TQ-r0-01]."
+    assert keep_cited_sentences(text, "ITME", idx) == "실증 데이터가 부족하다.[TR-IT-r0-01]"
+
+
+def test_context_drops_profile_and_trl_free_text_but_keeps_ids():
+    llm = FakeLLM({"SynthesisOut": _out()})
+    build_synthesis(llm)(load_fixture("state_after_eval.json"))
+    prompt = llm.prompts("SynthesisOut")[0]
+    assert "KV를 낮은 비트로 저장하는 양자화 기법" not in prompt  # tech_profiles.overview
+    assert "구현 실험은 있으나 운영 환경 검증은 확인하지 못했다" not in prompt  # trl.rationale
+    assert "추정 단계" not in prompt
+    assert "TR-TQ-r0-01" in prompt and "TR-TQ-r0-02" in prompt  # 근거 id·claim은 남는다
+
+
+def test_prior_synthesis_issue_rewrites_instead_of_emptying():
+    state = load_fixture("state_after_eval.json")
+    state["validation"] = {
+        "passed": False,
+        "issues": [{"target": "synthesis", "tech": "ITME", "type": "unsupported_claim", "detail": "TRL 단계 재서술"}],
+        "retry_targets": ["synthesis"],
+        "closed": [],
+    }
+    llm = FakeLLM({"SynthesisOut": _out()})
+    syn = build_synthesis(llm)(state)["synthesis"]
+    assert llm.prompts("SynthesisOut") and "TRL 단계 재서술" in llm.prompts("SynthesisOut")[0]
+    assert syn["agreements"] and syn["per_tech"]["ITME"]  # 빈 종합으로 낮추지 않는다

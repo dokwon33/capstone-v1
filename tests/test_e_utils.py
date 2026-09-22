@@ -66,3 +66,8 @@ def test_strip_handles_paren_and_removes_unknown():
     out, removed = strip_unknown_cites("수치 (DM-TQ-r0-01, DM-TQ-r9-99) 확인.", {"DM-TQ-r0-01"})
     assert out == "수치 [DM-TQ-r0-01] 확인."
     assert removed == ["DM-TQ-r9-99"]
+
+
+def test_range_cite_is_recognized_as_citation():
+    # 실제 실행에서 (DM-TQ-r0-01~DM-TQ-r0-11) 같은 범위 인용이 나왔다. 양 끝 id를 인용으로 인식한다
+    assert normalize_cites("압축됐다 (DM-TQ-r0-01~DM-TQ-r0-11).") == "압축됐다 [DM-TQ-r0-01, DM-TQ-r0-11]."

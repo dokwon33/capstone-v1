@@ -303,11 +303,11 @@ def retry_templates(issues: list[dict]) -> list[tuple[str, str]]:
     return picked
 
 
-def _revision_text(prev: dict, issues: list[dict]) -> str:
+def _revision_text(prev: dict, issues: list[dict], tech: str) -> str:
     if not issues:
         return ""
     body = "\n".join(f"- [{i['type']}] {i['detail']}" for i in issues)
-    return P.REVISION.format(prev_summary=prev.get("summary", ""), issues=body)
+    return P.REVISION.format(prev_summary=prev.get("summary", ""), issues=body, category_label=P.CATEGORY_LABEL[tech])
 
 
 # ---------------------------------------------------------------- 노드
@@ -332,7 +332,7 @@ def build_domain_eval(llm=None, rag_fn=None, search_fn=None):
 
             if mode == "rewrite":
                 pool = [idx[i] for i in prev["findings"] if i in idx]
-                res = _write_result(state, tech, pool, llm, [], _revision_text(prev, issues))
+                res = _write_result(state, tech, pool, llm, [], _revision_text(prev, issues, tech))
                 results[tech] = {**res, "queries": prev["queries"]}
                 continue
 
@@ -354,7 +354,7 @@ def build_domain_eval(llm=None, rag_fn=None, search_fn=None):
                 hits, queries, notes = _run_web(tech, round_, retry_templates(issues), search)
                 fresh = _extract_web_evidence(state, tech, round_, hits, llm, ids)
                 pool = [idx[i] for i in prev["findings"] if i in idx] + fresh
-                revision, prev_queries = _revision_text(prev, issues), prev["queries"]
+                revision, prev_queries = _revision_text(prev, issues, tech), prev["queries"]
 
             res = _write_result(state, tech, pool, llm, notes, revision)
             results[tech] = {**res, "queries": merge_query_logs(prev_queries, queries)}
