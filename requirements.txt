@@ -5,3 +5,4 @@ langchain-openai>=1.6
 pydantic>=2.13
 python-dotenv
 pytest>=9.0
+tavily-python>=0.7
