@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 
+from tools.search import normalize_url
+
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 
 
@@ -44,7 +46,10 @@ class FakeLLM:
 
 
 class FakeSearch:
-    """web_search 대역. 질의마다 결과 2건을 돌려주고 QueryLog를 만든다."""
+    """web_search 대역. 질의마다 결과 2건을 돌려주고 QueryLog를 만든다.
+
+    C의 실제 tools.search.web_search 반환 형식(source_key·document 포함)을 그대로 맞춘다.
+    """
 
     def __init__(self, fail_queries=()):
         self.calls = []
@@ -54,9 +59,19 @@ class FakeSearch:
         self.calls.append({"query": query, "tech": tech, "intent": intent, "round": round_})
         failed = query in self.fail_queries
         n = len(self.calls)
+
+        def hit(url, title, doc, published=None):
+            return {
+                "url": url,
+                "source_key": normalize_url(url),
+                "title": title,
+                "published_date": published,
+                "document": f"<document>{doc}</document>",
+            }
+
         hits = [] if failed else [
-            {"url": f"https://ex.com/{tech}/{n}/a?utm_source=x", "title": f"자료 {n}a", "published_date": "2026-02-01", "document": f"<document>본문 {n}a</document>"},
-            {"url": f"https://ex.com/{tech}/{n}/b", "title": f"자료 {n}b", "document": f"<document>본문 {n}b</document>"},
+            hit(f"https://ex.com/{tech}/{n}/a?utm_source=x", f"자료 {n}a", f"본문 {n}a", "2026-02-01"),
+            hit(f"https://ex.com/{tech}/{n}/b", f"자료 {n}b", f"본문 {n}b"),
         ]
         log = {"round": round_, "tech": tech, "intent": intent, "query": query, "tool": "web", "status": "failed" if failed else "ok", "n_results": len(hits)}
         return hits, log

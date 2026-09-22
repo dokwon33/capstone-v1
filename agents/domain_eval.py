@@ -6,7 +6,8 @@
 외부 의존성 (테스트에서는 가짜 구현을 인자로 넣는다)
 - rag_fn(tech, aspect, round_) -> RagResult                        : 트랙 B, rag/subgraph.run_rag
 - search_fn(query, *, tech, intent, round_) -> (results, QueryLog)  : 트랙 C, tools/search.web_search
-  results: [{"url", "title", "published_date"?, "document"}]. document는 래퍼가 <document>로 감싼 본문
+  results: [{"url", "source_key", "title", "published_date"?, "document"}]. source_key는 래퍼가
+  정규화한 URL, document는 <document>로 감싼 본문. 둘 다 그대로 쓰고 다시 계산하지 않는다.
 QueryLog는 검색 래퍼가 만든다. 이 에이전트는 받은 로그를 누적만 한다 (DEVELOPMENT_RULES 5절).
 재조사 모드 판정(select_eval_mode 등)과 Evidence 순번(next_evidence_sequence)은
 트랙 D의 agents/_eval_base.py 공통 로직을 쓴다. 쿼리 템플릿 선택(retry_templates)은
@@ -18,7 +19,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 import config
-from agents._e_utils import as_document, cited_ids, get_generator, normalize_url, strip_unknown_cites, web_ref
+from agents._e_utils import cited_ids, get_generator, strip_unknown_cites, web_ref
 from agents._eval_base import (
     SUPPLEMENT_SEARCH,
     get_previous_result,
@@ -32,6 +33,7 @@ from agents._eval_base import (
 from common.ids import make_evidence_id
 from prompts import domain_eval as P
 from prompts.common import with_common
+from tools.search import format_document, normalize_url
 
 log = logging.getLogger(__name__)
 
@@ -108,7 +110,7 @@ def _run_web(tech: str, round_: int, templates: list[tuple[str, str]], search_fn
         hits, qlog = search_fn(query, tech=tech, intent=intent, round_=round_)
         queries.append(qlog)
         for h in hits:
-            key = normalize_url(h["url"])
+            key = h["source_key"]  # 래퍼가 이미 정규화한 값. 다시 계산하지 않는다
             if key not in seen:
                 seen.add(key)
                 results.append(h)
@@ -132,7 +134,7 @@ def _extract_web_evidence(state: dict, tech: str, round_: int, results: list[dic
             log.warning("domain_eval: 범위 밖 result_index 무시: %s", item.result_index)
             continue
         r = results[item.result_index]
-        source_key = normalize_url(r["url"])  # URL은 검색 결과에서 가져온다. LLM이 URL을 만들지 못하게 한다
+        source_key = r["source_key"]  # 래퍼가 이미 정규화한 값. LLM이 URL을 만들지 못하게 검색 결과에서만 가져온다
         date = item.date or (r.get("published_date") or "")[:10] or "n.d."
         evidence.append(
             {
@@ -184,7 +186,7 @@ def _write_result(state: dict, tech: str, pool: list[dict], llm, notes: list[str
         (
             "human",
             P.RESULT_HUMAN.format(
-                evidence=as_document("id | scope | source_type | stance | self_reported | claim\n" + ev_lines, name="evidence"),
+                evidence=format_document("id | scope | source_type | stance | self_reported | claim\n" + ev_lines, name="evidence"),
                 notes=f"[검색 메모]\n{note_text}" if notes else "",
                 revision=revision,
             ),
