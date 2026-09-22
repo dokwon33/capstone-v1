@@ -414,11 +414,13 @@ def test_judge_retries_once_on_missing_negative_scenario():
 
 
 def test_judge_retry_limit_records_blocking_issues_scenario():
-    """실행 시나리오 '상한 도달': round == MAX_RETRY에서 차단 이슈가 남으면 retry_targets=[]."""
+    """실행 시나리오 '상한 도달': round == MAX_RETRY에서 차단 이슈가 남아도 soft-fail로 통과시키고
+    남은 이슈는 보존한다(2026-09-22: 마지막 라운드는 이슈 유형을 가리지 않고 보고서를 낸다.
+    report_writer가 이 issues를 6장 '마지막 라운드까지 남은 검증 이슈'에 적는다)."""
     state = base_state(retry_count=config.MAX_RETRY)  # 모든 관점이 빈 결과 → 다수의 차단 이슈
     out = build_judge(ALWAYS_OK)(state)
     v = out["validation"]
-    assert v["passed"] is False
+    assert v["passed"] is True
     assert v["retry_targets"] == []
     assert out["retry_count"] == config.MAX_RETRY
     assert v["issues"]  # 차단 이슈가 보존됨
@@ -580,9 +582,10 @@ def test_fixture_early_close():
 
 
 def test_fixture_retry_limit():
+    # 2026-09-22: 마지막 라운드는 soft-fail(passed=True)로 바뀌었다. 남은 이슈는 보존된다.
     out = build_judge(ALWAYS_OK)(load_fixture("state_retry_limit.json"))
     v = out["validation"]
-    assert v["passed"] is False
+    assert v["passed"] is True
     assert v["retry_targets"] == []
     assert out["retry_count"] == config.MAX_RETRY
     assert any(i["type"] == "missing_negative" for i in v["issues"])

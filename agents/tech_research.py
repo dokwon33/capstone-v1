@@ -79,9 +79,15 @@ class _Seq:
 
 
 def _collect_rag(tech: str, round_: int, seq: _Seq):
-    """RAG 5항목. B가 만든 Evidence는 id를 이 에이전트 순번으로 다시 매긴다 (aspect를 합쳐도 이어서)."""
+    """RAG 5항목. B가 만든 Evidence는 id를 이 에이전트 순번으로 다시 매긴다 (aspect를 합쳐도 이어서).
+
+    RAG 재조사 사유(raw uncertainty)는 LLM 프롬프트 문맥으로만 쓴다(prompt_context). 보고서에는
+    항목별 원문 로그를 그대로 싣지 않고, 아래 _unverified_note()로 만든 한 줄 요약만 싣는다
+    (2026-09-22: [RAG:개요] ... 원문 로그가 그대로 report_writer 출력에 노출되는 문제 수정).
+    """
     evidence: list[Evidence] = []
-    uncertainty: list[str] = []
+    prompt_context: list[str] = []
+    insufficient_aspects: list[str] = []
     low_confidence = False
     seen: set[tuple] = set()
     for aspect in P.RAG_ASPECTS:
@@ -96,9 +102,17 @@ def _collect_rag(tech: str, round_: int, seq: _Seq):
                 {**e, "id": seq.next_id(), "round": round_, "tech": tech, "perspective": PERSPECTIVE}
             )
         if result["grade"] == "insufficient":
-            uncertainty.append(f"[RAG:{aspect}] {result['uncertainty'] or P.NOT_FOUND}")
+            prompt_context.append(f"[RAG:{aspect}] {result['uncertainty'] or P.NOT_FOUND}")
+            insufficient_aspects.append(aspect)
         low_confidence = low_confidence or result["confidence"] == "low"
-    return evidence, uncertainty, low_confidence
+    return evidence, prompt_context, insufficient_aspects, low_confidence
+
+
+def _unverified_note(insufficient_aspects: list[str]) -> str | None:
+    """보고서용 한 줄 요약. 항목별 RAG 진단 로그 원문은 여기 담지 않는다."""
+    if not insufficient_aspects:
+        return None
+    return f"RAG 문서 풀에서 근거 부족: {', '.join(insufficient_aspects)}"
 
 
 def _collect_web(tech: str, spec: dict, round_: int, seq: _Seq):
@@ -182,9 +196,10 @@ def _valid_ids(ids: list[str], known: set[str], tech: str, field: str) -> list[s
     return valid
 
 
-def _not_found_result(tech: str, queries: list[QueryLog], uncertainty: list[str]):
+def _not_found_result(tech: str, queries: list[QueryLog], insufficient_aspects: list[str]):
     """근거가 전혀 없으면 LLM 없이 미확정으로 둔다 (설계서 4장: 근거 부족 시 단계 미확정, TRL 1 부여 금지)."""
     reason = f"{P.NOT_FOUND} (논문·웹 근거 0건)"
+    note = _unverified_note(insufficient_aspects)
     profile: Profile = {"overview": reason, "scope": reason, "limitations": [reason], "evidence_ids": []}
     trl: TRL = {
         "level": None,
@@ -192,7 +207,7 @@ def _not_found_result(tech: str, queries: list[QueryLog], uncertainty: list[str]
         "target": tech,
         "rationale": reason,
         "environment": P.NOT_FOUND,
-        "unverified": [*uncertainty, reason],
+        "unverified": [*([note] if note else []), reason],
         "evidence_ids": [],
         "confidence": "low",
         "queries": queries,
@@ -203,12 +218,12 @@ def _not_found_result(tech: str, queries: list[QueryLog], uncertainty: list[str]
 
 def _research_tech(tech: str, spec: dict, domain: str, round_: int):
     seq = _Seq(tech, round_)
-    paper_ev, rag_uncertainty, rag_low = _collect_rag(tech, round_, seq)
+    paper_ev, rag_prompt_context, rag_insufficient, rag_low = _collect_rag(tech, round_, seq)
     web_ev, queries = _collect_web(tech, spec, round_, seq)
     evidence = paper_ev + web_ev
 
     if not evidence:
-        profile, trl = _not_found_result(tech, queries, rag_uncertainty)
+        profile, trl = _not_found_result(tech, queries, rag_insufficient)
         return profile, trl, []
 
     system = P.PROFILE_TRL_SYSTEM.format(
@@ -217,13 +232,15 @@ def _research_tech(tech: str, spec: dict, domain: str, round_: int):
     human = P.PROFILE_TRL_HUMAN.format(
         paper_documents=_evidence_documents(paper_ev),
         web_documents=_evidence_documents(web_ev),
-        rag_uncertainty="\n".join(rag_uncertainty) or "(없음)",
+        rag_uncertainty="\n".join(rag_prompt_context) or "(없음)",
     )
     out: ProfileTRLOutput = _invoke(ProfileTRLOutput, system, human)
 
     by_id = {e["id"]: e for e in evidence}
     trl_ids = _valid_ids(out.trl_evidence_ids, set(by_id), tech, "trl.evidence_ids")
-    level, range_, unverified = out.trl_level, out.trl_range, [*out.trl_unverified, *rag_uncertainty]
+    rag_note = _unverified_note(rag_insufficient)
+    level, range_ = out.trl_level, out.trl_range
+    unverified = [*out.trl_unverified, *([rag_note] if rag_note else [])]
     # scope=category 근거만으로 TRL을 확정하지 않는다 (설계서 4장 ITME 근거 범위)
     if (level is not None or range_) and not any(by_id[i]["scope"] == "direct" for i in trl_ids):
         logger.warning("%s: direct 근거 없는 TRL 단계(%s/%s)를 미확정으로 변경", tech, level, range_)

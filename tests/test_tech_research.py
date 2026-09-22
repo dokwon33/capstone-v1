@@ -150,10 +150,14 @@ def test_category_only_evidence_cannot_fix_trl(wire):
 
 
 def test_rag_insufficient_recorded_and_confidence_low(wire):
+    # 항목별 RAG 원문 로그([RAG:개요] ...)는 보고서에 그대로 싣지 않는다(2026-09-22 report_writer
+    # 출력 정리). 대신 미확인 항목 이름을 모은 한 줄 요약만 unverified에 남는다.
     wire(rag=fake_rag(grade="insufficient"))
     t = tr.tech_research(STATE)["trl"]["ITME"]
     assert t["confidence"] == "low"
-    assert sum(u.startswith("[RAG:") for u in t["unverified"]) == len(P.RAG_ASPECTS)
+    assert not any(u.startswith("[RAG:") for u in t["unverified"])
+    note = next(u for u in t["unverified"] if u.startswith("RAG 문서 풀에서 근거 부족"))
+    assert all(aspect in note for aspect in P.RAG_ASPECTS)
 
 
 def test_no_evidence_skips_llm_and_marks_undetermined(wire):

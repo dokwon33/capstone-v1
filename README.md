@@ -175,8 +175,8 @@ cp .env.example .env
 
 - `OPENAI_API_KEY` : Generator/Judge LLM 호출
 - `TAVILY_API_KEY` : 웹 검색
-- `GENERATOR_MODEL` : 조사·평가·종합·보고서 생성 모델 ID
-- `JUDGE_MODEL` : Judge와 Final Check 모델 ID
+- `GENERATOR_MODEL` : 조사·평가·종합·보고서 생성 모델 ID (`gpt-4.1-mini`)
+- `JUDGE_MODEL` : Judge와 Final Check 모델 ID (`gpt-4.1`)
 - `USE_CACHE` : 웹 검색 캐시 사용 여부, 기본값 `true`
 
 ### 실행

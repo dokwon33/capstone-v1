@@ -185,6 +185,7 @@ def _extract_evidence(
     )
     evidence: list[Evidence] = []
     notes: list[str] = []
+    excluded_no_date = 0
     for item in output.items:
         if not 0 <= item.result_index < len(results):
             log.warning("stakeholder_eval: 범위 밖 result_index 무시: %s", item.result_index)
@@ -193,10 +194,10 @@ def _extract_evidence(
         source_key = result["source_key"]
         date = _published_date(result)
         if date is None:
-            notes.append(
-                "공개일이 없거나 유효하지 않아 YYYY-MM-DD 계약을 충족하지 못한 검색 결과를 "
-                f"Evidence에서 제외함: {source_key}"
-            )
+            # 제외 사유를 URL마다 한 줄씩 쌓으면 보고서 "불확실성"에 그대로 실려 수십 줄이 된다.
+            # 로그는 여기서만(개수) 남기고, source_key별 상세는 log.info로 뺀다.
+            log.info("stakeholder_eval: 공개일 없어 제외 (%s): %s", tech, source_key)
+            excluded_no_date += 1
             continue
         evidence.append(
             {
@@ -215,6 +216,10 @@ def _extract_evidence(
                 "date": date,
                 "ref": _reference(result, date),
             }
+        )
+    if excluded_no_date:
+        notes.append(
+            f"공개일이 없거나 유효하지 않아 YYYY-MM-DD 계약을 충족하지 못한 검색 결과 {excluded_no_date}건을 Evidence에서 제외함"
         )
     return evidence, notes
 

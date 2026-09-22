@@ -30,7 +30,6 @@ RESULT_KEY = {"market_eval": "market_result", "stakeholder_eval": "stakeholder_r
 PERSPECTIVE = {"market_eval": "market", "stakeholder_eval": "stakeholder", "domain_eval": "domain"}
 RETRY_TARGETS = {"market_eval", "stakeholder_eval", "domain_eval", "synthesis"}
 _ABBR_TO_AGENT = {v: k for k, v in AGENT_ABBR.items()}
-REPORTABLE_AFTER_RETRY = {"self_reported_only"}
 
 MIN_ORIGINS = 3
 MIN_SOURCE_TYPES = 2
@@ -384,9 +383,11 @@ def build_judge(llm=None):
 
         if not blocking:
             passed, retry_targets, next_round = True, [], round_
-        elif round_ >= config.MAX_RETRY and all(
-            issue["type"] in REPORTABLE_AFTER_RETRY for issue in blocking
-        ):
+        elif round_ >= config.MAX_RETRY:
+            # 재시도 소진(마지막 라운드): 이슈 유형을 가리지 않고 보고서를 낸다(soft-fail).
+            # 남은 이슈는 report_writer가 6장 한계점에 "마지막 라운드까지 남은 검증 이슈"로 명시한다.
+            # 2026-09-22: 이전엔 REPORTABLE_AFTER_RETRY(self_reported_only만) 밖의 이슈가 남으면
+            # 보고서 자체를 내보내지 않아, 데모 직전 재시도를 반복해도 출력이 보장되지 않았다.
             passed, retry_targets, next_round = True, [], round_
         elif targets and round_ < config.MAX_RETRY:
             passed, retry_targets, next_round = False, targets, round_ + 1
