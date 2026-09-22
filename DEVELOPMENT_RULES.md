@@ -88,9 +88,9 @@ State 키 이름, agent_id, 기술 키(`"TurboQuant"`, `"ITME"`), IssueType 문�
 - `source_key`는 문서 단위다. 논문은 문서 ID, 웹은 정규화 URL을 쓴다. 페이지·청크 위치는 `locator`에 둔다.
 - `origin_key`는 재인용을 묶는 값이다. 재인용 기사는 원 발표의 식별자를 넣는다. 출처 수 집계는 이 값으로 한다.
 - `scope`는 대상 기술을 직접 다루면 `direct`, CXL 하이브리드 메모리 범주나 도메인 배경이면 `category`다. 도메인 논문 속 다른 시스템의 성과는 `direct`로 적지 않는다.
-- `self_reported`는 저자·벤더 자신의 발표면 `true`다. 확실하지 않으면 `true`로 둔다.
+- `self_reported`는 저자·벤더 자신의 발표면 `true`다. 확실하지 않으면 `true`로 둔다. *(설계서에 없는 팀 기준: 판단이 애매하면 독립 근거로 잘못 집계되지 않도록 보수적으로 `true`를 기본값으로 삼는다.)*
 - `claim`은 해당 청크·문서가 실제로 뒷받침하는 단일 주장만 쓴다. 수치를 넣을 때는 기술·단위·실험 조건·방향을 함께 쓴다. final_check가 이 값과 대조한다.
-- **QueryLog는 LLM이 쓰지 않는다.** `tools/search.py` 래퍼와 RAG 호출부가 실제 호출마다 자동으로 기록한다. 에이전트 코드에서 QueryLog를 직접 만들지 않는다.
+- **QueryLog는 LLM이 쓰지 않는다.** 웹 검색은 `tools/search.py` 래퍼가, RAG 검색은 `rag/subgraph.py`의 호출 함수가 실제 호출마다 자동으로 기록한다. 에이전트 코드에서 QueryLog를 직접 만들지 않는다.
 - `intent`(positive/negative/neutral)는 쿼리 템플릿에서 정해 래퍼에 인자로 넘긴다.
 
 ## 6. LLM·프롬프트 규칙
@@ -100,7 +100,7 @@ State 키 이름, agent_id, 기술 키(`"TurboQuant"`, `"ITME"`), IssueType 문�
 - 평가·판정 출력은 Pydantic 모델과 `with_structured_output`으로 받는다. 자유 텍스트를 파싱하지 않는다.
   - RAG grade 출력 키는 `binary_score`(yes/no), 근거 충실도 출력 키는 `supported`(yes/no)로 고정한다.
 - 모든 에이전트 시스템 프롬프트는 `prompts/common.py`의 공통 규칙을 앞에 붙인다.
-- 검색 결과는 `<document>` 태그로 감싸 프롬프트에 넣는다.
+- 검색 결과는 검색 래퍼(`tools/search.py`)가 `<document>` 태그로 감싸 반환한다. 에이전트는 반환된 문자열을 그대로 프롬프트에 넣으며, 태그를 직접 조립하지 않는다.
 - 프롬프트는 `prompts/`에 파일로 둔다. 코드 안에 긴 프롬프트 문자열을 두지 않는다.
 - 두 기술에 같은 쿼리 템플릿을 쓴다. 기술명만 바꿔 넣는다.
 - `trl.note`의 "공개 정보 기반 추정"은 LLM 출력이 아니라 코드에서 고정 삽입한다.
@@ -128,6 +128,7 @@ RAG:
 - 검색 실패는 래퍼 안에서 처리한다. 백오프를 두고 최대 2회 재시도하고, 그래도 실패하면 `status="failed"`로 기록한 뒤 빈 결과를 반환한다. **노드 밖으로 예외를 던지지 않는다.**
 - LLM 호출 오류는 그래프 등록 시 지정한 `retry_policy`(최대 3회)가 처리한다. 노드 안에서 LLM 예외를 삼키지 않는다.
 - `except: pass`나 조용한 폴백을 쓰지 않는다. 실패는 기록으로 남긴다.
+- **병렬 브랜치 예외 격리와 재개**: 메인 그래프는 `compile(checkpointer=MemorySaver())`로 컴파일한다(`graph/builder.py`, 트랙 A). 평가 3종 중 하나가 `retry_policy` 소진까지 예외를 던지면 해당 슈퍼스텝의 State 업데이트는 적용되지 않지만, 그 이전에 성공한 노드의 쓰기는 체크포인터가 보존한다. 실행은 중단하고 오류를 기록한 뒤, 같은 `thread_id`로 다시 실행해 재개한다(이미 성공한 노드는 재실행하지 않음). 새 `thread_id`로 실행하면 처음부터 다시 돈다.
 
 ## 8. 테스트와 fixture 규칙
 

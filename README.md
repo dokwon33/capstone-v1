@@ -141,8 +141,8 @@ pytest tests/
 
 - **계약 파일 동결**: `graph/state.py`, `config.py`, `common/ids.py`, `common/issues.py`, `prompts/common.py`, `fixtures/*.json`은 트랙 A만 수정한다. 변경 시 팀 채널에 사유를 올리고 영향 트랙 확인 후 fixture를 함께 갱신한다.
 - **Single Writer**: 노드는 자기 출력 키만 담은 dict를 반환한다. `evidence`만 `merge_by_id` reducer를 쓴다.
-- **QueryLog는 LLM이 쓰지 않는다**: 검색 래퍼·RAG 호출부가 호출마다 자동 기록한다.
-- **오류 처리**: 검색 실패는 래퍼에서 처리(재시도 2회, `status=failed`)하고, LLM 오류는 `retry_policy`가 처리한다.
+- **QueryLog는 LLM이 쓰지 않는다**: 웹 검색은 `tools/search.py`가, RAG 검색은 `rag/subgraph.py`의 호출 함수가 호출마다 자동 기록한다.
+- **오류 처리**: 검색 실패는 래퍼에서 처리(재시도 2회, `status=failed`)하고, LLM 오류는 `retry_policy`가 처리한다. 병렬 평가 브랜치가 재시도 소진까지 실패하면 실행을 중단하고, 메인 그래프의 `MemorySaver` 체크포인트를 이용해 같은 `thread_id`로 재개한다.
 - **브랜치·커밋**: `track/<a-f>-<짧은설명>`, 커밋 메시지는 `[트랙] 요약`. `main`은 항상 `python app.py`가 START부터 END까지 돌아가는 상태를 유지하며, 병합은 A가 한다.
 - **테스트**: fixture로 각 노드를 독립 개발·pytest한다. 설계서 Rubric 검증 13건과 실행 시나리오 7종을 `tests/`에 옮긴다.
 
