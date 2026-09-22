@@ -12,7 +12,7 @@ import numpy as np
 
 from .chunking import chunk_blocks
 from .embeddings import Encoder, TokenCounter
-from .models import Manifest, RuntimePolicy, canonical_hash, file_sha256
+from .models import Manifest, RetrievalPolicy, canonical_hash, file_sha256
 from .pdf_parser import PARSER_VERSION, load_blocks
 from .store import DenseStore, EmbeddingCache
 
@@ -37,7 +37,7 @@ def ingest(
     output: Path,
     counter: TokenCounter,
     encoder: Encoder,
-    policy: RuntimePolicy,
+    policy: RetrievalPolicy,
     *,
     thread_id: str,
     cache_path: Path | None = None,

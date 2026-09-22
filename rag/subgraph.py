@@ -31,6 +31,7 @@ from .models import (
     Hit,
     Manifest,
     RagRequest,
+    RetrievalPolicy,
     RewriteTerms,
     RuntimePolicy,
     SearchFilters,
@@ -170,23 +171,21 @@ def sufficient(claims: list[tuple[Hit, ClaimDraft]]) -> bool:
     return len(claims) >= 2 and any(d.scope == "direct" for _, d in claims)
 
 
-class RagNodes:
-    """Node functions also support isolated offline unit testing. No fake graph fallback."""
+class RetrievalNodes:
+    """The shared retrieval step, also usable for local index diagnostics without an LLM."""
 
     def __init__(
         self,
-        policy: RuntimePolicy,
+        policy: RetrievalPolicy,
         counter: TokenCounter,
         retriever: Retriever,
-        llm: RagLLM,
         audit: Callable[[dict], None],
         sleep: Callable[[float], None] = time.sleep,
     ):
-        self.policy, self.counter, self.retriever, self.llm = (
+        self.policy, self.counter, self.retriever = (
             policy,
             counter,
             retriever,
-            llm,
         )
         self.audit, self.sleep = audit, sleep
 
@@ -286,6 +285,22 @@ class RagNodes:
             "queries": [*state["queries"], log],
             "traces": [*state["traces"], trace],
         }
+
+
+class RagNodes(RetrievalNodes):
+    """Stateless RAG nodes; retrieval keeps the same logging/retry path in diagnostics."""
+
+    def __init__(
+        self,
+        policy: RuntimePolicy,
+        counter: TokenCounter,
+        retriever: Retriever,
+        llm: RagLLM,
+        audit: Callable[[dict], None],
+        sleep: Callable[[float], None] = time.sleep,
+    ):
+        super().__init__(policy, counter, retriever, audit, sleep)
+        self.llm = llm
 
     def grade(self, state: RagState) -> dict:
         relevant, grades = [], []

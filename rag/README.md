@@ -4,7 +4,7 @@
 
 제공 범위는 PDF 색인, 구조 기반 분할, 로컬 E5 어댑터, 메타데이터 필터 선적용 Dense 검색, RAG 서브그래프, Evidence/QueryLog 연결, Golden QA 평가기와 B 전용 테스트다. 구현 파일은 `rag/` 아래에 있고, 루트 `requirements.txt`는 CI가 B 코어 의존성을 설치하도록 해당 파일만 포함한다.
 
-> **실행 검증 상태:** 저장소 전체 테스트 103건 통과, 실제 E5 토크나이저/가중치 검사 2건 건너뜀. LangGraph 서브그래프와 재시도 정책은 실제 설치된 엔진으로 검증했다. 실제 논문 6건, 고정 E5 snapshot, 공급자 LLM이 없으므로 운영 색인과 실측 Hit Rate@5·MRR@5는 아직 만들지 않았다. Golden QA 질문 56건은 사람이 정답 라벨을 승인하기 전의 초안이다.
+> **실행 검증 상태 (이슈 #8):** 원문 6편·123쪽의 고정 PDF와 구조 보완본으로 실제 E5 색인을 생성했다. 전체 테스트는 실제 E5 검사 2건을 포함해 229건 통과했다. 실행 결과·검색 점검·환경은 [이슈 #8 검증 기록](docs/ISSUE8_VERIFICATION.md)에 있다. Golden QA 질문 56건은 정답 라벨 승인 전 초안이며 Hit Rate@5·MRR@5와 공급자 LLM의 최종 근거 추출은 별도 검증 대상이다.
 >
 > 이 구현은 최신 `main`의 실제 계약에 맞춰 `rag/project_bindings.json`과 기존 `run_rag(tech, aspect, round_)` 호환 어댑터를 제공한다. 공통 계약 파일과 다른 트랙의 소스는 수정하지 않는다.
 
@@ -75,7 +75,7 @@ Generator/Judge 모델명은 config에서만 받는다. 모델명에 맞는 공�
 - 고정되지 않은 도메인 논문 판본.
 - 확인한 E5 모델의 40자리 commit revision.
 
-페이지 수 25/13/16/19/23/27, 합계 123은 **설계서에 적힌 계획값**이다. 이 작업에서 실제 논문 6건을 재확인한 측정값이 아니다. 실제 파일의 전체 페이지 수와 다르면 색인을 중단하고 판본을 먼저 대조한다. 내용 예산은 References 제외 여부와 무관하게 PDF 전체 페이지 합계 200쪽 이하로 검사한다.
+현재 `data/manifest.json`의 페이지 수 25/13/16/19/23/27, 합계 123은 이슈 #8 작업에서 실제 PDF 바이트·SHA256과 함께 재확인했다. 실제 파일의 전체 페이지 수와 다르면 색인을 중단하고 판본을 먼저 대조한다. 내용 예산은 References 제외 여부와 무관하게 PDF 전체 페이지 합계 200쪽 이하로 검사한다.
 
 운영에서는 팀이 관리하는 `data/manifest.json` 또는 기존 config 기준으로 원문 정보를 승인·고정한다. 이 패키지의 명령은 그 파일을 **읽기만** 한다. PDF 경로는 manifest 파일의 부모 디렉터리를 기준으로 해석한다. 예시 `papers/turboquant.pdf`는 `data/manifest.json`에서 읽을 때 `data/papers/turboquant.pdf`다.
 
@@ -92,7 +92,7 @@ python -m rag prepare-model \
   --destination outputs/models/e5-pinned
 ```
 
-`prepare-model`은 원문 PDF나 사용자 질의를 전송하지 않는다. 고정 공개 모델 파일만 다운로드하고 파일별 해시와 revision을 기록한다. `local_path`로 위 디렉터리를 사용할 경우 그 경로는 실행 디렉터리 기준이다. 해당 값의 manifest 반영은 팀 담당자가 수행한다. 이미 준비된 동일 revision의 Hugging Face 로컬 캐시를 쓰면 `local_path=null`로 둘 수 있다.
+`prepare-model`은 원문 PDF나 사용자 질의를 전송하지 않는다. 고정 공개 모델 파일만 다운로드하고 파일별 해시와 revision을 기록한다. 현재 `data/manifest.json`은 `outputs/models/e5-pinned`를 사용한다. 경로는 실행 디렉터리 기준이므로 위 명령과 아래 명령은 저장소 루트에서 실행한다. 이미 준비된 동일 revision의 Hugging Face 로컬 캐시를 쓰려면 `local_path=null`로 변경할 수 있다. 모델 위치 변경은 색인 fingerprint에 영향을 주지 않는다.
 
 실제 추론은 `local_files_only=True`, `trust_remote_code=False`, Safetensors로만 실행한다. 토크나이저·모델 버전이 다르면 조용히 바꾸지 않는다. 검증 후 팀 환경의 성공한 의존성 버전을 별도 freeze해야 한다.
 
@@ -112,13 +112,17 @@ python -m rag inspect \
 
 기본 파서는 좌표·서체 기반 휴리스틱이다. 임의의 다단 논문/복잡한 표를 자동으로 완벽히 읽었다고 가정하지 않는다. 본문에 없는 그림의 픽셀 수치나 설명은 생성하지 않는다. 자동 OCR·클라우드 파서는 없다.
 
+이슈 #8의 6개 보완본은 `data/structure_reviews/`에 있다. 원본 PDF·보완본 해시를 함께 고정했고, 검토 방식은 **AI가 렌더링된 PDF와 텍스트 레이어를 대조**한 것으로 명시했다. `approved`는 구조 보완본의 사용 상태이며 사람의 검수·PR 승인을 대신하지 않는다. 파일별 수정/제외 기록과 원본 이슈 ID도 보존한다.
+
+`inspect`는 원시 파싱 이슈를 그대로 남기고, 검증된 보완본을 적용한 `effective_blocks`와 `review`를 함께 출력한다. 해결되지 않은 차단 항목은 `unresolved_blocking_count`로 표시한다. 0건이면 `status=parsed`/종료 코드 0, 남아 있으면 `review_required`/종료 코드 2다. 원본 또는 보완본 해시가 맞지 않으면 실패한다.
+
 ### 5.2 색인
 
 ```bash
 python -m rag ingest \
   --manifest data/manifest.json \
   --bindings rag/project_bindings.json \
-  --index outputs/rag/index-400-001.sqlite \
+  --index outputs/rag/index-400-reviewed.sqlite \
   --cache outputs/cache/rag-embeddings.sqlite \
   --report outputs/rag/ingest-400-001.json \
   --thread-id b-ingest-001
@@ -128,13 +132,31 @@ PDF 해시를 먼저 확인하고, 구조 검토가 통과한 블록만 분할�
 
 같은 원문·모델·청킹·파서 버전이면 캐시/색인을 재사용할 수 있다. 달라지면 기존 색인을 덮어쓰지 않고 새 경로를 요구한다. 생성 색인에는 SQLite 벡터 BLOB, 청크 원문, 문서/판본/SHA/페이지/좌표/section/scope/자가보고/서지 정보와 입력 fingerprint가 함께 저장된다.
 
-### 5.3 RAG 한 항목 호출
+### 5.3 로컬 검색 확인 (API 키 불필요)
+
+```bash
+python -m rag retrieve \
+  --manifest data/manifest.json \
+  --bindings rag/project_bindings.json \
+  --index outputs/rag/index-400-reviewed.sqlite \
+  --cache outputs/cache/rag-embeddings.sqlite \
+  --audit outputs/rag/retrieve-001.jsonl \
+  --thread-id b-retrieve-001 \
+  --request rag/examples/request_turboquant.json \
+  --output outputs/rag/retrieve-turboquant-001.json
+```
+
+`request_itme.json`으로 바꾸면 ITME를 검색한다. 실제 로컬 E5와 metadata filter를 사용한 Top-5 청크, 페이지·섹션·scope, QueryLog, 실행 시간을 기록한다. `mode=retrieval_only`이며 LLM 관련성 판정·주장 추출·재작성은 실행하지 않는다. 검색 실패는 기존 B 검색 래퍼의 재시도/failed 로그를 거친 뒤 종료 코드 2를 반환한다.
+
+`ingest`와 `retrieve`에는 Generator/Judge 모델명이나 API 키가 필요 없다. `query`/`evaluate` 및 부모 그래프에서의 실제 RAG 호출에는 `config.py`가 읽는 모델명과 해당 공급자 설정이 필요하다.
+
+### 5.4 RAG 한 항목 호출
 
 ```bash
 python -m rag query \
   --manifest data/manifest.json \
   --bindings rag/project_bindings.json \
-  --index outputs/rag/index-400-001.sqlite \
+  --index outputs/rag/index-400-reviewed.sqlite \
   --cache outputs/cache/rag-embeddings.sqlite \
   --audit outputs/rag/audit-query-001.jsonl \
   --thread-id b-query-001 \
@@ -146,11 +168,11 @@ python -m rag query \
 
 QueryLog는 이 호출부가 실제 검색 시도마다 작성한다. 최초 검색+재작성 최대 2회, 논리 검색 최대 3회다. 검색 오류의 물리 재시도는 별도 trace에 남긴다. 성공 여부와 무관하게 검색 기록의 `round`는 입력값이다.
 
-### 5.4 Golden QA 라벨과 평가
+### 5.5 Golden QA 라벨과 평가
 
 ```bash
 python -m rag export-labels \
-  --index outputs/rag/index-400-001.sqlite \
+  --index outputs/rag/index-400-reviewed.sqlite \
   --output outputs/rag/chunks-for-human-labels-001.json
 ```
 
@@ -162,7 +184,7 @@ python -m rag export-labels \
 python -m rag evaluate \
   --manifest data/manifest.json \
   --bindings rag/project_bindings.json \
-  --index outputs/rag/index-400-001.sqlite \
+  --index outputs/rag/index-400-reviewed.sqlite \
   --cache outputs/cache/rag-embeddings.sqlite \
   --audit outputs/rag/audit-eval-dev-001.jsonl \
   --thread-id b-eval-dev-001 \
@@ -196,7 +218,7 @@ from rag.subgraph import configure_run_rag
 
 adapter, store, policy = build_project_adapter(
     manifest_path=Path("data/manifest.json"),
-    index_path=Path("outputs/rag/index-400-001.sqlite"),
+    index_path=Path("outputs/rag/index-400-reviewed.sqlite"),
     binding_path=Path("rag/project_bindings.json"),
     audit_path=Path("outputs/rag/run-001.jsonl"),
     thread_id="run-001",

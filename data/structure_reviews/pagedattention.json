@@ -1,0 +1,4268 @@
+{
+  "document_sha256": "55b3b324d779a67c59dac2519445e3b07c14e6ff5c656fadb47a3d7b5997469e",
+  "parser_version": "structure-v1",
+  "status": "approved",
+  "reviewer": "Codex (AI-assisted visual review)",
+  "reviewed_at": "2026-09-22T02:57:40Z",
+  "review_notes": "AI-assisted visual review of all figure/table pages rendered at 120 dpi from the hash-pinned original PDF. Reviewer is Codex, not a claimed human reviewer. status=approved records this AI structural review; human PR review remains separate. Removed false table detections inside charts/diagrams and isolated visual-label fragments. Preserved source captions and substantive prose, with page/bbox provenance; figure claims come from captions and explanatory text, not pixel interpolation. Recovered raw captions swallowed by table detection; reconstructed numbered section metadata from original bold headings, replacing the erroneous arXiv-sidebar section. References and page/sidebar furniture remain excluded. Actual tables were transcribed into rows with repeated column, unit and condition context. Non-evidence title/author/affiliation/copyright blocks are kept in source/audit rather than separately indexed. Equation fragments are grouped with their source explanations, and short introduction/continuation blocks with the relevant prose, preserving original text and the union of same-page source bounding boxes. Restored Figure 8, labeled combined Figure 18 caption, reclassified p12-b22 as body prose, and added missed Table 1. Review coverage and every original blocking issue resolution are listed below.",
+  "review_method": "AI-assisted visual PDF/text-layer comparison",
+  "source_issue_count": 43,
+  "resolved_issue_ids": [
+    "p1-b25",
+    "p1-table0",
+    "p1-table1",
+    "p10-b35",
+    "p10-b69",
+    "p10-table0",
+    "p10-table1",
+    "p10-table2",
+    "p11-b35",
+    "p11-b57",
+    "p11-table0",
+    "p11-table1",
+    "p12-b13",
+    "p12-b21",
+    "p12-b22",
+    "p12-table0",
+    "p12-table1",
+    "p13-b22",
+    "p2-b23",
+    "p2-table0",
+    "p4-b13",
+    "p4-table0",
+    "p5-b17",
+    "p5-b32",
+    "p5-table0",
+    "p5-table1",
+    "p5-table2",
+    "p5-table3",
+    "p6-b47",
+    "p6-b84",
+    "p6-table0",
+    "p6-table1",
+    "p6-table2",
+    "p6-table3",
+    "p7-b45",
+    "p7-table0",
+    "p7-table1",
+    "p8-b17",
+    "p8-table0",
+    "p8-table1",
+    "p9-b0",
+    "p9-b27",
+    "p9-table0"
+  ],
+  "reviewed_pages": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "original_issue_count": 43,
+  "issue_resolutions": [
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 1,
+      "block_id": "p1-b25",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 1,
+      "block_id": "p1-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 1,
+      "block_id": "p1-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 2,
+      "block_id": "p2-b23",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 2,
+      "block_id": "p2-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 4,
+      "block_id": "p4-b13",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 4,
+      "block_id": "p4-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-b17",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-b32",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-table2",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-table3",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-b47",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-b84",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-table2",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 6,
+      "block_id": "p6-table3",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-b45",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-b17",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 9,
+      "block_id": "p9-b0",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 9,
+      "block_id": "p9-b27",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 9,
+      "block_id": "p9-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-b35",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-b69",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-table2",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 11,
+      "block_id": "p11-b35",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 11,
+      "block_id": "p11-b57",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 11,
+      "block_id": "p11-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 11,
+      "block_id": "p11-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-b13",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-b21",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-b22",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "retain_body_text_not_caption"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 13,
+      "block_id": "p13-b22",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    }
+  ],
+  "false_table_blocks_removed": [
+    "p1-table0",
+    "p1-table1",
+    "p2-table0",
+    "p4-table0",
+    "p5-table0",
+    "p5-table1",
+    "p5-table2",
+    "p5-table3",
+    "p6-table0",
+    "p6-table1",
+    "p6-table2",
+    "p6-table3",
+    "p7-table0",
+    "p7-table1",
+    "p8-table0",
+    "p8-table1",
+    "p9-table0",
+    "p10-table0",
+    "p10-table1",
+    "p10-table2",
+    "p11-table0",
+    "p11-table1",
+    "p12-table0",
+    "p12-table1"
+  ],
+  "heading_corrections": [
+    {
+      "block_id": "p1-b4",
+      "section": [
+        "Abstract"
+      ]
+    },
+    {
+      "block_id": "p1-b6",
+      "section": [
+        "1 Introduction"
+      ]
+    },
+    {
+      "block_id": "p2-b26",
+      "section": [
+        "2 Background"
+      ]
+    },
+    {
+      "block_id": "p3-b0",
+      "section": [
+        "2 Background",
+        "2.1 Transformer-Based Large Language Models"
+      ]
+    },
+    {
+      "block_id": "p3-b12",
+      "section": [
+        "2 Background",
+        "2.2 LLM Service & Autoregressive Generation"
+      ]
+    },
+    {
+      "block_id": "p3-b16",
+      "section": [
+        "2 Background",
+        "2.3 Batching Techniques for LLMs"
+      ]
+    },
+    {
+      "block_id": "p4-b14",
+      "section": [
+        "3 Memory Challenges in LLM Serving"
+      ]
+    },
+    {
+      "block_id": "p4-b20",
+      "section": [
+        "3 Memory Challenges in LLM Serving",
+        "3.1 Memory Management in Existing Systems"
+      ]
+    },
+    {
+      "block_id": "p5-b19",
+      "section": [
+        "4 Method"
+      ]
+    },
+    {
+      "block_id": "p5-b21",
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ]
+    },
+    {
+      "block_id": "p5-b40",
+      "section": [
+        "4 Method",
+        "4.2 KV Cache Manager"
+      ]
+    },
+    {
+      "block_id": "p6-b49",
+      "section": [
+        "4 Method",
+        "4.3 Decoding with PagedAttention and vLLM"
+      ]
+    },
+    {
+      "block_id": "p6-b86",
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ]
+    },
+    {
+      "block_id": "p8-b20",
+      "section": [
+        "4 Method",
+        "4.5 Scheduling and Preemption"
+      ]
+    },
+    {
+      "block_id": "p8-b25",
+      "section": [
+        "4 Method",
+        "4.6 Distributed Execution"
+      ]
+    },
+    {
+      "block_id": "p9-b5",
+      "section": [
+        "5 Implementation"
+      ]
+    },
+    {
+      "block_id": "p9-b29",
+      "section": [
+        "5 Implementation",
+        "5.1 Kernel-level Optimization"
+      ]
+    },
+    {
+      "block_id": "p9-b31",
+      "section": [
+        "5 Implementation",
+        "5.2 Supporting Various Decoding Algorithms"
+      ]
+    },
+    {
+      "block_id": "p9-b33",
+      "section": [
+        "6 Evaluation"
+      ]
+    },
+    {
+      "block_id": "p10-b70",
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ]
+    },
+    {
+      "block_id": "p11-b36",
+      "section": [
+        "6 Evaluation",
+        "6.2 Basic Sampling"
+      ]
+    },
+    {
+      "block_id": "p11-b58",
+      "section": [
+        "6 Evaluation",
+        "6.3 Parallel Sampling and Beam Search"
+      ]
+    },
+    {
+      "block_id": "p11-b60",
+      "section": [
+        "6 Evaluation",
+        "6.4 Shared prefix"
+      ]
+    },
+    {
+      "block_id": "p12-b23",
+      "section": [
+        "6 Evaluation",
+        "6.5 Chatbot"
+      ]
+    },
+    {
+      "block_id": "p12-b49",
+      "section": [
+        "7 Ablation Studies"
+      ]
+    },
+    {
+      "block_id": "p12-b51",
+      "section": [
+        "7 Ablation Studies",
+        "7.1 Kernel Microbenchmark"
+      ]
+    },
+    {
+      "block_id": "p12-b53",
+      "section": [
+        "7 Ablation Studies",
+        "7.2 Impact of Block Size"
+      ]
+    },
+    {
+      "block_id": "p13-b23",
+      "section": [
+        "7 Ablation Studies",
+        "7.3 Comparing Recomputation and Swapping"
+      ]
+    },
+    {
+      "block_id": "p13-b25",
+      "section": [
+        "8 Discussion"
+      ]
+    },
+    {
+      "block_id": "p13-b29",
+      "section": [
+        "9 Related Work"
+      ]
+    },
+    {
+      "block_id": "p14-b1",
+      "section": [
+        "10 Conclusion"
+      ]
+    },
+    {
+      "block_id": "p14-b3",
+      "section": [
+        "Acknowledgement"
+      ]
+    }
+  ],
+  "grouped_source_blocks": [
+    {
+      "block_id": "p3-b1-grouped",
+      "source_block_ids": [
+        "p3-b1",
+        "p3-b2"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p3-b3-grouped",
+      "source_block_ids": [
+        "p3-b3",
+        "p3-b4"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p3-b5-grouped",
+      "source_block_ids": [
+        "p3-b5",
+        "p3-b6",
+        "p3-b7",
+        "p3-b8",
+        "p3-b9",
+        "p3-b10"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p5-b33-grouped",
+      "source_block_ids": [
+        "p5-b33",
+        "p5-b34",
+        "p5-b35",
+        "p5-b36",
+        "p5-b37",
+        "p5-b38"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p4-b17-grouped",
+      "source_block_ids": [
+        "p4-b17",
+        "p4-b18"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p12-b24-grouped",
+      "source_block_ids": [
+        "p12-b24",
+        "p12-b48"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    }
+  ],
+  "excluded_raw_blocks": [
+    {
+      "block_id": "p1-b0",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b1",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b2",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b3",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b28",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p1-b8",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b27",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p2-b28",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p3-b18",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p4-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b22",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p4-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b42",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p5-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b89",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p6-b63",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b64",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b80",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b82",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b81",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b83",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b65",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b58",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b66",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b59",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b73",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b79",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b51",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b74",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b54",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b76",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b67",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b60",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b52",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b75",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b55",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b77",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b68",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b56",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b78",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b53",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b61",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b69",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b57",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b70",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b71",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b62",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p6-b72",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b48",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p7-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b27",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p9-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b35",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p9-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p9-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b62",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b67",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b51",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b63",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b61",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b47",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b60",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b66",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b59",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b50",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b65",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b58",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b49",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b48",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b57",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b64",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b56",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b53",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b54",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b55",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b52",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b68",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b77",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p10-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b62",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p11-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b53",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b52",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b55",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b54",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b51",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b50",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b49",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b48",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b47",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b56",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b55",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p12-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b34",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p14-b5",
+      "reason": "references_heading"
+    },
+    {
+      "block_id": "p14-b6",
+      "reason": "references"
+    },
+    {
+      "block_id": "p14-b8",
+      "reason": "references"
+    },
+    {
+      "block_id": "p14-b7",
+      "reason": "references"
+    },
+    {
+      "block_id": "p15-b0",
+      "reason": "references"
+    },
+    {
+      "block_id": "p15-b2",
+      "reason": "references"
+    },
+    {
+      "block_id": "p15-b1",
+      "reason": "references"
+    },
+    {
+      "block_id": "p16-b0",
+      "reason": "references"
+    },
+    {
+      "block_id": "p16-b2",
+      "reason": "references"
+    },
+    {
+      "block_id": "p16-b1",
+      "reason": "references"
+    }
+  ],
+  "blocks": [
+    {
+      "block_id": "p1-b5",
+      "page": 1,
+      "section": [
+        "Abstract"
+      ],
+      "kind": "text",
+      "text": "High throughput serving of large language models (LLMs)\nrequires batching sufficiently many requests at a time. How-\never, existing systems struggle because the key-value cache\n(KV cache) memory for each request is huge and grows\nand shrinks dynamically. When managed inefficiently, this\nmemory can be significantly wasted by fragmentation and\nredundant duplication, limiting the batch size. To address\nthis problem, we propose PagedAttention, an attention al-\ngorithm inspired by the classical virtual memory and pag-\ning techniques in operating systems. On top of it, we build\nvLLM, an LLM serving system that achieves (1) near-zero\nwaste in KV cache memory and (2) flexible sharing of KV\ncache within and across requests to further reduce mem-\nory usage. Our evaluations show that vLLM improves the\nthroughput of popular LLMs by 2-4× with the same level\nof latency compared to the state-of-the-art systems, such\nas FasterTransformer and Orca. The improvement is more\npronounced with longer sequences, larger models, and more\ncomplex decoding algorithms. vLLM’s source code is publicly\navailable at https://github.com/vllm-project/vllm.",
+      "bbox": [
+        53.63100051879883,
+        196.4198455810547,
+        295.73016357421875,
+        433.65911865234375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b7",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "The emergence of large language models (LLMs) like GPT [5,\n37] and PaLM [9] have enabled new applications such as pro-\ngramming assistants [6, 18] and universal chatbots [19, 35]\nthat are starting to profoundly impact our work and daily\nroutines. Many cloud companies [34, 44] are racing to pro-\nvide these applications as hosted services. However, running\nthese applications is very expensive, requiring a large num-\nber of hardware accelerators such as GPUs. According to\nrecent estimates, processing an LLM request can be 10× more\nexpensive than a traditional keyword query [43]. Given these\nhigh costs, increasing the throughput—and hence reducing",
+      "bbox": [
+        53.70100021362305,
+        469.9486999511719,
+        295.7324523925781,
+        599.46728515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b25",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "figure",
+      "text": "Figure 1. Left: Memory layout when serving an LLM with\n13B parameters on NVIDIA A100. The parameters (gray)\npersist in GPU memory throughout serving. The memory\nfor the KV cache (red) is (de)allocated per serving request.\nA small amount of memory (yellow) is used ephemerally\nfor activation. Right: vLLM smooths out the rapid growth\ncurve of KV cache memory seen in existing systems [31, 60],\nleading to a notable boost in serving throughput.",
+      "bbox": [
+        317.6059875488281,
+        315.14093017578125,
+        559.5328979492188,
+        408.8883361816406
+      ],
+      "context": "Figure 1. Memory layout and serving throughput; 13B-parameter model on NVIDIA A100 40GB. Axes: batch size (requests), memory usage (GB), throughput (tokens/s). See Introduction.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p1-b26",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "the cost per request—of LLM serving systems is becoming\nmore important.\nAt the core of LLMs lies an autoregressive Transformer\nmodel [53]. This model generates words (tokens), one at a\ntime, based on the input (prompt) and the previous sequence\nof the output’s tokens it has generated so far. For each re-\nquest, this expensive process is repeated until the model out-\nputs a termination token. This sequential generation process\nmakes the workload memory-bound, underutilizing the com-\nputation power of GPUs and limiting the serving throughput.\nImproving the throughput is possible by batching multi-\nple requests together. However, to process many requests\nin a batch, the memory space for each request should be\nefficiently managed. For example, Fig. 1 (left) illustrates the\nmemory distribution for a 13B-parameter LLM on an NVIDIA\nA100 GPU with 40GB RAM. Approximately 65% of the mem-\nory is allocated for the model weights, which remain static\nduring serving. Close to 30% of the memory is used to store\nthe dynamic states of the requests. For Transformers, these\nstates consist of the key and value tensors associated with the\nattention mechanism, commonly referred to as KV cache [41],\nwhich represent the context from earlier tokens to gener-\nate new output tokens in sequence. The remaining small",
+      "bbox": [
+        317.5870056152344,
+        427.92529296875,
+        559.6880493164062,
+        701.0000610351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b23",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "figure",
+      "text": "Figure 2. Average percentage of memory wastes in different\nLLM serving systems during the experiment in §6.2.",
+      "bbox": [
+        54.0,
+        222.04237365722656,
+        294.04388427734375,
+        243.93429565429688
+      ],
+      "context": "Figure 2. KV-cache memory use (%): token states, reservation, internal fragmentation, external fragmentation and others. Orca Max/Pow2/Oracle and vLLM; basic-sampling experiment in section 6.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p2-b24",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "percentage of memory is used for other data, including ac-\ntivations – the ephemeral tensors created when evaluating\nthe LLM. Since the model weights are constant and the ac-\ntivations only occupy a small fraction of the GPU memory,\nthe way the KV cache is managed is critical in determining\nthe maximum batch size. When managed inefficiently, the\nKV cache memory can significantly limit the batch size and\nconsequently the throughput of the LLM, as illustrated in\nFig. 1 (right).\nIn this paper, we observe that existing LLM serving sys-\ntems [31, 60] fall short of managing the KV cache memory\nefficiently. This is mainly because they store the KV cache of\na request in contiguous memory space, as most deep learning\nframeworks [33, 39] require tensors to be stored in contigu-\nous memory. However, unlike the tensors in the traditional\ndeep learning workloads, the KV cache has unique charac-\nteristics: it dynamically grows and shrinks over time as the\nmodel generates new tokens, and its lifetime and length are\nnot known a priori. These characteristics make the existing\nsystems’ approach significantly inefficient in two ways:\nFirst, the existing systems [31, 60] suffer from internal and\nexternal memory fragmentation. To store the KV cache of\na request in contiguous space, they pre-allocate a contigu-\nous chunk of memory with the request’s maximum length\n(e.g., 2048 tokens). This can result in severe internal frag-\nmentation, since the request’s actual length can be much\nshorter than its maximum length (e.g., Fig. 11). Moreover,\neven if the actual length is known a priori, the pre-allocation\nis still inefficient: As the entire chunk is reserved during the\nrequest’s lifetime, other shorter requests cannot utilize any\npart of the chunk that is currently unused. Besides, external\nmemory fragmentation can also be significant, since the pre-\nallocated size can be different for each request. Indeed, our\nprofiling results in Fig. 2 show that only 20.4% - 38.2% of the\nKV cache memory is used to store the actual token states in\nthe existing systems.\nSecond, the existing systems cannot exploit the opportu-\nnities for memory sharing. LLM services often use advanced",
+      "bbox": [
+        53.70100021362305,
+        265.7081298828125,
+        295.7308044433594,
+        718.0473022460938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b25",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "decoding algorithms, such as parallel sampling and beam\nsearch, that generate multiple outputs per request. In these\nscenarios, the request consists of multiple sequences that can\npartially share their KV cache. However, memory sharing is\nnot possible in the existing systems because the KV cache of\nthe sequences is stored in separate contiguous spaces.\nTo address the above limitations, we propose PagedAt-\ntention, an attention algorithm inspired by the operating\nsystem’s (OS) solution to memory fragmentation and shar-\ning: virtual memory with paging. PagedAttention divides the\nrequest’s KV cache into blocks, each of which can contain\nthe attention keys and values of a fixed number of tokens. In\nPagedAttention, the blocks for the KV cache are not neces-\nsarily stored in contiguous space. Therefore, we can manage\nthe KV cache in a more flexible way as in OS’s virtual mem-\nory: one can think of blocks as pages, tokens as bytes, and\nrequests as processes. This design alleviates internal frag-\nmentation by using relatively small blocks and allocating\nthem on demand. Moreover, it eliminates external fragmen-\ntation as all blocks have the same size. Finally, it enables\nmemory sharing at the granularity of a block, across the\ndifferent sequences associated with the same request or even\nacross the different requests.\nIn this work, we build vLLM, a high-throughput distributed\nLLM serving engine on top of PagedAttention that achieves\nnear-zero waste in KV cache memory. vLLM uses block-level\nmemory management and preemptive request scheduling\nthat are co-designed with PagedAttention. vLLM supports\npopular LLMs such as GPT [5], OPT [62], and LLaMA [52]\nwith varying sizes, including the ones exceeding the memory\ncapacity of a single GPU. Our evaluations on various models\nand workloads show that vLLM improves the LLM serving\nthroughput by 2-4× compared to the state-of-the-art sys-\ntems [31, 60], without affecting the model accuracy at all. The\nimprovements are more pronounced with longer sequences,\nlarger models, and more complex decoding algorithms (§4.3).\nIn summary, we make the following contributions:\n• We identify the challenges in memory allocation in serving\nLLMs and quantify their impact on serving performance.\n• We propose PagedAttention, an attention algorithm that\noperates on KV cache stored in non-contiguous paged\nmemory, which is inspired by the virtual memory and\npaging in OS.\n• We design and implement vLLM, a distributed LLM serving\nengine built on top of PagedAttention.\n• We evaluate vLLM on various scenarios and demonstrate\nthat it substantially outperforms the previous state-of-the-\nart solutions such as FasterTransformer [31] and Orca [60].",
+      "bbox": [
+        317.5870056152344,
+        74.41132354736328,
+        559.6874389648438,
+        646.34130859375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b27",
+      "page": 2,
+      "section": [
+        "2 Background"
+      ],
+      "kind": "text",
+      "text": "In this section, we describe the generation and serving pro-\ncedures of typical LLMs and the iteration-level scheduling\nused in LLM serving.",
+      "bbox": [
+        317.9549865722656,
+        684.1950073242188,
+        559.6799926757812,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b1-grouped",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.1 Transformer-Based Large Language Models"
+      ],
+      "kind": "text",
+      "text": "The task of language modeling is to model the probability\nof a list of tokens (𝑥1, . . . ,𝑥𝑛). Since language has a natural\nsequential ordering, it is common to factorize the joint prob-\nability over the whole sequence as the product of conditional\nprobabilities (a.k.a. autoregressive decomposition [3]):\n\n𝑃(𝑥) = 𝑃(𝑥1) · 𝑃(𝑥2 | 𝑥1) · · · 𝑃(𝑥𝑛| 𝑥1, . . . ,𝑥𝑛−1).\n(1)",
+      "bbox": [
+        53.70100021362305,
+        91.43933868408203,
+        295.7307434082031,
+        174.08631896972656
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b3-grouped",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.1 Transformer-Based Large Language Models"
+      ],
+      "kind": "text",
+      "text": "Transformers [53] have become the de facto standard ar-\nchitecture for modeling the probability above at a large scale.\nThe most important component of a Transformer-based lan-\nguage model is its self-attention layers. For an input hidden\nstate sequence (𝑥1, . . . ,𝑥𝑛) ∈R𝑛×𝑑, a self-attention layer\nfirst applies linear transformations on each position 𝑖to get\nthe query, key, and value vectors:\n\n𝑞𝑖= 𝑊𝑞𝑥𝑖, 𝑘𝑖= 𝑊𝑘𝑥𝑖, 𝑣𝑖= 𝑊𝑣𝑥𝑖.\n(2)",
+      "bbox": [
+        53.70100021362305,
+        187.25448608398438,
+        295.7321472167969,
+        293.0813293457031
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b5-grouped",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.1 Transformer-Based Large Language Models"
+      ],
+      "kind": "text",
+      "text": "Then, the self-attention layer computes the attention score\n𝑎𝑖𝑗by multiplying the query vector at one position with all\nthe key vectors before it and compute the output 𝑜𝑖as the\nweighted average over the value vectors:\n\n𝑎𝑖𝑗=\nexp(𝑞⊤\n𝑖𝑘𝑗/\n√\n\n𝑑)\nÍ𝑖\n𝑡=1 exp(𝑞⊤\n𝑖𝑘𝑡/\n√\n\n𝑑)\n, 𝑜𝑖=\n\n𝑖∑︁\n\n𝑗=1\n𝑎𝑖𝑗𝑣𝑗.\n(3)",
+      "bbox": [
+        53.63100051879883,
+        307.05859375,
+        294.6422424316406,
+        397.5273132324219
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b11",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.1 Transformer-Based Large Language Models"
+      ],
+      "kind": "text",
+      "text": "Besides the computation in Eq. 4, all other components\nin the Transformer model, including the embedding layer,\nfeed-forward layer, layer normalization [2], residual connec-\ntion [22], output logit computation, and the query, key, and\nvalue transformation in Eq. 2, are all applied independently\nposition-wise in a form of 𝑦𝑖= 𝑓(𝑥𝑖).",
+      "bbox": [
+        53.750999450683594,
+        409.36529541015625,
+        295.7320251464844,
+        479.1783142089844
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b13",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.2 LLM Service & Autoregressive Generation"
+      ],
+      "kind": "text",
+      "text": "Once trained, LLMs are often deployed as a conditional gen-\neration service (e.g., completion API [34] or chatbot [19, 35]).\nA request to an LLM service provides a list of input prompt\ntokens (𝑥1, . . . ,𝑥𝑛), and the LLM service generates a list of\noutput tokens (𝑥𝑛+1, . . . ,𝑥𝑛+𝑇) according to Eq. 1. We refer to\nthe concatenation of the prompt and output lists as sequence.\nDue to the decomposition in Eq. 1, the LLM can only sam-\nple and generate new tokens one by one, and the generation\nprocess of each new token depends on all the previous tokens\nin that sequence, specifically their key and value vectors. In\nthis sequential generation process, the key and value vectors\nof existing tokens are often cached for generating future\ntokens, known as KV cache. Note that the KV cache of one\ntoken depends on all its previous tokens. This means that the\nKV cache of the same token appearing at different positions\nin a sequence will be different.\nGiven a request prompt, the generation computation in\nthe LLM service can be decomposed into two phases:",
+      "bbox": [
+        53.6510009765625,
+        504.9317626953125,
+        295.72723388671875,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b14",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.2 LLM Service & Autoregressive Generation"
+      ],
+      "kind": "text",
+      "text": "The prompt phase takes the whole user prompt (𝑥1, . . . ,𝑥𝑛)\nas input and computes the probability of the first new to-\nken 𝑃(𝑥𝑛+1 | 𝑥1, . . . ,𝑥𝑛). During this process, also gener-\nates the key vectors 𝑘1, . . . ,𝑘𝑛and value vectors 𝑣1, . . . , 𝑣𝑛.\nSince prompt tokens 𝑥1, . . . ,𝑥𝑛are all known, the computa-\ntion of the prompt phase can be parallelized using matrix-\nmatrix multiplication operations. Therefore, this phase can\nefficiently use the parallelism inherent in GPUs.",
+      "bbox": [
+        317.6260070800781,
+        72.24503326416016,
+        559.6852416992188,
+        168.13430786132812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b15",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.2 LLM Service & Autoregressive Generation"
+      ],
+      "kind": "text",
+      "text": "The autoregressive generation phase generates the re-\nmaining new tokens sequentially. At iteration 𝑡, the model\ntakes one token 𝑥𝑛+𝑡as input and computes the probability\n𝑃(𝑥𝑛+𝑡+1 | 𝑥1, . . . ,𝑥𝑛+𝑡) with the key vectors 𝑘1, . . . ,𝑘𝑛+𝑡and\nvalue vectors 𝑣1, . . . , 𝑣𝑛+𝑡. Note that the key and value vectors\nat positions 1 to 𝑛+ 𝑡−1 are cached at previous iterations,\nonly the new key and value vector 𝑘𝑛+𝑡and 𝑣𝑛+𝑡are com-\nputed at this iteration. This phase completes either when the\nsequence reaches a maximum length (specified by users or\nlimited by LLMs) or when an end-of-sequence (<eos>) token\nis emitted. The computation at different iterations cannot\nbe parallelized due to the data dependency and often uses\nmatrix-vector multiplication, which is less efficient. As a re-\nsult, this phase severely underutilizes GPU computation and\nbecomes memory-bound, being responsible for most portion\nof the latency of a single request.",
+      "bbox": [
+        317.6260070800781,
+        173.98678588867188,
+        559.6870727539062,
+        363.4023132324219
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b17",
+      "page": 3,
+      "section": [
+        "2 Background",
+        "2.3 Batching Techniques for LLMs"
+      ],
+      "kind": "text",
+      "text": "The compute utilization in serving LLMs can be improved\nby batching multiple requests. Because the requests share\nthe same model weights, the overhead of moving weights is\namortized across the requests in a batch, and can be over-\nwhelmed by the computational overhead when the batch\nsize is sufficiently large. However, batching the requests\nto an LLM service is non-trivial for two reasons. First, the\nrequests may arrive at different times. A naive batching strat-\negy would either make earlier requests wait for later ones\nor delay the incoming requests until earlier ones finish, lead-\ning to significant queueing delays. Second, the requests may\nhave vastly different input and output lengths (Fig. 11). A\nstraightforward batching technique would pad the inputs\nand outputs of the requests to equalize their lengths, wasting\nGPU computation and memory.\nTo address this problem, fine-grained batching mecha-\nnisms, such as cellular batching [16] and iteration-level sched-\nuling [60], have been proposed. Unlike traditional methods\nthat work at the request level, these techniques operate at\nthe iteration level. After each iteration, completed requests\nare removed from the batch, and new ones are added. There-\nfore, a new request can be processed after waiting for a\nsingle iteration, not waiting for the entire batch to complete.\nMoreover, with special GPU kernels, these techniques elim-\ninate the need to pad the inputs and outputs. By reducing\nthe queueing delay and the inefficiencies from padding, the\nfine-grained batching mechanisms significantly increase the\nthroughput of LLM serving.",
+      "bbox": [
+        317.5870056152344,
+        385.24530029296875,
+        560.355712890625,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b13",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving",
+        "3.1 Memory Management in Existing Systems"
+      ],
+      "kind": "figure",
+      "text": "Figure 3. KV cache memory management in existing systems. Three types of memory wastes – reserved, internal fragmentation,\nand external fragmentation – exist that prevent other requests from fitting into the memory. The token in each memory slot\nrepresents its KV cache. Note the same tokens can have different KV cache when at different positions.",
+      "bbox": [
+        54.0,
+        144.79237365722656,
+        559.0986328125,
+        178.63931274414062
+      ],
+      "context": "Figure 3. Reserved space and internal/external fragmentation in contiguous KV-cache allocation. Illustrative requests A and B, with maximum lengths 2048 and 512; see section 3.1. No measured plot values.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p4-b17-grouped",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving"
+      ],
+      "kind": "text",
+      "text": "Complex decoding algorithms. LLM services offer a range\nof decoding algorithms for users to select from, each with\nvarying implications for memory management complexity.\nFor example, when users request multiple random samples\nfrom a single input prompt, a typical use case in program\nsuggestion [18], the KV cache of the prompt part, which\naccounts for 12% of the total KV cache memory in our ex-\nperiment (§6.3), can be shared to minimize memory usage.\nOn the other hand, the KV cache during the autoregressive\ngeneration phase should remain unshared due to the dif-\nferent sample results and their dependence on context and\nposition. The extent of KV cache sharing depends on the\nspecific decoding algorithm employed. In more sophisticated\nalgorithms like beam search [49], different request beams\ncan share larger portions (up to 55% memory saving, see\n\n§6.3) of their KV cache, and the sharing pattern evolves as\nthe decoding process advances.",
+      "bbox": [
+        53.750999450683594,
+        197.10269165039062,
+        558.00439453125,
+        718.0970458984375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b15",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving"
+      ],
+      "kind": "text",
+      "text": "Although fine-grained batching reduces the waste of com-\nputing and enables requests to be batched in a more flexible\nway, the number of requests that can be batched together is\nstill constrained by GPU memory capacity, particularly the\nspace allocated to store the KV cache. In other words, the\nserving system’s throughput is memory-bound. Overcom-\ning this memory-bound requires addressing the following\nchallenges in the memory management:",
+      "bbox": [
+        53.63100051879883,
+        221.85829162597656,
+        295.72802734375,
+        315.5813293457031
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b16",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving"
+      ],
+      "kind": "text",
+      "text": "Large KV cache. The KV Cache size grows quickly with the\nnumber of requests. As an example, for the 13B parameter\nOPT model [62], the KV cache of a single token demands 800\nKB of space, calculated as 2 (key and value vectors) × 5120\n(hidden state size) × 40 (number of layers) × 2 (bytes per\nFP16). Since OPT can generate sequences up to 2048 tokens,\nthe memory required to store the KV cache of one request\ncan be as much as 1.6 GB. Concurrent GPUs have memory\ncapacities in the tens of GBs. Even if all available memory\nwas allocated to KV cache, only a few tens of requests could\nbe accommodated. Moreover, inefficient memory manage-\nment can further decrease the batch size, as shown in Fig. 2.\nAdditionally, given the current trends, the GPU’s computa-\ntion speed grows faster than the memory capacity [17]. For\nexample, from NVIDIA A100 to H100, The FLOPS increases\nby more than 2x, but the GPU memory stays at 80GB max-\nimum. Therefore, we believe the memory will become an\nincreasingly significant bottleneck.",
+      "bbox": [
+        53.63100051879883,
+        321.5843811035156,
+        295.7325744628906,
+        534.75927734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b19",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving"
+      ],
+      "kind": "text",
+      "text": "Scheduling for unknown input & output lengths. The\nrequests to an LLM service exhibit variability in their input\nand output lengths. This requires the memory management\nsystem to accommodate a wide range of prompt lengths. In\naddition, as the output length of a request grows at decoding,\nthe memory required for its KV cache also expands and may\nexhaust available memory for incoming requests or ongoing\ngeneration for existing prompts. The system needs to make\nscheduling decisions, such as deleting or swapping out the\nKV cache of some requests from GPU memory.",
+      "bbox": [
+        317.9549865722656,
+        224.9894256591797,
+        559.099853515625,
+        342.62432861328125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b21",
+      "page": 4,
+      "section": [
+        "3 Memory Challenges in LLM Serving",
+        "3.1 Memory Management in Existing Systems"
+      ],
+      "kind": "text",
+      "text": "Since most operators in current deep learning frameworks\n[33, 39] require tensors to be stored in contiguous memory,\nprevious LLM serving systems [31, 60] also store the KV\ncache of one request as a contiguous tensor across the differ-\nent positions. Due to the unpredictable output lengths from\nthe LLM, they statically allocate a chunk of memory for a\nrequest based on the request’s maximum possible sequence\nlength, irrespective of the actual input or eventual output\nlength of the request.\nFig. 3 illustrates two requests: request A with 2048 max-\nimum possible sequence length and request B with a max-\nimum of 512. The chunk pre-allocation scheme in existing\nsystems has three primary sources of memory wastes: re-\nserved slots for future tokens, internal fragmentation due to\nover-provisioning for potential maximum sequence lengths,\nand external fragmentation from the memory allocator like\nthe buddy allocator. The external fragmentation will never\nbe used for generated tokens, which is known before serving\na request. Internal fragmentation also remains unused, but\nthis is only realized after a request has finished sampling.\nThey are both pure memory waste. Although the reserved\nmemory is eventually used, reserving this space for the en-\ntire request’s duration, especially when the reserved space\nis large, occupies the space that could otherwise be used to\nprocess other requests. We visualize the average percentage\nof memory wastes in our experiments in Fig. 2, revealing\nthat the actual effective memory in previous systems can be\nas low as 20.4%.",
+      "bbox": [
+        317.656005859375,
+        385.2749938964844,
+        559.686767578125,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b17",
+      "page": 5,
+      "section": [
+        "4 Method"
+      ],
+      "kind": "figure",
+      "text": "Figure 4. vLLM system overview.",
+      "bbox": [
+        105.13600158691406,
+        194.84471130371094,
+        242.90911865234375,
+        204.85733032226562
+      ],
+      "context": "Figure 4. vLLM system architecture: scheduler, KV-cache manager, CPU/GPU block allocators and distributed GPU workers. Section 4 explains the design; diagram, no numerical experiment.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p5-b18",
+      "page": 5,
+      "section": [
+        "3 Memory Challenges in LLM Serving",
+        "3.1 Memory Management in Existing Systems"
+      ],
+      "kind": "text",
+      "text": "Although compaction [54] has been proposed as a poten-\ntial solution to fragmentation, performing compaction in a\nperformance-sensitive LLM serving system is impractical\ndue to the massive KV cache. Even with compaction, the\npre-allocated chunk space for each request prevents memory\nsharing specific to decoding algorithms in existing memory\nmanagement systems.",
+      "bbox": [
+        54.0,
+        215.31373596191406,
+        295.7243957519531,
+        297.00732421875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b20",
+      "page": 5,
+      "section": [
+        "4 Method"
+      ],
+      "kind": "text",
+      "text": "In this work, we develop a new attention algorithm, Page-\ndAttention, and build an LLM serving engine, vLLM, to tackle\nthe challenges outlined in §3. The architecture of vLLM is\nshown in Fig. 4. vLLM adopts a centralized scheduler to\ncoordinate the execution of distributed GPU workers. The\nKV cache manager effectively manages the KV cache in a\npaged fashion, enabled by PagedAttention. Specifically, the\nKV cache manager manages the physical KV cache memory\non the GPU workers through the instructions sent by the\ncentralized scheduler.\nNext, We describe the PagedAttention algorithm in §4.1.\nWith that, we show the design of the KV cache manager in\n§4.2 and how it facilitates PagedAttention in §4.3, respec-\ntively. Then, we show how this design facilitates effective\nmemory management for various decoding methods (§4.4)\nand handles the variable length input and output sequences\n(§4.5). Finally, we show how the system design of vLLM\nworks in a distributed setting (§4.6).",
+      "bbox": [
+        53.52199935913086,
+        320.8293151855469,
+        295.7301025390625,
+        534.1043090820312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b22",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ],
+      "kind": "text",
+      "text": "To address the memory challenges in §3, we introduce Page-\ndAttention, an attention algorithm inspired by the classic idea\nof paging [25] in operating systems. Unlike the traditional\nattention algorithms, PagedAttention allows storing continu-\nous keys and values in non-contiguous memory space. Specif-\nically, PagedAttention partitions the KV cache of each se-\nquence into KV blocks. Each block contains the key and value\nvectors for a fixed number of tokens,1 which we denote as KV",
+      "bbox": [
+        53.70100021362305,
+        557.0733642578125,
+        295.7308044433594,
+        650.6478881835938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b23",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ],
+      "kind": "text",
+      "text": "1In Transformer, each token has a set of key and value vectors across layers\nand attention heads within a layer. All the key and value vectors can be\nmanaged together within a single KV block, or the key and value vectors at\ndifferent heads and layers can each have a separate block and be managed\nin separate block tables. The two designs have no performance difference\nand we choose the second one for easy implementation.",
+      "bbox": [
+        53.858001708984375,
+        658.2440795898438,
+        294.0478820800781,
+        717.5752563476562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b32",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ],
+      "kind": "figure",
+      "text": "Figure 5. Illustration of the PagedAttention algorithm,\nwhere the attention key and values vectors are stored as\nnon-contiguous blocks in the memory.",
+      "bbox": [
+        317.5870056152344,
+        169.47579956054688,
+        559.096435546875,
+        203.47329711914062
+      ],
+      "context": "Figure 5. PagedAttention uses non-contiguous physical KV blocks. The example query attends to key/value vectors across three blocks; see section 4.1. Diagram, no measured values.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p5-b33-grouped",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ],
+      "kind": "text",
+      "text": "block size (𝐵). Denote the key block 𝐾𝑗= (𝑘(𝑗−1)𝐵+1, . . . ,𝑘𝑗𝐵)\nand value block 𝑉𝑗= (𝑣(𝑗−1)𝐵+1, . . . , 𝑣𝑗𝐵). The attention com-\nputation in Eq. 4 can be transformed into the following block-\nwise computation:\n\n𝐴𝑖𝑗=\nexp(𝑞⊤\n𝑖𝐾𝑗/\n√\n\n𝑑)\nÍ⌈𝑖/𝐵⌉\n𝑡=1\nexp(𝑞⊤\n𝑖𝐾𝑡1/\n√\n\n𝑑)\n, 𝑜𝑖=\n\n⌈𝑖/𝐵⌉\n∑︁\n\n𝑗=1\n𝑉𝑗𝐴⊤\n𝑖𝑗,\n(4)",
+      "bbox": [
+        317.5870056152344,
+        211.94802856445312,
+        559.685546875,
+        299.55126953125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b39",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.1 PagedAttention"
+      ],
+      "kind": "text",
+      "text": "where 𝐴𝑖𝑗= (𝑎𝑖,(𝑗−1)𝐵+1, . . . ,𝑎𝑖,𝑗𝐵) is the row vector of atten-\ntion score on 𝑗-th KV block.\nDuring the attention computation, the PagedAttention\nkernel identifies and fetches different KV blocks separately.\nWe show an example of PagedAttention in Fig. 5: The key\nand value vectors are spread across three blocks, and the\nthree blocks are not contiguous on the physical memory. At\neach time, the kernel multiplies the query vector 𝑞𝑖of the\nquery token (“forth”) and the key vectors 𝐾𝑗in a block (e.g.,\nkey vectors of “Four score and seven” for block 0) to compute\nthe attention score𝐴𝑖𝑗, and later multiplies𝐴𝑖𝑗with the value\nvectors 𝑉𝑗in a block to derive the final attention output 𝑜𝑖.\nIn summary, the PagedAttention algorithm allows the\nKV blocks to be stored in non-contiguous physical memory,\nwhich enables more flexible paged memory management in\nvLLM.",
+      "bbox": [
+        317.47698974609375,
+        302.3390197753906,
+        559.6787719726562,
+        493.8703308105469
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b41",
+      "page": 5,
+      "section": [
+        "4 Method",
+        "4.2 KV Cache Manager"
+      ],
+      "kind": "text",
+      "text": "The key idea behind vLLM’s memory manager is analogous\nto the virtual memory [25] in operating systems. OS parti-\ntions memory into fixed-sized pages and maps user programs’\nlogical pages to physical pages. Contiguous logical pages can\ncorrespond to non-contiguous physical memory pages, al-\nlowing user programs to access memory as though it were\ncontiguous. Moreover, physical memory space needs not to\nbe fully reserved in advance, enabling the OS to dynamically\nallocate physical pages as needed. vLLM uses the ideas be-\nhind virtual memory to manage the KV cache in an LLM\nservice. Enabled by PagedAttention, we organize the KV\ncache as fixed-size KV blocks, like pages in virtual memory.\nA request’s KV cache is represented as a series of logical\nKV blocks, filled from left to right as new tokens and their KV\ncache are generated. The last KV block’s unfilled positions\nare reserved for future generations. On GPU workers, a block\nengine allocates a contiguous chunk of GPU DRAM and",
+      "bbox": [
+        317.656005859375,
+        516.8716430664062,
+        559.68798828125,
+        718.1159057617188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b47",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.3 Decoding with PagedAttention and vLLM"
+      ],
+      "kind": "figure",
+      "text": "Figure 6. Block table translation in vLLM.",
+      "bbox": [
+        87.9000015258789,
+        196.08567810058594,
+        260.1436462402344,
+        206.09829711914062
+      ],
+      "context": "Figure 6. Translation between logical and physical KV blocks via the block table; filled-position count supports allocation as decoding grows. See sections 4.2-4.3; illustrative diagram.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p6-b48",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.2 KV Cache Manager"
+      ],
+      "kind": "text",
+      "text": "divides it into physical KV blocks (this is also done on CPU\nRAM for swapping; see §4.5). The KV block manager also\nmaintains block tables—the mapping between logical and\nphysical KV blocks of each request. Each block table entry\nrecords the corresponding physical blocks of a logical block\nand the number of filled positions. Separating logical and\nphysical KV blocks allows vLLM to dynamically grow the\nKV cache memory without reserving it for all positions in\nadvance, which eliminates most memory waste in existing\nsystems, as in Fig. 2.",
+      "bbox": [
+        54.0,
+        219.2564239501953,
+        294.30810546875,
+        336.8523254394531
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b50",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.3 Decoding with PagedAttention and vLLM"
+      ],
+      "kind": "text",
+      "text": "Next, we walk through an example, as in Fig. 6, to demon-\nstrate how vLLM executes PagedAttention and manages the\nmemory during the decoding process of a single input se-\nquence: 1○As in OS’s virtual memory, vLLM does not require\nreserving the memory for the maximum possible generated\nsequence length initially. Instead, it reserves only the nec-\nessary KV blocks to accommodate the KV cache generated\nduring prompt computation. In this case, The prompt has 7\ntokens, so vLLM maps the first 2 logical KV blocks (0 and\n1) to 2 physical KV blocks (7 and 1, respectively). In the\nprefill step, vLLM generates the KV cache of the prompts\nand the first output token with a conventional self-attention\nalgorithm (e.g., [13]). vLLM then stores the KV cache of the\nfirst 4 tokens in logical block 0 and the following 3 tokens\nin logical block 1. The remaining slot is reserved for the\nsubsequent autoregressive generation phase. 2○In the first\nautoregressive decoding step, vLLM generates the new token\nwith the PagedAttention algorithm on physical blocks 7 and\n1. Since one slot remains available in the last logical block,\nthe newly generated KV cache is stored there, and the block\ntable’s #filled record is updated. 3○At the second decoding\nstep, as the last logical block is full, vLLM stores the newly\ngenerated KV cache in a new logical block; vLLM allocates a\nnew physical block (physical block 3) for it and stores this\nmapping in the block table.\nGlobally, for each decoding iteration, vLLM first selects\na set of candidate sequences for batching (more in §4.5),\nand allocates the physical blocks for the newly required\nlogical blocks. Then, vLLM concatenates all the input tokens\nof the current iteration (i.e., all tokens for prompt phase",
+      "bbox": [
+        53.63100051879883,
+        361.3352966308594,
+        295.7301940917969,
+        718.0970458984375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b84",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.3 Decoding with PagedAttention and vLLM"
+      ],
+      "kind": "figure",
+      "text": "Figure 7. Storing the KV cache of two requests at the same\ntime in vLLM.",
+      "bbox": [
+        317.9549865722656,
+        178.16529846191406,
+        557.9951171875,
+        200.11032104492188
+      ],
+      "context": "Figure 7. Two requests map logical blocks into shared physical KV-cache capacity. Logical adjacency does not require physical adjacency; see section 4.3. Diagram, no measured values.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p6-b85",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.3 Decoding with PagedAttention and vLLM"
+      ],
+      "kind": "text",
+      "text": "requests and the latest tokens for generation phase requests)\nas one sequence and feeds it into the LLM. During LLM’s\ncomputation, vLLM uses the PagedAttention kernel to access\nthe previous KV cache stored in the form of logical KV blocks\nand saves the newly generated KV cache into the physical\nKV blocks. Storing multiple tokens within a KV block (block\nsize > 1) enables the PagedAttention kernel to process the\nKV cache across more positions in parallel, thus increasing\nthe hardware utilization and reducing latency. However, a\nlarger block size also increases memory fragmentation. We\nstudy the effect of block size in §7.2.\nAgain, vLLM dynamically assigns new physical blocks to\nlogical blocks as more tokens and their KV cache are gener-\nated. As all the blocks are filled from left to right and a new\nphysical block is only allocated when all previous blocks\nare full, vLLM limits all the memory wastes for a request\nwithin one block, so it can effectively utilize all the memory,\nas shown in Fig. 2. This allows more requests to fit into mem-\nory for batching—hence improving the throughput. Once a\nrequest finishes its generation, its KV blocks can be freed to\nstore the KV cache of other requests. In Fig. 7, we show an\nexample of vLLM managing the memory for two sequences.\nThe logical blocks of the two sequences are mapped to differ-\nent physical blocks within the space reserved by the block\nengine in GPU workers. The neighboring logical blocks of\nboth sequences do not need to be contiguous in physical GPU\nmemory and the space of physical blocks can be effectively\nutilized by both sequences.",
+      "bbox": [
+        317.5870056152344,
+        215.90988159179688,
+        559.6868896484375,
+        548.5863037109375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b87",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "§4.3 shows how PagedAttention and vLLM handle basic de-\ncoding algorithms, such as greedy decoding and sampling,\nthat take one user prompt as input and generate a single out-\nput sequence. In many successful LLM applications [18, 34],\nan LLM service must offer more complex decoding scenarios\nthat exhibit complex accessing patterns and more opportuni-\nties for memory sharing. We show the general applicability\nof vLLM on them in this section.",
+      "bbox": [
+        317.9549865722656,
+        572.6326293945312,
+        559.685791015625,
+        666.2662963867188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b88",
+      "page": 6,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "Parallel sampling. In LLM-based program assistants [6, 18],\nan LLM generates multiple sampled outputs for a single in-\nput prompt; users can choose a favorite output from various\ncandidates. So far we have implicitly assumed that a request",
+      "bbox": [
+        317.9549865722656,
+        672.2437133789062,
+        559.6849975585938,
+        718.0473022460938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b29",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "figure",
+      "text": "Figure 8. Parallel sampling example.",
+      "bbox": [
+        98.95899963378906,
+        177.93772888183594,
+        249.085693359375,
+        187.95034790039062
+      ],
+      "context": "Figure 8. Parallel sampling shares prompt KV blocks using reference counts and block-level copy-on-write. Two output samples; section 4.4 explains when a shared block is copied.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p7-b30",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "generates a single sequence. In the remainder of this paper,\nwe assume the more general case in which a request gener-\nates multiple sequences. In parallel sampling, one request\nincludes multiple samples sharing the same input prompt,\nallowing the KV cache of the prompt to be shared as well. Via\nits PagedAttention and paged memory management, vLLM\ncan realize this sharing easily and save memory.\nFig. 8 shows an example of parallel decoding for two out-\nputs. Since both outputs share the same prompt, we only\nreserve space for one copy of the prompt’s state at the prompt\nphase; the logical blocks for the prompts of both sequences\nare mapped to the same physical blocks: the logical block 0\nand 1 of both sequences are mapped to physical blocks 7 and\n1, respectively. Since a single physical block can be mapped\nto multiple logical blocks, we introduce a reference count for\neach physical block. In this case, the reference counts for\nphysical blocks 7 and 1 are both 2. At the generation phase,\nthe two outputs sample different output tokens and need\nseparate storage for KV cache. vLLM implements a copy-on-\nwrite mechanism at the block granularity for the physical\nblocks that need modification by multiple sequences, similar\nto the copy-on-write technique in OS virtual memory (e.g.,\nwhen forking a process). Specifically, in Fig. 8, when sample\nA1 needs to write to its last logical block (logical block 1),\nvLLM recognizes that the reference count of the correspond-\ning physical block (physical block 1) is greater than 1; it\nallocates a new physical block (physical block 3), instructs\nthe block engine to copy the information from physical block\n1, and decreases the reference count to 1. Next, when sample\nA2 writes to physical block 1, the reference count is already\nreduced to 1; thus A2 directly writes its newly generated KV\ncache to physical block 1.\nIn summary, vLLM enables the sharing of most of the\nspace used to store the prompts’ KV cache across multiple\noutput samples, with the exception of the final logical block,\nwhich is managed by a copy-on-write mechanism. By sharing\nphysical blocks across multiple samples, memory usage can\nbe greatly reduced, especially for long input prompts.",
+      "bbox": [
+        53.63100051879883,
+        201.99551391601562,
+        295.7328796386719,
+        654.3300170898438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b31",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "Beam search. In LLM tasks like machine translation [59],\nthe users expect the top-𝑘most appropriate translations out-\nput by the LLM. Beam search [49] is widely used to decode\nthe most probable output sequence from an LLM, as it miti-\ngates the computational complexity of fully traversing the",
+      "bbox": [
+        54.0,
+        660.163818359375,
+        295.7326965332031,
+        718.0921020507812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b45",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "figure",
+      "text": "Figure 9. Beam search example.",
+      "bbox": [
+        372.343994140625,
+        154.80870056152344,
+        503.611572265625,
+        164.82131958007812
+      ],
+      "context": "Figure 9. Beam search example with beam width k=4; physical blocks are shared and freed when their reference counts reach zero. See section 4.4; illustration, not an experiment.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p7-b46",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "sample space. The algorithm relies on the beam width pa-\nrameter 𝑘, which determines the number of top candidates\nretained at every step. During decoding, beam search ex-\npands each candidate sequence in the beam by considering\nall possible tokens, computes their respective probabilities us-\ning the LLM, and retains the top-𝑘most probable sequences\nout of 𝑘· |𝑉| candidates, where |𝑉| is the vocabulary size.\nUnlike parallel decoding, beam search facilities sharing\nnot only the initial prompt blocks but also other blocks across\ndifferent candidates, and the sharing patterns dynamically\nchange as the decoding process advances, similar to the pro-\ncess tree in the OS created by compound forks. Fig. 9 shows\nhow vLLM manages the KV blocks for a beam search ex-\nample with 𝑘= 4. Prior to the iteration illustrated as the\ndotted line, each candidate sequence has used 4 full logi-\ncal blocks. All beam candidates share the first block 0 (i.e.,\nprompt). Candidate 3 digresses from others from the second\nblock. Candidates 0-2 share the first 3 blocks and diverge at\nthe fourth block. At subsequent iterations, the top-4 prob-\nable candidates all originate from candidates 1 and 2. As\nthe original candidates 0 and 3 are no longer among the\ntop candidates, their logical blocks are freed, and the refer-\nence counts of corresponding physical blocks are reduced.\nvLLM frees all physical blocks whose reference counts reach\n0 (blocks 2, 4, 5, 8). Then, vLLM allocates new physical blocks\n(blocks 9-12) to store the new KV cache from the new can-\ndidates. Now, all candidates share blocks 0, 1, 3; candidates\n0 and 1 share block 6, and candidates 2 and 3 further share\nblock 7.\nPrevious LLM serving systems require frequent memory\ncopies of the KV cache across the beam candidates. For exam-\nple, in the case shown in Fig. 9, after the dotted line, candidate\n3 would need to copy a large portion of candidate 2’s KV\ncache to continue generation. This frequent memory copy\noverhead is significantly reduced by vLLM’s physical block\nsharing. In vLLM, most blocks of different beam candidates\ncan be shared. The copy-on-write mechanism is applied only\nwhen the newly generated tokens are within an old shared\nblock, as in parallel decoding. This involves only copying\none block of data.",
+      "bbox": [
+        317.5870056152344,
+        178.0222930908203,
+        559.6884155273438,
+        654.311279296875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b47",
+      "page": 7,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "Shared prefix. Commonly, the LLM user provides a (long)\ndescription of the task including instructions and example\ninputs and outputs, also known as system prompt [36]. The\ndescription is concatenated with the actual task input to form\nthe prompt of the request. The LLM generates outputs based",
+      "bbox": [
+        317.9549865722656,
+        660.2236328125,
+        558.599853515625,
+        718.0473022460938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b17",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "figure",
+      "text": "Figure 10. Shared prompt example for machine translation.\nThe examples are adopted from [5].",
+      "bbox": [
+        53.70100021362305,
+        157.88165283203125,
+        295.57464599609375,
+        179.81533813476562
+      ],
+      "context": "Figure 10. Machine translation requests share a cached prompt prefix with instructions/examples. Only the task input requires prompt computation; section 4.4. Illustration, not a measured result.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p8-b18",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "on the full prompt. Fig. 10 shows an example. Moreover, the\nshared prefix can be further tuned, via prompt engineering,\nto improve the accuracy of the downstream tasks [26, 27].\nFor this type of application, many user prompts share a\nprefix, thus the LLM service provider can store the KV cache\nof the prefix in advance to reduce the redundant computa-\ntion spent on the prefix. In vLLM, this can be conveniently\nachieved by reserving a set of physical blocks for a set of\npredefined shared prefixes by the LLM service provider, as\nhow OS handles shared library across processes. A user in-\nput prompt with the shared prefix can simply map its logi-\ncal blocks to the cached physical blocks (with the last block\nmarked copy-on-write). The prompt phase computation only\nneeds to execute on the user’s task input.",
+      "bbox": [
+        54.0,
+        191.74652099609375,
+        295.7283020019531,
+        357.06231689453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b19",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.4 Application to Other Decoding Scenarios"
+      ],
+      "kind": "text",
+      "text": "Mixed decoding methods. The decoding methods dis-\ncussed earlier exhibit diverse memory sharing and access-\ning patterns. Nonetheless, vLLM facilitates the simultane-\nous processing of requests with different decoding prefer-\nences, which existing systems cannot efficiently do. This is\nbecause vLLM conceals the complex memory sharing be-\ntween different sequences via a common mapping layer that\ntranslates logical blocks to physical blocks. The LLM and\nits execution kernel only see a list of physical block IDs\nfor each sequence and do not need to handle sharing pat-\nterns across sequences. Compared to existing systems, this\napproach broadens the batching opportunities for requests\nwith different sampling requirements, ultimately increasing\nthe system’s overall throughput.",
+      "bbox": [
+        53.63100051879883,
+        362.9158020019531,
+        295.7333068847656,
+        528.4202880859375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b21",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.5 Scheduling and Preemption"
+      ],
+      "kind": "text",
+      "text": "When the request traffic surpasses the system’s capacity,\nvLLM must prioritize a subset of requests. In vLLM, we adopt\nthe first-come-first-serve (FCFS) scheduling policy for all\nrequests, ensuring fairness and preventing starvation. When\nvLLM needs to preempt requests, it ensures that the earliest\narrived requests are served first and the latest requests are\npreempted first.\nLLM services face a unique challenge: the input prompts\nfor an LLM can vary significantly in length, and the resulting\noutput lengths are not known a priori, contingent on both\nthe input prompt and the model. As the number of requests\nand their outputs grow, vLLM can run out of the GPU’s phys-\nical blocks to store the newly generated KV cache. There\nare two classic questions that vLLM needs to answer in this",
+      "bbox": [
+        53.52199935913086,
+        552.6173095703125,
+        295.7308044433594,
+        718.059814453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b22",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.5 Scheduling and Preemption"
+      ],
+      "kind": "text",
+      "text": "context: (1) Which blocks should it evict? (2) How to recover\nevicted blocks if needed again? Typically, eviction policies\nuse heuristics to predict which block will be accessed fur-\nthest in the future and evict that block. Since in our case we\nknow that all blocks of a sequence are accessed together, we\nimplement an all-or-nothing eviction policy, i.e., either evict\nall or none of the blocks of a sequence. Furthermore, multi-\nple sequences within one request (e.g., beam candidates in\none beam search request) are gang-scheduled as a sequence\ngroup. The sequences within one sequence group are always\npreempted or rescheduled together due to potential memory\nsharing across those sequences. To answer the second ques-\ntion of how to recover an evicted block, we consider two\ntechniques:",
+      "bbox": [
+        317.9549865722656,
+        74.56088256835938,
+        559.6851806640625,
+        239.86532592773438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b23",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.5 Scheduling and Preemption"
+      ],
+      "kind": "text",
+      "text": "Swapping. This is the classic technique used by most virtual\nmemory implementations which copy the evicted pages to a\nswap space on the disk. In our case, we copy evicted blocks to\nthe CPU memory. As shown in Fig. 4, besides the GPU block\nallocator, vLLM includes a CPU block allocator to manage\nthe physical blocks swapped to CPU RAM. When vLLM\nexhausts free physical blocks for new tokens, it selects a set\nof sequences to evict and transfer their KV cache to the CPU.\nOnce it preempts a sequence and evicts its blocks, vLLM\nstops accepting new requests until all preempted sequences\nare completed. Once a request completes, its blocks are freed\nfrom memory, and the blocks of a preempted sequence are\nbrought back in to continue the processing of that sequence.\nNote that with this design, the number of blocks swapped to\nthe CPU RAM never exceeds the number of total physical\nblocks in the GPU RAM, so the swap space on the CPU RAM\nis bounded by the GPU memory allocated for the KV cache.",
+      "bbox": [
+        317.9549865722656,
+        245.8683624267578,
+        559.5332641601562,
+        447.08209228515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b24",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.5 Scheduling and Preemption"
+      ],
+      "kind": "text",
+      "text": "Recomputation. In this case, we simply recompute the KV\ncache when the preempted sequences are rescheduled. Note\nthat recomputation latency can be significantly lower than\nthe original latency, as the tokens generated at decoding\ncan be concatenated with the original user prompt as a new\nprompt—their KV cache at all positions can be generated in\none prompt phase iteration.\nThe performances of swapping and recomputation depend\non the bandwidth between CPU RAM and GPU memory and\nthe computation power of the GPU. We examine the speeds\nof swapping and recomputation in §7.3.",
+      "bbox": [
+        317.9549865722656,
+        453.0685729980469,
+        558.364013671875,
+        582.5802612304688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b26",
+      "page": 8,
+      "section": [
+        "4 Method",
+        "4.6 Distributed Execution"
+      ],
+      "kind": "text",
+      "text": "Many LLMs have parameter sizes exceeding the capacity of a\nsingle GPU [5, 9]. Therefore, it is necessary to partition them\nacross distributed GPUs and execute them in a model parallel\nfashion [28, 63]. This calls for a memory manager capable of\nhandling distributed memory. vLLM is effective in distributed\nsettings by supporting the widely used Megatron-LM style\ntensor model parallelism strategy on Transformers [47]. This\nstrategy adheres to an SPMD (Single Program Multiple Data)\nexecution schedule, wherein the linear layers are partitioned",
+      "bbox": [
+        317.9549865722656,
+        612.5428466796875,
+        558.6019897460938,
+        718.0473022460938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-table1-reviewed",
+      "page": 9,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "table",
+      "text": "13B | A100 | 40 GB | 26 GB | 12 GB | 15.7K\n66B | 4×A100 | 160 GB | 132 GB | 21 GB | 9.7K\n175B | 8×A100-80GB | 640 GB | 346 GB | 264 GB | 60.1K",
+      "bbox": [
+        77.12,
+        72.84,
+        270.43,
+        159.5
+      ],
+      "context": "Table 1. Model sizes and server configurations. Columns: Model size (parameters) | GPUs | Total GPU memory (GB) | Parameter size (GB) | Memory for KV cache (GB) | Maximum KV-cache slots.",
+      "rows": [
+        "13B | A100 | 40 GB | 26 GB | 12 GB | 15.7K",
+        "66B | 4×A100 | 160 GB | 132 GB | 21 GB | 9.7K",
+        "175B | 8×A100-80GB | 640 GB | 346 GB | 264 GB | 60.1K"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p9-b4",
+      "page": 9,
+      "section": [
+        "4 Method",
+        "4.6 Distributed Execution"
+      ],
+      "kind": "text",
+      "text": "to perform block-wise matrix multiplication, and the the\nGPUs constantly synchronize intermediate results via an all-\nreduce operation. Specifically, the attention operator is split\non the attention head dimension, each SPMD process takes\ncare of a subset of attention heads in multi-head attention.\nWe observe that even with model parallel execution, each\nmodel shard still processes the same set of input tokens, thus\nrequiring the KV Cache for the same positions. Therefore,\nvLLM features a single KV cache manager within the cen-\ntralized scheduler, as in Fig. 4. Different GPU workers share\nthe manager, as well as the mapping from logical blocks to\nphysical blocks. This common mapping allows GPU workers\nto execute the model with the physical blocks provided by\nthe scheduler for each input request. Although each GPU\nworker has the same physical block IDs, a worker only stores\na portion of the KV cache for its corresponding attention\nheads.\nIn each step, the scheduler first prepares the message with\ninput token IDs for each request in the batch, as well as the\nblock table for each request. Next, the scheduler broadcasts\nthis control message to the GPU workers. Then, the GPU\nworkers start to execute the model with the input token IDs.\nIn the attention layers, the GPU workers read the KV cache\naccording to the block table in the control message. During\nexecution, the GPU workers synchronize the intermediate\nresults with the all-reduce communication primitive without\nthe coordination of the scheduler, as in [47]. In the end, the\nGPU workers send the sampled tokens of this iteration back\nto the scheduler. In summary, GPU workers do not need\nto synchronize on memory management as they only need\nto receive all the memory management information at the\nbeginning of each decoding iteration along with the step\ninputs.",
+      "bbox": [
+        53.63100051879883,
+        172.3793487548828,
+        295.7307434082031,
+        564.9822998046875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b6",
+      "page": 9,
+      "section": [
+        "5 Implementation"
+      ],
+      "kind": "text",
+      "text": "vLLM is an end-to-end serving system with a FastAPI [15]\nfrontend and a GPU-based inference engine. The frontend\nextends the OpenAI API [34] interface, allowing users to\ncustomize sampling parameters for each request, such as\nthe maximum sequence length and the beam width 𝑘. The\nvLLM engine is written in 8.5K lines of Python and 2K lines of\nC++/CUDA code. We develop control-related components in-\ncluding the scheduler and the block manager in Python while\ndeveloping custom CUDA kernels for key operations such as\nPagedAttention. For the model executor, we implement pop-\nular LLMs such as GPT [5], OPT [62], and LLaMA [52] using",
+      "bbox": [
+        53.750999450683594,
+        588.505615234375,
+        295.7308349609375,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b27",
+      "page": 9,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "figure",
+      "text": "Figure 11. Input and output length distributions of the (a)\nShareGPT and (b) Alpaca datasets.",
+      "bbox": [
+        317.9549865722656,
+        177.281982421875,
+        558.59521484375,
+        199.31430053710938
+      ],
+      "context": "Figure 11. ShareGPT and Alpaca input/output length distributions. Horizontal axis: number of tokens; vertical axis: density. These datasets define the workloads described in section 6.1.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p9-b28",
+      "page": 9,
+      "section": [
+        "5 Implementation"
+      ],
+      "kind": "text",
+      "text": "PyTorch [39] and Transformers [58]. We use NCCL [32] for\ntensor communication across the distributed GPU workers.",
+      "bbox": [
+        317.9549865722656,
+        212.34571838378906,
+        559.0201416015625,
+        234.26333618164062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b30",
+      "page": 9,
+      "section": [
+        "5 Implementation",
+        "5.1 Kernel-level Optimization"
+      ],
+      "kind": "text",
+      "text": "Since PagedAttention introduces memory access patterns\nthat are not efficiently supported by existing systems, we\ndevelop several GPU kernels for optimizing it. (1) Fused re-\nshape and block write. In every Transformer layer, the new\nKV cache are split into blocks, reshaped to a memory layout\noptimized for block read, then saved at positions specified\nby the block table. To minimize kernel launch overheads, we\nfuse them into a single kernel. (2) Fusing block read and atten-\ntion. We adapt the attention kernel in FasterTransformer [31]\nto read KV cache according to the block table and perform\nattention operations on the fly. To ensure coalesced memory\naccess, we assign a GPU warp to read each block. More-\nover, we add support for variable sequence lengths within a\nrequest batch. (3) Fused block copy. Block copy operations,\nissued by the copy-on-write mechanism, may operate on\ndiscontinuous blocks. This can lead to numerous invocations\nof small data movements if we use the cudaMemcpyAsync\nAPI. To mitigate the overhead, we implement a kernel that\nbatches the copy operations for different blocks into a single\nkernel launch.",
+      "bbox": [
+        317.6059875488281,
+        257.64227294921875,
+        559.6851196289062,
+        494.82733154296875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b32",
+      "page": 9,
+      "section": [
+        "5 Implementation",
+        "5.2 Supporting Various Decoding Algorithms"
+      ],
+      "kind": "text",
+      "text": "vLLM implements various decoding algorithms using three\nkey methods: fork, append, and free. The fork method\ncreates a new sequence from an existing one. The append\nmethod appends a new token to the sequence. Finally, the\nfree method deletes the sequence. For instance, in paral-\nlel sampling, vLLM creates multiple output sequences from\nthe single input sequence using the fork method. It then\nadds new tokens to these sequences in every iteration with\nappend, and deletes sequences that meet a stopping condi-\ntion using free. The same strategy is also applied in beam\nsearch and prefix sharing by vLLM. We believe future decod-\ning algorithms can also be supported by combining these\nmethods.",
+      "bbox": [
+        317.70599365234375,
+        518.2871704101562,
+        559.6876220703125,
+        671.7042846679688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b34",
+      "page": 9,
+      "section": [
+        "6 Evaluation"
+      ],
+      "kind": "text",
+      "text": "In this section, we evaluate the performance of vLLM under\na variety of workloads.",
+      "bbox": [
+        317.9549865722656,
+        696.2062377929688,
+        558.189208984375,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b35",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.2 Basic Sampling"
+      ],
+      "kind": "figure",
+      "text": "Figure 12. Single sequence generation with OPT models on the ShareGPT and Alpaca dataset",
+      "bbox": [
+        114.91200256347656,
+        269.66973876953125,
+        497.08697509765625,
+        279.6823425292969
+      ],
+      "context": "Figure 12. Single-sequence generation: normalized latency (s/token) versus request rate (requests/s). OPT-13B/66B/175B on 1/4/8 GPUs; ShareGPT and Alpaca; FasterTransformer, Orca variants and vLLM. Sections 6.1-6.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p10-b69",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.2 Basic Sampling"
+      ],
+      "kind": "figure",
+      "text": "Figure 13. Average number of batched requests when serv-\ning OPT-13B for the ShareGPT (2 reqs/s) and Alpaca (30\nreqs/s) traces.",
+      "bbox": [
+        54.0,
+        385.99908447265625,
+        295.7292785644531,
+        419.89532470703125
+      ],
+      "context": "Figure 13. Average batched request count for OPT-13B: ShareGPT at 2 requests/s and Alpaca at 30 requests/s. Orca Max/Pow2/Oracle versus vLLM; section 6.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p10-b71",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "Model and server configurations. We use OPT [62] mod-\nels with 13B, 66B, and 175B parameters and LLaMA [52] with\n13B parameters for our evaluation. 13B and 66B are popular\nsizes for LLMs as shown in an LLM leaderboard [38], while\n175B is the size of the famous GPT-3 [5] model. For all of\nour experiments, we use A2 instances with NVIDIA A100\nGPUs on Google Cloud Platform. The detailed model sizes\nand server configurations are shown in Table 1.",
+      "bbox": [
+        53.770999908447266,
+        449.0646667480469,
+        295.72821044921875,
+        542.7293090820312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b72",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "Workloads. We synthesize workloads based on ShareGPT [51]\nand Alpaca [50] datasets, which contain input and output\ntexts of real LLM services. The ShareGPT dataset is a collec-\ntion of user-shared conversations with ChatGPT [35]. The\nAlpaca dataset is an instruction dataset generated by GPT-\n3.5 with self-instruct [57]. We tokenize the datasets and use\ntheir input and output lengths to synthesize client requests.\nAs shown in Fig. 11, the ShareGPT dataset has 8.4× longer\ninput prompts and 5.8× longer outputs on average than the\nAlpaca dataset, with higher variance. Since these datasets do\nnot include timestamps, we generate request arrival times\nusing Poisson distribution with different request rates.",
+      "bbox": [
+        53.492000579833984,
+        548.7067260742188,
+        300.5907287597656,
+        690.17626953125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b73",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "Baseline 1: FasterTransformer. FasterTransformer [31] is\na distributed inference engine highly optimized for latency.",
+      "bbox": [
+        54.0,
+        696.1536865234375,
+        295.57830810546875,
+        718.0759887695312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b74",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "As FasterTransformer does not have its own scheduler, we\nimplement a custom scheduler with a dynamic batching\nmechanism similar to the existing serving systems such as\nTriton [30]. Specifically, we set a maximum batch size 𝐵as\nlarge as possible for each experiment, according to the GPU\nmemory capacity. The scheduler takes up to 𝐵number of\nearliest arrived requests and sends the batch to FasterTrans-\nformer for processing.",
+      "bbox": [
+        317.6059875488281,
+        288.19854736328125,
+        559.6790771484375,
+        381.8993225097656
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b75",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "Baseline 2: Orca. Orca [60] is a state-of-the-art LLM serving\nsystem optimized for throughput. Since Orca is not publicly\navailable for use, we implement our own version of Orca. We\nassume Orca uses the buddy allocation algorithm to deter-\nmine the memory address to store KV cache. We implement\nthree versions of Orca based on how much it over-reserves\nthe space for request outputs:\n• Orca (Oracle). We assume the system has the knowledge\nof the lengths of the outputs that will be actually generated\nfor the requests. This shows the upper-bound performance\nof Orca, which is infeasible to achieve in practice.\n• Orca (Pow2). We assume the system over-reserves the\nspace for outputs by at most 2×. For example, if the true\noutput length is 25, it reserves 32 positions for outputs.\n• Orca (Max). We assume the system always reserves the\nspace up to the maximum sequence length of the model,\ni.e., 2048 tokens.",
+      "bbox": [
+        317.9549865722656,
+        387.876708984375,
+        559.6815795898438,
+        589.1222534179688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b76",
+      "page": 10,
+      "section": [
+        "6 Evaluation",
+        "6.1 Experimental Setup"
+      ],
+      "kind": "text",
+      "text": "Key metrics. We focus on serving throughput. Specifically,\nusing the workloads with different request rates, we mea-\nsure normalized latency of the systems, the mean of every\nrequest’s end-to-end latency divided by its output length,\nas in Orca [60]. A high-throughput serving system should\nretain low normalized latency against high request rates.\nFor most experiments, we evaluate the systems with 1-hour\ntraces. As an exception, we use 15-minute traces for the\nOPT-175B model due to the cost limit.",
+      "bbox": [
+        317.9549865722656,
+        595.0798950195312,
+        559.6852416992188,
+        700.7033081054688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b35",
+      "page": 11,
+      "section": [
+        "6 Evaluation",
+        "6.3 Parallel Sampling and Beam Search"
+      ],
+      "kind": "figure",
+      "text": "Figure 14. Parallel generation and beam search with OPT-13B on the Alpaca dataset.",
+      "bbox": [
+        132.93899536132812,
+        277.63970947265625,
+        479.06036376953125,
+        287.6523132324219
+      ],
+      "context": "Figure 14. OPT-13B, Alpaca: normalized latency (s/token) versus request rate (requests/s). Parallel sample counts and beam widths 2, 4, 6; Orca variants and vLLM. Section 6.3.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p11-b37",
+      "page": 11,
+      "section": [
+        "6 Evaluation",
+        "6.2 Basic Sampling"
+      ],
+      "kind": "text",
+      "text": "We evaluate the performance of vLLM with basic sampling\n(one sample per request) on three models and two datasets.\nThe first row of Fig. 12 shows the results on the ShareGPT\ndataset. The curves illustrate that as the request rate in-\ncreases, the latency initially increases at a gradual pace but\nthen suddenly explodes. This can be attributed to the fact\nthat when the request rate surpasses the capacity of the serv-\ning system, the queue length continues to grow infinitely\nand so does the latency of the requests.\nOn the ShareGPT dataset, vLLM can sustain 1.7×–2.7×\nhigher request rates compared to Orca (Oracle) and 2.7×–8×\ncompared to Orca (Max), while maintaining similar laten-\ncies. This is because vLLM’s PagedAttention can efficiently\nmanage the memory usage and thus enable batching more\nrequests than Orca. For example, as shown in Fig. 13a, for\nOPT-13B vLLM processes 2.2× more requests at the same\ntime than Orca (Oracle) and 4.3× more requests than Orca\n(Max). Compared to FasterTransformer, vLLM can sustain up\nto 22× higher request rates, as FasterTransformer does not\nutilize a fine-grained scheduling mechanism and inefficiently\nmanages the memory like Orca (Max).\nThe second row of Fig. 12 and Fig. 13b shows the results\non the Alpaca dataset, which follows a similar trend to the\nShareGPT dataset. One exception is Fig. 12 (f), where vLLM’s\nadvantage over Orca (Oracle) and Orca (Pow2) is less pro-\nnounced. This is because the model and server configuration\nfor OPT-175B (Table 1) allows for large GPU memory space\navailable to store KV cache, while the Alpaca dataset has\nshort sequences. In this setup, Orca (Oracle) and Orca (Pow2)\ncan also batch a large number of requests despite the inef-\nficiencies in their memory management. As a result, the\nperformance of the systems becomes compute-bound rather\nthan memory-bound.",
+      "bbox": [
+        53.52199935913086,
+        325.5325012207031,
+        295.7308044433594,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b57",
+      "page": 11,
+      "section": [
+        "6 Evaluation",
+        "6.3 Parallel Sampling and Beam Search"
+      ],
+      "kind": "figure",
+      "text": "Figure 15. Average amount of memory saving from sharing\nKV blocks, when serving OPT-13B for the Alpaca trace.",
+      "bbox": [
+        317.9549865722656,
+        381.38037109375,
+        557.9978637695312,
+        403.2723083496094
+      ],
+      "context": "Figure 15. KV-block-sharing memory savings (%) for OPT-13B on Alpaca, across output-sequence counts and beam widths 2, 4, 6. Section 6.3 defines savings relative to blocks without sharing.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p11-b59",
+      "page": 11,
+      "section": [
+        "6 Evaluation",
+        "6.3 Parallel Sampling and Beam Search"
+      ],
+      "kind": "text",
+      "text": "We evaluate the effectiveness of memory sharing in Page-\ndAttention with two popular sampling methods: parallel\nsampling and beam search. In parallel sampling, all paral-\nlel sequences in a request can share the KV cache for the\nprompt. As shown in the first row of Fig. 14, with a larger\nnumber of sequences to sample, vLLM brings more improve-\nment over the Orca baselines. Similarly, the second row of\nFig. 14 shows the results for beam search with different beam\nwidths. Since beam search allows for more sharing, vLLM\ndemonstrates even greater performance benefits. The im-\nprovement of vLLM over Orca (Oracle) on OPT-13B and the\nAlpaca dataset goes from 1.3× in basic sampling to 2.3× in\nbeam search with a width of 6.\nFig. 15 plots the amount of memory saving, computed by\nthe number of blocks we saved by sharing divided by the\nnumber of total blocks without sharing. We show 6.1% - 9.8%\nmemory saving on parallel sampling and 37.6% - 55.2% on\nbeam search. In the same experiments with the ShareGPT\ndataset, we saw 16.2% - 30.5% memory saving on parallel\nsampling and 44.3% - 66.3% on beam search.",
+      "bbox": [
+        317.47698974609375,
+        434.7023010253906,
+        559.6856689453125,
+        671.8872680664062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b61",
+      "page": 11,
+      "section": [
+        "6 Evaluation",
+        "6.4 Shared prefix"
+      ],
+      "kind": "text",
+      "text": "We explore the effectiveness of vLLM for the case a prefix\nis shared among different input prompts, as illustrated in",
+      "bbox": [
+        317.47698974609375,
+        696.0792846679688,
+        558.2418823242188,
+        718.0970458984375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b13",
+      "page": 12,
+      "section": [
+        "6 Evaluation",
+        "6.4 Shared prefix"
+      ],
+      "kind": "figure",
+      "text": "Figure 16. Translation workload where the input prompts\nshare a common prefix. The prefix includes (a) 1 example\nwith 80 tokens or (b) 5 examples with 341 tokens.",
+      "bbox": [
+        53.63100051879883,
+        199.65789794921875,
+        294.0432434082031,
+        233.61434936523438
+      ],
+      "context": "Figure 16. LLaMA-13B on WMT16 English-to-German translation; shared one-shot prefix (80 tokens) or five-shot prefix (341 tokens). Normalized latency (s/token) versus request rate (requests/s); section 6.4.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p12-b24-grouped",
+      "page": 12,
+      "section": [
+        "6 Evaluation",
+        "6.5 Chatbot"
+      ],
+      "kind": "text",
+      "text": "A chatbot [8, 19, 35] is one of the most important applications\nof LLMs. To implement a chatbot, we let the model generate\na response by concatenating the chatting history and the\nlast user query into a prompt. We synthesize the chatting\nhistory and user query using the ShareGPT dataset. Due to\nthe limited context length of the OPT-13B model, we cut the\nprompt to the last 1024 tokens and let the model generate\nat most 1024 tokens. We do not store the KV cache between\ndifferent conversation rounds as doing this would occupy the\nspace for other requests between the conversation rounds.\nFig. 17 shows that vLLM can sustain 2× higher request\nrates compared to the three Orca baselines. Since the ShareGPT\ndataset contains many long conversations, the input prompts\nfor most requests have 1024 tokens. Due to the buddy allo-\ncation algorithm, the Orca baselines reserve the space for\n1024 tokens for the request outputs, regardless of how they\npredict the output lengths. For this reason, the three Orca\nbaselines behave similarly. In contrast, vLLM can effectively\n\nhandle the long prompts, as PagedAttention resolves the\nproblem of memory fragmentation and reservation.",
+      "bbox": [
+        53.6510009765625,
+        238.38331604003906,
+        557.9984741210938,
+        718.0510864257812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b21",
+      "page": 12,
+      "section": [
+        "6 Evaluation",
+        "6.5 Chatbot"
+      ],
+      "kind": "figure",
+      "text": "Figure 17. Performance on chatbot workload.",
+      "bbox": [
+        80.30899810791016,
+        333.00872802734375,
+        267.73590087890625,
+        343.0213317871094
+      ],
+      "context": "Figure 17. OPT-13B chatbot workload from ShareGPT: prompts truncated to last 1024 tokens; at most 1024 output tokens. Normalized latency (s/token) versus request rate (requests/s); section 6.5.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p12-b22",
+      "page": 12,
+      "section": [
+        "6 Evaluation",
+        "6.4 Shared prefix"
+      ],
+      "kind": "text",
+      "text": "Fig. 10. For the model, we use LLaMA-13B [52], which is mul-\ntilingual. For the workload, we use the WMT16 [4] English-\nto-German translation dataset and synthesize two prefixes\nthat include an instruction and a few translation examples.\nThe first prefix includes a single example (i.e., one-shot)\nwhile the other prefix includes 5 examples (i.e., few-shot). As\nshown in Fig. 16 (a), vLLM achieves 1.67× higher through-\nput than Orca (Oracle) when the one-shot prefix is shared.\nFurthermore, when more examples are shared (Fig. 16 (b)),\nvLLM achieves 3.58× higher throughput than Orca (Oracle).",
+      "bbox": [
+        53.63100051879883,
+        364.2397155761719,
+        295.7303771972656,
+        481.786865234375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b47",
+      "page": 12,
+      "section": [
+        "7 Ablation Studies"
+      ],
+      "kind": "figure",
+      "text": "Figure 18. Ablation experiments. (a) Latency of attention kernels. (b) End-to-end latency with different block sizes.",
+      "bbox": [
+        317.677001953125,
+        166.4393768310547,
+        557.0226440429688,
+        200.30728149414062
+      ],
+      "context": "Figure 18. Ablations: (a) attention-kernel latency (microseconds) versus context length for block sizes 8 and 32; (b) normalized end-to-end latency (s/token) versus block size for ShareGPT/Alpaca at fixed request rates. Sections 7.1-7.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p12-b50",
+      "page": 12,
+      "section": [
+        "7 Ablation Studies"
+      ],
+      "kind": "text",
+      "text": "In this section, we study various aspects of vLLM and evalu-\nate the design choices we make with ablation experiments.",
+      "bbox": [
+        317.9549865722656,
+        288.1395568847656,
+        559.681396484375,
+        309.9933166503906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b52",
+      "page": 12,
+      "section": [
+        "7 Ablation Studies",
+        "7.1 Kernel Microbenchmark"
+      ],
+      "kind": "text",
+      "text": "The dynamic block mapping in PagedAttention affects the\nperformance of the GPU operations involving the stored KV\ncache, i.e., block read/writes and attention. Compared to the\nexisting systems, our GPU kernels (§5) involve extra over-\nheads of accessing the block table, executing extra branches,\nand handling variable sequence lengths. As shown in Fig. 18a,\nthis leads to 20–26% higher attention kernel latency, com-\npared to the highly-optimized FasterTransformer implemen-\ntation. We believe the overhead is small as it only affects\nthe attention operator but not the other operators in the\nmodel, such as Linear. Despite the overhead, PagedAttention\nmakes vLLM significantly outperform FasterTransformer in\nend-to-end performance (§6).",
+      "bbox": [
+        317.656005859375,
+        336.641845703125,
+        559.6853637695312,
+        490.122314453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b54",
+      "page": 12,
+      "section": [
+        "7 Ablation Studies",
+        "7.2 Impact of Block Size"
+      ],
+      "kind": "text",
+      "text": "The choice of block size can have a substantial impact on the\nperformance of vLLM. If the block size is too small, vLLM\nmay not fully utilize the GPU’s parallelism for reading and\nprocessing KV cache. If the block size is too large, inter-\nnal fragmentation increases and the probability of sharing\ndecreases.\nIn Fig. 18b, we evaluate the performance of vLLM with dif-\nferent block sizes, using the ShareGPT and Alpaca traces with\nbasic sampling under fixed request rates. In the ShareGPT\ntrace, block sizes from 16 to 128 lead to the best performance.\nIn the Alpaca trace, while the block size 16 and 32 work\nwell, larger block sizes significantly degrade the performance\nsince the sequences become shorter than the block sizes. In\npractice, we find that the block size 16 is large enough to\nefficiently utilize the GPU and small enough to avoid signifi-\ncant internal fragmentation in most workloads. Accordingly,\nvLLM sets its default block size as 16.",
+      "bbox": [
+        317.5870056152344,
+        516.9017944335938,
+        559.6856689453125,
+        718.072265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b22",
+      "page": 13,
+      "section": [
+        "7 Ablation Studies",
+        "7.3 Comparing Recomputation and Swapping"
+      ],
+      "kind": "figure",
+      "text": "Figure 19. (a) Overhead of recomputation and swapping for\ndifferent block sizes. (b) Performance when serving OPT-13B\nwith the ShareGPT traces at the same request rate.",
+      "bbox": [
+        53.63100051879883,
+        170.8263702392578,
+        294.2355041503906,
+        204.67330932617188
+      ],
+      "context": "Figure 19. Recomputation versus swapping: microbenchmark time (ms) and normalized end-to-end latency (s/token) across block sizes. OPT-13B, ShareGPT, fixed request rate; section 7.3.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p13-b24",
+      "page": 13,
+      "section": [
+        "7 Ablation Studies",
+        "7.3 Comparing Recomputation and Swapping"
+      ],
+      "kind": "text",
+      "text": "vLLM supports both recomputation and swapping as its re-\ncovery mechanisms. To understand the tradeoffs between\nthe two methods, we evaluate their end-to-end performance\nand microbenchmark their overheads, as presented in Fig. 19.\nOur results reveal that swapping incurs excessive overhead\nwith small block sizes. This is because small block sizes often\nresult in numerous small data transfers between CPU and\nGPU, which limits the effective PCIe bandwidth. In contrast,\nthe overhead of recomputation remains constant across dif-\nferent block sizes, as recomputation does not utilize the KV\nblocks. Thus, recomputation is more efficient when the block\nsize is small, while swapping is more efficient when the block\nsize is large, though recomputation overhead is never higher\nthan 20% of swapping’s latency. For medium block sizes from\n16 to 64, the two methods exhibit comparable end-to-end\nperformance.",
+      "bbox": [
+        53.63100051879883,
+        235.94351196289062,
+        295.7323913574219,
+        425.2453308105469
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b26",
+      "page": 13,
+      "section": [
+        "8 Discussion"
+      ],
+      "kind": "text",
+      "text": "Applying the virtual memory and paging technique to\nother GPU workloads. The idea of virtual memory and\npaging is effective for managing the KV cache in LLM serving\nbecause the workload requires dynamic memory allocation\n(since the output length is not known a priori) and its perfor-\nmance is bound by the GPU memory capacity. However, this\ndoes not generally hold for every GPU workload. For exam-\nple, in DNN training, the tensor shapes are typically static,\nand thus memory allocation can be optimized ahead of time.\nFor another example, in serving DNNs that are not LLMs,\nan increase in memory efficiency may not result in any per-\nformance improvement since the performance is primarily\ncompute-bound. In such scenarios, introducing the vLLM’s\ntechniques may rather degrade the performance due to the\nextra overhead of memory indirection and non-contiguous\nblock memory. However, we would be excited to see vLLM’s\ntechniques being applied to other workloads with similar\nproperties to LLM serving.",
+      "bbox": [
+        53.63100051879883,
+        453.0875549316406,
+        295.72589111328125,
+        666.2662963867188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b27",
+      "page": 13,
+      "section": [
+        "8 Discussion"
+      ],
+      "kind": "text",
+      "text": "LLM-specific optimizations in applying virtual mem-\nory and paging. vLLM re-interprets and augments the idea\nof virtual memory and paging by leveraging the application-\nspecific semantics. One example is vLLM’s all-or-nothing",
+      "bbox": [
+        54.0,
+        672.1449584960938,
+        295.8272705078125,
+        718.0970458984375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b28",
+      "page": 13,
+      "section": [
+        "8 Discussion"
+      ],
+      "kind": "text",
+      "text": "swap-out policy, which exploits the fact that processing a\nrequest requires all of its corresponding token states to be\nstored in GPU memory. Another example is the recomputa-\ntion method to recover the evicted blocks, which is not feasi-\nble in OS. Besides, vLLM mitigates the overhead of memory\nindirection in paging by fusing the GPU kernels for memory\naccess operations with those for other operations such as\nattention.",
+      "bbox": [
+        317.9549865722656,
+        74.41132354736328,
+        559.6854248046875,
+        168.13430786132812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b30",
+      "page": 13,
+      "section": [
+        "9 Related Work"
+      ],
+      "kind": "text",
+      "text": "General model serving systems. Model serving has been\nan active area of research in recent years, with numerous\nsystems proposed to tackle diverse aspects of deep learning\nmodel deployment. Clipper [11], TensorFlow Serving [33],\nNexus [45], InferLine [10], and Clockwork [20] are some\nearlier general model serving systems. They study batch-\ning, caching, placement, and scheduling for serving single\nor multiple models. More recently, DVABatch [12] intro-\nduces multi-entry multi-exit batching. REEF [21] and Shep-\nherd [61] propose preemption for serving. AlpaServe [28]\nutilizes model parallelism for statistical multiplexing. How-\never, these general systems fail to take into account the auto-\nregressive property and token state of LLM inference, result-\ning in missed opportunities for optimization.",
+      "bbox": [
+        317.9549865722656,
+        205.97564697265625,
+        559.6868286132812,
+        371.372314453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b31",
+      "page": 13,
+      "section": [
+        "9 Related Work"
+      ],
+      "kind": "text",
+      "text": "Specialized serving systems for transformers. Due to\nthe significance of the transformer architecture, numerous\nspecialized serving systems for it have been developed. These\nsystems utilize GPU kernel optimizations [1, 29, 31, 56], ad-\nvanced batching mechanisms [14, 60], model parallelism [1,\n41, 60], and parameter sharing [64] for efficient serving.\nAmong them, Orca [60] is most relevant to our approach.",
+      "bbox": [
+        317.6059875488281,
+        377.22479248046875,
+        559.6875,
+        459.0433349609375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b32",
+      "page": 13,
+      "section": [
+        "9 Related Work"
+      ],
+      "kind": "text",
+      "text": "Comparison to Orca. The iteration-level scheduling in\nOrca [60] and PagedAttention in vLLM are complementary\ntechniques: While both systems aim to increase the GPU\nutilization and hence the throughput of LLM serving, Orca\nachieves it by scheduling and interleaving the requests so\nthat more requests can be processed in parallel, while vLLM\nis doing so by increasing memory utilization so that the\nworking sets of more requests fit into memory. By reducing\nmemory fragmentation and enabling sharing, vLLM runs\nmore requests in a batch in parallel and achieves a 2-4×\nspeedup compared to Orca. Indeed, the fine-grained sched-\nuling and interleaving of the requests like in Orca makes\nmemory management more challenging, making the tech-\nniques proposed in vLLM even more crucial.",
+      "bbox": [
+        317.5870056152344,
+        464.8957824707031,
+        559.6851806640625,
+        630.4002685546875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b33",
+      "page": 13,
+      "section": [
+        "9 Related Work"
+      ],
+      "kind": "text",
+      "text": "Memory optimizations. The widening gap between the\ncompute capability and memory capacity of accelerators has\ncaused memory to become a bottleneck for both training\nand inference. Swapping [23, 42, 55], recomputation [7, 24]\nand their combination [40] have been utilized to reduce the\npeak memory of training. Notably, FlexGen [46] studies how\nto swap weights and token states for LLM inference with",
+      "bbox": [
+        317.9549865722656,
+        636.2538452148438,
+        558.3681640625,
+        718.0970458984375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b0",
+      "page": 14,
+      "section": [
+        "9 Related Work"
+      ],
+      "kind": "text",
+      "text": "limited GPU memory, but it does not target the online serv-\ning settings. OLLA [48] optimizes the lifetime and location\nof tensors to reduce fragmentation, but it does not do fine-\ngrained block-level management or online serving. FlashAt-\ntention [13] applies tiling and kernel optimizations to reduce\nthe peak memory of attention computation and reduce I/O\ncosts. This paper introduces a new idea of block-level mem-\nory management in the context of online serving.",
+      "bbox": [
+        54.0,
+        74.50444793701172,
+        295.73211669921875,
+        168.13430786132812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b2",
+      "page": 14,
+      "section": [
+        "10 Conclusion"
+      ],
+      "kind": "text",
+      "text": "This paper proposes PagedAttention, a new attention algo-\nrithm that allows attention keys and values to be stored\nin non-contiguous paged memory, and presents vLLM, a\nhigh-throughput LLM serving system with efficient mem-\nory management enabled by PagedAttention. Inspired by\noperating systems, we demonstrate how established tech-\nniques, such as virtual memory and copy-on-write, can be\nadapted to efficiently manage KV cache and handle various\ndecoding algorithms in LLM serving. Our experiments show\nthat vLLM achieves 2-4× throughput improvements over the\nstate-of-the-art systems.",
+      "bbox": [
+        53.70100021362305,
+        195.15113830566406,
+        295.7301330566406,
+        324.6993103027344
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b4",
+      "page": 14,
+      "section": [
+        "Acknowledgement"
+      ],
+      "kind": "text",
+      "text": "We would like to thank Xiaoxuan Liu, Zhifeng Chen, Yan-\nping Huang, anonymous SOSP reviewers, and our shepherd,\nLidong Zhou, for their insightful feedback. This research is\npartly supported by gifts from Andreessen Horowitz, Anyscale,\nAstronomer, Google, IBM, Intel, Lacework, Microsoft, Mo-\nhamed Bin Zayed University of Artificial Intelligence, Sam-\nsung SDS, Uber, and VMware.",
+      "bbox": [
+        53.52199935913086,
+        351.67529296875,
+        301.1299133300781,
+        433.4433288574219
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    }
+  ]
+}

@@ -1,8 +1,36 @@
 # B → A/C/E 연결 안내
 
+## 이슈 #8 반영 (2026-09-22)
+
+`data/structure_reviews/*.json` 6개가 원본 216건의 구조 검토 항목을 해소한다.
+`data/manifest.json`이 각 보완본과 SHA256을 고정하며, `python -m rag inspect`는
+검증된 보완본 적용 후 미해결 차단 0건을 보고한다. 검토는 AI가 렌더링된 PDF와
+텍스트 레이어를 대조한 것이며, 사람의 승인으로 기록하지 않았다.
+
+저장소 루트에서 모델을 `outputs/models/e5-pinned`에 준비하고 아래 순서로 실행한다.
+실제 PDF 경로는 `data/papers/`, 색인 경로는 `outputs/rag/index-400-reviewed.sqlite`다.
+원문·모델·색인·실행 산출물은 Git에 포함하지 않으므로 다른 환경에서는 재생성한다.
+
+```bash
+python -m pip install -r rag/requirements-runtime.txt
+python -m rag prepare-model --manifest data/manifest.json --destination outputs/models/e5-pinned
+python -m rag inspect --manifest data/manifest.json --output outputs/rag/inspect-reviewed-001.json
+python -m rag ingest --manifest data/manifest.json --bindings rag/project_bindings.json --index outputs/rag/index-400-reviewed.sqlite --cache outputs/cache/rag-embeddings.sqlite --report outputs/rag/ingest-400-001.json --thread-id b-ingest-001
+python -m rag retrieve --manifest data/manifest.json --bindings rag/project_bindings.json --index outputs/rag/index-400-reviewed.sqlite --audit outputs/rag/retrieve-001.jsonl --thread-id b-retrieve-001 --request rag/examples/request_turboquant.json --output outputs/rag/retrieve-turboquant-001.json
+```
+
+이미 모델/출력 파일이 있으면 재사용하거나 새 출력 이름을 사용한다. `ingest`는
+동일 fingerprint 색인을 재사용할 수 있다. `retrieve`는 LLM 호출 없이 실제 E5
+Top-5·출처·QueryLog를 확인하는 진단 명령이다. 생성형 LLM 설정은 색인/검색의
+전제 조건에서 분리했으며 `query`와 어댑터의 grade/extract에는 여전히 필요하다.
+
+PagedAttention은 고정된 PDF 해시가 arXiv `2309.06180v1`과 일치하여 manifest의
+잘못된 `v4` 표기를 `v1`으로 수정했다. PDF 바이트는 바뀌지 않았다.
+실행 검증 결과와 범위는 [ISSUE8_VERIFICATION.md](ISSUE8_VERIFICATION.md)를 참고한다.
+
 ## 1. 변경 경계
 
-최신 `main`에서 공통 State/상수/ID 생성기/IssueType/공통 프롬프트는 읽기만 한다. 부모 그래프 조립, 평가 에이전트, 웹 검색 래퍼, 판정/보고서 노드는 수정하지 않았다. CI 설치를 위한 루트 `requirements.txt`의 B 코어 include만 예외다.
+공통 State/상수/ID 생성기/IssueType/공통 프롬프트는 읽기만 한다. 부모 그래프 조립, 평가 에이전트, 웹 검색 래퍼, 판정/보고서 노드는 수정하지 않았다. 이번 이슈의 공유 파일 변경은 요청에 명시된 `data/manifest.json`과 구조 보완 데이터이며 A의 PR 검토 대상이다.
 
 ## 2. A가 연결할 계약
 
@@ -32,7 +60,7 @@ from rag.subgraph import configure_run_rag
 
 adapter, store, policy = build_project_adapter(
     manifest_path=Path("data/manifest.json"),
-    index_path=Path("outputs/rag/index-400-001.sqlite"),
+    index_path=Path("outputs/rag/index-400-reviewed.sqlite"),
     binding_path=Path("rag/project_bindings.json"),
     audit_path=Path("outputs/rag/run-001.jsonl"),
     thread_id="run-001",
@@ -64,7 +92,7 @@ Evidence ID 순번의 범위는 **에이전트×기술×round**이다. aspect와
 
 `EvidenceAllocator`는 순번 예약/중복 검사를 lock 아래 처리하고, 실제 ID 문자열은 공통 생성기에 넘긴다. 동일 실행 객체 안의 같은 allocation key는 같은 ID를 돌려준다. 중간 실패한 batch는 부분적으로 할당하지 않는다.
 
-기존 웹 래퍼도 동일 할당기를 사용하거나 같은 순번 서비스와 연결해야 한다. A/C가 이미 사용 중인 번호가 있다면 `starting_sequences`와 `used_ids`로 초기화한다. 별도 웹 카운터와 B 카운터를 각각 1에서 시작하면 충돌할 수 있다. **이 연결은 중요하지만, 실제 C 코드가 없으므로 이 제공본에서 검증하지 않았다.**
+현재 C/E 호출자는 RAG 근거 ID를 각자 에이전트의 웹/RAG 공통 순번으로 재부여한다. 어댑터를 직접 연결하는 통합에서는 같은 범위의 기존 번호를 `starting_sequences`와 `used_ids`로 전달하거나 호출자의 재부여 경로를 유지해야 한다. 별도 웹 카운터와 B 카운터를 각각 1에서 시작한 ID를 그대로 합치면 충돌할 수 있다. QueryLog 누적은 `adapter.call().queries`를 소비하도록 C/E 호출부에 배선해야 한다.
 
 부모의 SQLite 영속 체크포인터는 A가 유지한다. 동일 thread의 부모 재개에서 성공한 형제 노드를 보존하는 정책을 B가 바꾸지 않는다. B 서브그래프는 checkpoint=False라서 실패한 B 호출의 내부 단계 중간부터 재개하지 않는다. 실패한 부모 노드가 다시 실행되면 해당 RAG 호출이 다시 시작될 수 있다. 감사 로그는 실제 재시도 수행 기록을 남긴다.
 
@@ -88,7 +116,7 @@ B가 42개짜리 전역 카운터를 만들어 다른 에이전트 호출을 통
 
 현재 저장소에서 공통 계약 바인딩, 전체 pytest, stub 파이프라인은 확인했다. 다음 실자료 항목은 통합 전에 담당자가 확인해야 한다.
 
-1. 원문 6건/고정 모델/구조 검토본을 승인하고 real E5 색인을 생성한다. 표·그림/수치 조건을 샘플만이 아니라 필요한 대상 구간에서 대조한다.
+1. 이슈 #8의 보완본·검토 기록을 PR에서 검수한다. 로컬 구조 검사·real E5 색인·검색 검증 결과는 `ISSUE8_VERIFICATION.md`에 기록한다.
 2. C/E의 실제 caller와 웹/RAG ID 순번, queries 누적, uncertainty 전달을 연결한다.
 3. 실제 E5 snapshot 테스트를 켜고 부모 SQLite 체크포인터에서 실패 호출 재개 동작을 점검한다.
 4. 사람이 승인한 Golden QA dev로 설정을 비교하고 held-out test에서 최초/최종 Hit@5·MRR@5를 기록한다.

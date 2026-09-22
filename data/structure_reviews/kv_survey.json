@@ -1,0 +1,2787 @@
+{
+  "document_sha256": "e2285c3886bb33a76f17463d2fe79e1c21dbda21507171092e08f77f53b2bb2b",
+  "parser_version": "structure-v1",
+  "status": "approved",
+  "review_method": "AI-assisted visual PDF/text-layer comparison",
+  "source_issue_count": 32,
+  "resolved_issue_ids": [
+    "p1-b22",
+    "p2-b17",
+    "p2-b18",
+    "p2-b55",
+    "p2-table0",
+    "p20-b0",
+    "p20-b9",
+    "p21-b0",
+    "p25-b2",
+    "p25-b5",
+    "p25-table0",
+    "p25-table1",
+    "p3-b31",
+    "p4-b0",
+    "p5-b32",
+    "p5-table0",
+    "p5-table1",
+    "p5-table2",
+    "p6-b0",
+    "p6-b11",
+    "p6-b3",
+    "p6-table0",
+    "p7-b0",
+    "p7-table0",
+    "p8-b0",
+    "p8-b12",
+    "p8-table0",
+    "p8-table1",
+    "p8-table2",
+    "p8-table3",
+    "p8-table4",
+    "p8-table5"
+  ],
+  "reviewer": "Codex (AI-assisted visual review)",
+  "reviewed_at": "2026-09-22",
+  "review_notes": "{\"review_method\": \"AI-assisted visual review of rendered source PDF pages, checked against the original text layer and coordinates. This records a Codex review, not approval by a named human; repository PR approval is separate.\", \"reviewed_pages\": [1, 2, 3, 4, 5, 6, 7, 8, 20, 21, 22, 23, 25], \"corrections\": \"Removed all 14 fragmented or false detector tables. Rebuilt real Tables 1-9, 11 and 12; Table 9 continues on page 22. Source has no Table 10 label. Source glyph positions/colors and visually checked legends decode primary/secondary and direct/indirect symbols, preserving blanks. Restored Figure 6 caption and page-8 prose swallowed by false table p8-table2. Reconstructed source section headings and appendix boundaries.\", \"retained_evidence_policy\": \"Chart captions, explicit labels and prose only; no numeric readings inferred from chart pixels. All substantive prose outside references is retained. Diagram/chart interior fragments are replaced with contextual captions; table text fragments are replaced by reviewed rows. Reference list and page footer excluded.\", \"source_region_exclusions\": {\"heading_as_metadata\": 38, \"header_footer\": 28, \"figure_interior\": 102, \"replaced_table_source\": 72, \"references_heading\": 1, \"references_content\": 203}, \"symbol_handling\": \"Table 9 wasy9 primary (source color 7847341), secondary (13345235); row baseline and seven header columns verified. Table 7 wasy9 filled-space glyph=direct, # glyph=indirect, star=high-prevalence. Density bar colors are not converted to exact counts. Table 1 source differs from Table 8 in no-retrain cells; both printed versions are preserved.\", \"semantic_regrouping\": \"Joined title/algorithm/listing or equation fragments with their explanatory source paragraphs, using union bounding boxes on the same PDF page. Equations and algorithm fractions were visually checked and serialized in linear text notation without changing values. Source block IDs, original page coordinates and metadata exclusions are recorded in source_block_mapping and semantic_metadata_exclusions. Author/title/contact, arXiv sidebar and preprint footer are excluded from semantic evidence, not treated as research claims. Rejoined the split Appendix E.1 final bullet across page 23 columns, preserving its citation tail and complete sentence.\"}",
+  "blocks": [
+    {
+      "block_id": "p1-b7",
+      "page": 1,
+      "bbox": [
+        87.50736999511719,
+        243.50466918945312,
+        273.78314208984375,
+        482.6705322265625
+      ],
+      "text": "Despite the rapid advancements of large lan-\nguage models (LLMs), LLM serving systems\nremain memory-intensive and costly. The key-\nvalue (KV) cache, which stores KV tensors\nduring autoregressive decoding, is crucial for\nenabling low-latency, high-throughput LLM\ninference serving. In this survey, we focus\non system-aware KV infrastructure for serving\nLLMs (abbreviated as sKis). We revisit recent\nwork from a system behavior perspective, orga-\nnizing existing efforts into three dimensions:\nexecution and scheduling (temporal), place-\nment and migration (spatial), and representa-\ntion and retention (structural). Furthermore, we\nanalyze cross-behavior co-design affinity and\nbehavior-objective links, highlighting future op-\nportunities. Our work systematizes a rapidly\nevolving area, providing a foundation for un-\nderstanding and innovating KV cache designs\nin modern LLM serving infrastructure.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "Abstract"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b22",
+      "page": 1,
+      "bbox": [
+        314.1286926269531,
+        330.1510009765625,
+        516.4393310546875,
+        342.1565246582031
+      ],
+      "text": "Figure 1: Positioning of the survey scope (“sKis”).\nBroader LLM efficiency directions listed in the diagram: long context memory augmentation; kernel fusion / operator scheduling; training-time KV compression and fine-tuning with KV reuse.",
+      "kind": "figure",
+      "context": "Scope diagram: serving-time LLM operation, KV-centric optimization and improving system metrics. Excludes retraining or changing Transformer architecture; section 2 defines the scope.",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p1-b23",
+      "page": 1,
+      "bbox": [
+        305.7512512207031,
+        366.7962951660156,
+        526.3306884765625,
+        733.7620849609375
+      ],
+      "text": "key-value (KV) cache (Pope et al., 2023) to store in-\ntermediate KV tensors of the generated tokens. Yet,\nas prompt and output length grow, the KV cache\ncan reach millions of tokens (Ding et al., 2024), cre-\nating memory bottlenecks and highlighting the crit-\nical role of KV cache optimization. Thus, a grow-\ning body of KV-centric techniques has emerged,\nyielding memory savings and efficiency gains in\nthroughput and latency (Li et al., 2024b).\nTo this end, we argue that it deserves a deep\ninvestigation of system-aware, serving-time, KV-\ncentric optimization methods, as shown in Fig. 1,\nwhich we call this scope sKis. We adopt a system-\noriented taxonomy to offer a comprehensive under-\nstanding of sKis, categorizing methods along three\nfundamental axes of system behaviors, as shown in\nFig. 2: (i) execution and scheduling focuses on\nthe temporal control of when KV data is accessed,\ncomputed, or scheduled (cf. § 3); (ii) placement\nand migration captures the spatial decisions of\nwhere KV data is placed or moved across memory\ntiers or devices (cf. § 4); and (iii) representation\nand retention concerns the structural treatment\nof how KV data is compressed or managed (cf.\n§ 5). We further analyze cross-behavior co-design\npatterns and behavior–objective effects to reveal\noverlooked regions and open challenges (cf. § 6).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b9",
+      "page": 1,
+      "bbox": [
+        70.85653686523438,
+        514.5176391601562,
+        290.9507751464844,
+        758.0112915039062
+      ],
+      "text": "Large language models (LLMs) have showcased ex-\nceptional abilities across diverse applications (Zhao\net al., 2023), with notable examples like GPT (Rad-\nford et al., 2018, 2019; Brown et al., 2020; Ope-\nnAI, 2023), LLaMA (Touvron et al., 2023a,b), and\nOPT (Zhang et al., 2022). These models excel\nat large-scale high-quality language understand-\ning and generation, and their extensions also sup-\nport plenty of multi-modal generation tasks (Zhang\net al., 2025d; Zhang and Bian, 2025). These abili-\nties are largely powered by the Transformer archi-\ntecture (Vaswani et al., 2017), which efficiently cap-\ntures long-range dependencies via self-attention.\nDespite their success, serving LLMs efficiently\nremains non-trivial (Li et al., 2024a). Transformer-\nbased LLMs generate tokens autoregressively, with\neach token conditioned on all previous ones. To\navoid redundant compute, serving systems adopt a",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b24",
+      "page": 1,
+      "bbox": [
+        306.144287109375,
+        735.689697265625,
+        526.23486328125,
+        775.9351806640625
+      ],
+      "text": "While prior surveys span efficient LLM infer-\nence and serving (Zhou et al., 2024b; Yuan et al.,\n2024; Miao et al., 2023; Li et al., 2024a; Zhen",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b55",
+      "page": 2,
+      "bbox": [
+        306.9353332519531,
+        144.92477416992188,
+        523.6327514648438,
+        156.93031311035156
+      ],
+      "text": "Figure 3: Prefill and decode phases of LLM inference.",
+      "kind": "figure",
+      "context": "LLM inference diagram: prefill processes the input and produces the first output; decode generates subsequent tokens autoregressively while reusing KV states.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p2-b56",
+      "page": 2,
+      "bbox": [
+        306.144287109375,
+        179.61090087890625,
+        526.2303466796875,
+        274.05615234375
+      ],
+      "text": "and decode generates tokens autoregressively. Due\nto the quadratic cost of self-attention, repeatedly\ncomputing attention across tokens is expensive. To\nthis end, key-value (KV) cache is used to store the\nintermediate KV tensors computed previously, al-\nlowing the model to efficiently reuse them without\nrecomputing attention over the entire sequence.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b17",
+      "page": 2,
+      "bbox": [
+        70.85653686523438,
+        211.91409301757812,
+        290.3773498535156,
+        235.87525939941406
+      ],
+      "text": "Figure 2: Taxonomy of the survey that covers temporal,\nspatial, and structural dimensions.",
+      "kind": "figure",
+      "context": "Taxonomy diagram: temporal execution/scheduling, spatial placement/migration, structural representation/retention. These are behavior categories, not measured performance outcomes.",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p2-review-table1",
+      "page": 2,
+      "bbox": [
+        70,
+        245,
+        292,
+        400
+      ],
+      "text": "Miao et al. (2023) | unmarked | yes | unmarked | Algorithm-system\nYuan et al. (2024) | unmarked | yes | unmarked | Optimization layer\nLi et al. (2024a) | unmarked | yes | yes | System component\nZhou et al. (2024b) | unmarked | yes | unmarked | Optimization layer\nZhen et al. (2025) | unmarked | yes | yes | Serving scale\nShi et al. (2024) | yes | unmarked | unmarked | Lifecycle stage\nLi et al. (2024b) | yes | yes | unmarked | Optimization layer\nLiu et al. (2025c) | yes | yes | unmarked | Compression types\nThis survey (sKis) | yes | yes | unmarked | System behavior",
+      "kind": "table",
+      "context": "Table 1: Comparison of our work with surveys related to efficient LLM inference or serving.\nSurvey | KV-centric | Serving only | No retrain | Organizing principle\nyes denotes a printed checkmark; unmarked preserves a blank source cell, not a negative assertion.",
+      "rows": [
+        "Miao et al. (2023) | unmarked | yes | unmarked | Algorithm-system",
+        "Yuan et al. (2024) | unmarked | yes | unmarked | Optimization layer",
+        "Li et al. (2024a) | unmarked | yes | yes | System component",
+        "Zhou et al. (2024b) | unmarked | yes | unmarked | Optimization layer",
+        "Zhen et al. (2025) | unmarked | yes | yes | Serving scale",
+        "Shi et al. (2024) | yes | unmarked | unmarked | Lifecycle stage",
+        "Li et al. (2024b) | yes | yes | unmarked | Optimization layer",
+        "Liu et al. (2025c) | yes | yes | unmarked | Compression types",
+        "This survey (sKis) | yes | yes | unmarked | System behavior"
+      ],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p2-b57",
+      "page": 2,
+      "bbox": [
+        306.144287109375,
+        283.31634521484375,
+        524.4282836914062,
+        310.40496826171875
+      ],
+      "text": "Scope.\nThis survey investigates recent advances\nin the sKis scope, as shown in Fig. 1.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b58",
+      "page": 2,
+      "bbox": [
+        313.3626403808594,
+        322.2070007324219,
+        519.0162963867188,
+        416.5321960449219
+      ],
+      "text": "sKis denotes system-aware KV infrastructure\nfor serving LLMs. A method belongs to sKis if\nit: (i) operates during serving (inference), (ii)\ncenters on KV caches as the primary optimiza-\ntion target, and (iii) aims to improve system met-\nrics without retraining the base LLM’s weights\nor modifying its Transformer architecture.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b22",
+      "page": 2,
+      "bbox": [
+        70.85653686523438,
+        416.1367492675781,
+        291.04736328125,
+        551.2319946289062
+      ],
+      "text": "et al., 2025), they are general surveys where the\nKV cache is discussed only as a minor component.\nKV-specific surveys are closest to our topic (Shi\net al., 2024; Li et al., 2024b; Liu et al., 2025c),\nbut they typically organize by lifecycle stages or\noptimization layers. Instead, this survey focuses\nexclusively on sKis and distinguishes itself by of-\nfering a novel behavior-oriented perspective and a\ndeeper understanding. We compare related surveys\nin Tab. 1 and provide further details in App. C.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b59",
+      "page": 2,
+      "bbox": [
+        306.144287109375,
+        428.3223876953125,
+        526.2385864257812,
+        590.5169067382812
+      ],
+      "text": "We acknowledge related but out-of-scope di-\nrections that redesign the attention or KV mecha-\nnism (DeepSeek-AI, 2024; Yuan et al., 2025; Sun\net al., 2026), or modify the backbone model struc-\nture (Ashkboos et al., 2024; Li et al., 2024d; Lu\net al., 2026). Although these directions can reshape\nthe KV footprint and improve efficiency, they do so\nby altering the model itself or requiring model adap-\ntation. In contrast, this survey focuses on serving-\ntime KV cache optimizations for off-the-shelf mod-\nels, which remains a common deployment setting\nin the community.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b23",
+      "page": 2,
+      "bbox": [
+        70.58352661132812,
+        552.1905517578125,
+        290.9507141113281,
+        646.6357421875
+      ],
+      "text": "To the best of our knowledge, we are the first to\nframe KV cache optimization as a temporal-spatial-\nstructural behavior space, enabling principled anal-\nysis and actionable future directions. Because this\ndesign space is decoupled from model and kernel\ndetails, it also offers a stable lens for situating new\ntechniques in this rapidly evolving area.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "1 Introduction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b60",
+      "page": 2,
+      "bbox": [
+        306.144287109375,
+        599.7772216796875,
+        526.3307495117188,
+        775.9141845703125
+      ],
+      "text": "Taxonomy.\nWe organize literature on sKis by\nlow-level system behaviors, as shown in Fig. 2.\nFurther details are provided in App. B. However,\nsimilar to how a modern OS includes components\nfor scheduling, memory, and I/O, LLM serving\nsystems often involve techniques spanning various\nsystem dimensions. Thus, a single paper may nat-\nurally touch on several categories. For clarity and\nfocus, we mention 1-2 primary categories per work\nbased on its main contributions. Minor associations\nare not elaborated, and we refer to App. D for de-\ntails. We summarize the organization and methods\nin Fig. 4 and the key takeaways in App. E.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b25",
+      "page": 2,
+      "bbox": [
+        70.46351623535156,
+        681.0762329101562,
+        291.0469665527344,
+        775.9141845703125
+      ],
+      "text": "LLM Inference and KV Cache.\nLLMs generate\ntokens autoregressively, as shown in Fig. 3 (see pre-\nliminaries on Transformer-based LLMs in App. A).\nAt each step, the model consumes the input and\npreviously generated tokens to generate the next to-\nken. This process has two phases: prefill processes\nthe initial input and generates the first output token,",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b3",
+      "page": 3,
+      "bbox": [
+        168.921630859375,
+        72.09452819824219,
+        519.7905883789062,
+        103.3072280883789
+      ],
+      "text": "TetriInfer (Hu et al., 2024b), Preble (Srivatsa et al., 2024), MuxServe (Duan et al., 2024), Quest (Tang et al., 2024), Spar-\nQAttention (Ribar et al., 2024), LayerKV (Xiong et al., 2024), LAMPS (Shahout et al., 2024), LoongServe (Wu et al.,\n2024a), RadixAttention (Zheng et al., 2024), Loki (Singhania et al., 2024), Mooncake (Qin et al., 2024), FlashInfer (Ye\net al., 2025), RocketKV (Behnam et al., 2025), RefreshKV (Xu et al., 2025a), TokenSelect (Wu et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. KV-centric scheduling (KVS, section 3.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b5",
+      "page": 3,
+      "bbox": [
+        168.90782165527344,
+        109.10411071777344,
+        515.1765747070312,
+        132.67564392089844
+      ],
+      "text": "CComp (Park and Egger, 2024), FastDecode (He and Zhai, 2024), CachedAttention (Gao et al., 2024), AsyncKV (Dong\net al., 2025), Neo (Jiang et al., 2025c), PRESERVE (Yüzügüler et al., 2025), KVPR (Jiang et al., 2025a), CXL-SpecKV\n(Liu and Yu, 2026)",
+      "kind": "figure",
+      "context": "Figure 4. Pipelining and overlapping (OVLP, section 3.2). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b8",
+      "page": 3,
+      "bbox": [
+        223.7418670654297,
+        138.46018981933594,
+        525.0348510742188,
+        154.38963317871094
+      ],
+      "text": "TetriInfer (Hu et al., 2024b), Splitwise (Patel et al., 2024), DistServe (Zhong et al., 2024), Infinite-LLM\n(Lin et al., 2024), MuxServe (Duan et al., 2024), DéjàVu (Strati et al., 2024), Mooncake (Qin et al., 2024)",
+      "kind": "figure",
+      "context": "Figure 4. Hardware-aware execution: disaggregated inference (section 3.3.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b10",
+      "page": 3,
+      "bbox": [
+        223.7418670654297,
+        160.4297332763672,
+        519.7455444335938,
+        184.00047302246094
+      ],
+      "text": "CComp (Park and Egger, 2024), FastDecode (He and Zhai, 2024), AttAcc (Park et al., 2024), InstInfer\n(Pan et al., 2024), TwinPilots (Yu et al., 2024), PAPI (He et al., 2025), MagicPIG (Chen et al., 2025c),\nNeo (Jiang et al., 2025c)",
+      "kind": "figure",
+      "context": "Figure 4. Hardware-aware execution: compute offloading (section 3.3.2). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b14",
+      "page": 3,
+      "bbox": [
+        209.51712036132812,
+        190.0826873779297,
+        522.5068969726562,
+        251.86265563964844
+      ],
+      "text": "FlexGen (Sheng et al., 2023), FastServe (Wu et al., 2023), ALISA (Zhao et al., 2024c), InfiniGen (Lee\net al., 2024), CachedAttention (Gao et al., 2024), DéjàVu (Strati et al., 2024), LayerKV (Xiong et al., 2024),\nFastSwitch (Shen et al., 2024), InfLLM (Xiao et al., 2024a), ArkVale (Chen et al., 2024b), IMPRESS (Chen\net al., 2025b), Pensieve (Yu et al., 2025), OmniKV (Hao et al., 2025), ClusterKV (Liu et al., 2025b), PQ-\nCache (Zhang et al., 2025a), ShadowKV (Sun et al., 2025), SpeCache (Jie et al., 2025), SlimInfer (Long\net al., 2025), RAGCache (Jin et al., 2025), LMCache (Cheng et al., 2025), RetrievalAttention (Liu et al.,\n2025a), KVFlow (Pan et al., 2025), TraCT (Yoon et al., 2025), CXL-SpecKV (Liu and Yu, 2026), Beluga\n(Yang et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. Memory hierarchy KV orchestration: cross-device memory hierarchy (section 4.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b15",
+      "page": 3,
+      "bbox": [
+        169.13409423828125,
+        257.9088134765625,
+        455.30322265625,
+        266.1962890625
+      ],
+      "text": "Intra-GPU memory hierarchy\nAsyncKV (Dong et al., 2025), PRESERVE (Yüzügüler et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. Memory hierarchy KV orchestration: intra-GPU memory hierarchy (section 4.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b17",
+      "page": 3,
+      "bbox": [
+        168.90782165527344,
+        272.24005126953125,
+        525.1808471679688,
+        295.8108215332031
+      ],
+      "text": "FastServe (Wu et al., 2023), AttAcc (Park et al., 2024), Splitwise (Patel et al., 2024), DistServe (Zhong et al., 2024), Infinite-\nLLM (Lin et al., 2024), CacheGen (Liu et al., 2024c), InstInfer (Pan et al., 2024), LMCache (Cheng et al., 2025), TraCT\n(Yoon et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. Compute device KV orchestration (CDO, section 4.2). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b21",
+      "page": 3,
+      "bbox": [
+        209.51712036132812,
+        301.600830078125,
+        522.9503784179688,
+        348.0967712402344
+      ],
+      "text": "SmoothQuant (Xiao et al., 2023), FlexGen (Sheng et al., 2023), WKVQuant (Yue et al., 2024), MiKV (Yang\net al., 2024b), QAQ (Dong et al., 2024), Atom (Zhao et al., 2024b), KIVI (Liu et al., 2024d), CacheGen\n(Liu et al., 2024c), DecoQuant (Liu et al., 2024b), GEAR (Kang et al., 2024), SKVQ (Duanmu et al., 2024),\nKVQuant (Hooper et al., 2024), CQ (Zhang et al., 2024c), ZipCache (He et al., 2024), QJL (Zandieh et al.,\n2025), VQ-LLM (Liu et al., 2025d), SQuat (Wang et al., 2025a), QoQ (Lin et al., 2025), CommVQ (Li et al.,\n2025a), OTT (Su et al., 2025), NSNQuant (Son et al., 2025), ChanMix (Liao and Wen, 2026)",
+      "kind": "figure",
+      "context": "Figure 4. KV cache compression: quantization (section 5.1.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b23",
+      "page": 3,
+      "bbox": [
+        234.61997985839844,
+        353.8836975097656,
+        520.5594482421875,
+        369.81317138671875
+      ],
+      "text": "LoRC (Zhang et al., 2024b), EigenAttention (Saxena et al., 2024), xKV (Chang et al., 2025a), Palu\n(Chang et al., 2025b), ReCalKV (Yan et al., 2025b), ShadowKV (Sun et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. KV cache compression: low-rank approximation (section 5.1.2). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b25",
+      "page": 3,
+      "bbox": [
+        214.5373992919922,
+        375.8554992675781,
+        525.086181640625,
+        399.427001953125
+      ],
+      "text": "KVMerger (Wang et al., 2024a), CaM (Zhang et al., 2024d), CHAI (Agarwal et al., 2024), KVSharer (Yang\net al., 2024d), MiniCache (Liu et al., 2024a), D2O (Wan et al., 2025), ThinK (Xu et al., 2025b), ClusterAttn\n(Zhang et al., 2025c)",
+      "kind": "figure",
+      "context": "Figure 4. KV cache compression: structural compression (section 5.1.3). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b28",
+      "page": 3,
+      "bbox": [
+        206.22500610351562,
+        405.4747009277344,
+        523.2916259765625,
+        429.04541015625
+      ],
+      "text": "vLLM (Kwon et al., 2023), PromptCache (Gim et al., 2024), LazyLLM (Fu et al., 2024), vTensor (Xu et al.,\n2024a), ChunkAttention (Ye et al., 2024), FastSwitch (Shen et al., 2024), RadixAttention (Zheng et al., 2024),\nMemServe (Hu et al., 2024a), vAttention (Prabhu et al., 2025), FlashInfer (Ye et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. KV cache retention: allocation and reuse (section 5.2.1). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b30",
+      "page": 3,
+      "bbox": [
+        206.14906311035156,
+        434.8277282714844,
+        525.0477294921875,
+        488.9656677246094
+      ],
+      "text": "H2O (Zhang et al., 2023), Scissorhands (Liu et al., 2023), RoCo (Ren and Zhu, 2024), FastGen (Ge et al.,\n2024), StreamingLLM (Xiao et al., 2024b), Keyformer (Adnan et al., 2024), PyramidKV (Cai et al., 2024),\nNACL (Chen et al., 2024c), PyramidInfer (Yang et al., 2024a), BUZZ (Zhao et al., 2024a), TOVA (Oren et al.,\n2024), VATP (Guo et al., 2024), L2KV (Devoto et al., 2024), SnapKV (Li et al., 2024c), CAKE (Qin et al.,\n2025), D2O (Wan et al., 2025), SepLLM (Chen et al., 2025a), LaCache (Shi et al., 2025), KVCompose (Akulov\net al., 2025), DiffKV (Zhang et al., 2025e), EvolKV (Yu and Chai, 2025), DynamicKV (Zhou et al., 2025),\nAda-KV (Feng et al., 2025)",
+      "kind": "figure",
+      "context": "Figure 4. KV cache retention: eviction (section 5.2.2). Source taxonomy lists primary contributions; minor associations are listed in Table 9.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b31",
+      "page": 3,
+      "bbox": [
+        70.85653686523438,
+        497.1313781738281,
+        524.5884399414062,
+        521.0924682617188
+      ],
+      "text": "Figure 4: Taxonomy of sKis and associated methods. Each method is annotated with its primary contributions for\nconciseness. Minor category associations are omitted here and listed in App. D, Tab. 9.",
+      "kind": "figure",
+      "context": "Taxonomy and named methods. Temporal: KVS, OVLP, HAE. Spatial: MHO, CDO. Structural: compression and retention. Complete primary/secondary method assignments are preserved in Table 9 on pages 21-22.",
+      "rows": [],
+      "section": [
+        "2 Foundations, Scope and Taxonomy"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b36",
+      "page": 3,
+      "bbox": [
+        305.7512512207031,
+        541.2680053710938,
+        526.23828125,
+        717.86328125
+      ],
+      "text": "to maximize KV cache hit rate (Zheng et al., 2024)\nor using KV reuse potential as a key signal in deci-\nsions (Srivatsa et al., 2024; Qin et al., 2024).\nAt finer granularity, token-level methods decide\nwhich KV entries participate in attention based on\nestimated contributions (Tang et al., 2024; Ribar\net al., 2024; Singhania et al., 2024; Behnam et al.,\n2025; Xu et al., 2025a; Wu et al., 2025), for exam-\nple via periodic refresh that alternates full-context\nand subset attention (Xu et al., 2025a). At the ker-\nnel level, methods like FlashInfer (Ye et al., 2025)\nschedule attention workloads across CUDA thread\nblocks based on query and KV lengths.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.1 KV-centric Scheduling"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b33",
+      "page": 3,
+      "bbox": [
+        70.51852416992188,
+        561.2439575195312,
+        289.1402587890625,
+        601.4894409179688
+      ],
+      "text": "This section captures the temporal behaviors of\nKV cache usage, including how cache entries are\nscheduled and executed efficiently at runtime.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b35",
+      "page": 3,
+      "bbox": [
+        70.34351348876953,
+        627.2703247070312,
+        291.04638671875,
+        775.9141845703125
+      ],
+      "text": "While scheduling is a long-studied system problem,\nKV-centric scheduling (KVS) methods explicitly\nintegrate KV characteristics into runtime decisions.\nAt the request level, some methods adopt KV\nusage-aware scheduling to balance resource load\nand reduce contention (Hu et al., 2024b; Duan et al.,\n2024; Xiong et al., 2024; Shahout et al., 2024; Wu\net al., 2024a). For example, TetriInfer (Hu et al.,\n2024b) prioritizes requests using predicted KV us-\nage to mitigate prefill-decode interference. Another\nline is reuse-aware, prioritizing high-reuse requests",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.1 KV-centric Scheduling"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b38",
+      "page": 3,
+      "bbox": [
+        306.144287109375,
+        749.2183837890625,
+        525.7854614257812,
+        775.9141845703125
+      ],
+      "text": "Pipelining and overlapping (OVLP) methods hide\nKV-related latency by overlapping compute, I/O,",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.2 Pipelining and Overlapping"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-review-table2",
+      "page": 4,
+      "bbox": [
+        68,
+        67,
+        529,
+        220
+      ],
+      "text": "Comp-Comp | FastDecode (He and Zhai, 2024) | CPU R-part comp <-> GPU S-part comp | Token-wise\nComp-Comp | Neo (Jiang et al., 2025c) | CPU attention comp <-> GPU linear ops | Sub-batch-wise\nComp-I/O | CComp (Park and Egger, 2024) | CPU MHSA comp <-> FFN data transfer (CPU->GPU) | Split point\nComp-I/O | CachedAttention (Gao et al., 2024) | GPU comp <-> KV load/store (CPU<->GPU) | Layer-wise\nComp-I/O | AsyncKV (Dong et al., 2025) | GPU attention comp <-> GPU KV prefetch (HBM->L2) | KV block-wise\nComp-I/O | KVPR (Jiang et al., 2025a) | GPU KV re-comp <-> KV transfer (CPU<->GPU) | Split point\nComp-I/O | CXL-SpecKV (Liu and Yu, 2026) | GPU comp <-> GPU KV prefetch (CXL memory->L2) | KV page-wise\nI/O-Comm | PRESERVE (Yuzuguler et al., 2025) | GPU KV prefetch (HBM->L2) <-> GPU collective comm | Operator-wise",
+      "kind": "table",
+      "context": "Table 2: Summary of OVLP methods. “Comp” denotes compute, “I/O” denotes KV data movement (host–device transfer or on-device memory movement), and “comm” denotes collective communication.\nMode | Method | Overlapped operations (transfer path) | Granularity",
+      "rows": [
+        "Comp-Comp | FastDecode (He and Zhai, 2024) | CPU R-part comp <-> GPU S-part comp | Token-wise",
+        "Comp-Comp | Neo (Jiang et al., 2025c) | CPU attention comp <-> GPU linear ops | Sub-batch-wise",
+        "Comp-I/O | CComp (Park and Egger, 2024) | CPU MHSA comp <-> FFN data transfer (CPU->GPU) | Split point",
+        "Comp-I/O | CachedAttention (Gao et al., 2024) | GPU comp <-> KV load/store (CPU<->GPU) | Layer-wise",
+        "Comp-I/O | AsyncKV (Dong et al., 2025) | GPU attention comp <-> GPU KV prefetch (HBM->L2) | KV block-wise",
+        "Comp-I/O | KVPR (Jiang et al., 2025a) | GPU KV re-comp <-> KV transfer (CPU<->GPU) | Split point",
+        "Comp-I/O | CXL-SpecKV (Liu and Yu, 2026) | GPU comp <-> GPU KV prefetch (CXL memory->L2) | KV page-wise",
+        "I/O-Comm | PRESERVE (Yuzuguler et al., 2025) | GPU KV prefetch (HBM->L2) <-> GPU collective comm | Operator-wise"
+      ],
+      "section": [
+        "3.2 Pipelining and Overlapping"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p4-b6",
+      "page": 4,
+      "bbox": [
+        70.85653686523438,
+        233.30963134765625,
+        291.0444641113281,
+        314.20513916015625
+      ],
+      "text": "and communication. Though often embedded in\nbroader systems, Tab. 2 highlights methods where\nOVLP forms the core technical contribution. We\nsummarize them by mode and list the correspond-\ning overlapped operations and granularity. OVLP is\nkey to reducing idle time and improving efficiency.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.2 Pipelining and Overlapping"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b13",
+      "page": 4,
+      "bbox": [
+        306.144287109375,
+        233.30963134765625,
+        526.238525390625,
+        328.351806640625
+      ],
+      "text": "selection and a load-aware scheduler, respectively.\nBeyond CPUs, several methods offload compute\nto alternative devices, such as computational stor-\nage drive (CSD) (Pan et al., 2024) and processing-\nin-memory (PIM) (He et al., 2025; Park et al.,\n2024). These methods expand the compute offload-\ning space to broader device heterogeneity.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.3 Hardware-aware Execution",
+        "3.3.2 Compute Offloading"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b14",
+      "page": 4,
+      "bbox": [
+        314.66070556640625,
+        340.0082702636719,
+        520.0881958007812,
+        454.7532653808594
+      ],
+      "text": "Takeaways & Limitations – Temporal Behavior\n• KVS and OVLP directly target KV reuse and stall hid-\ning. Lightweight cost models or predictors often en-\nhance them. However, they are typically evaluated on\ncontrolled workloads, with limited analysis of robust-\nness under bursty traffic or multi-tenant settings.\n• HAE improves throughput and hardware utilization by\ndecoupling compute and specializing kernels, but its\nreliance on low-level primitives can make portability\nnon-trivial for practitioners in some cases.\nMore analysis is provided in Apps. E.1 and E.2.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.3 Hardware-aware Execution",
+        "3.3.2 Compute Offloading"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b8",
+      "page": 4,
+      "bbox": [
+        70.49652099609375,
+        343.8321228027344,
+        289.1362609863281,
+        384.07861328125
+      ],
+      "text": "This section focuses on hardware-aware execution\n(HAE) methods that adapt KV-related operations\nto the underlying heterogeneous hardware.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.3 Hardware-aware Execution"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b10",
+      "page": 4,
+      "bbox": [
+        70.46351623535156,
+        410.7594909667969,
+        291.0430908203125,
+        600.0543823242188
+      ],
+      "text": "Disaggregated inference decouples inference com-\npute onto distinct hardware resources to reduce con-\ntention and improve utilization. Infinite-LLM (Lin\net al., 2024) adopts this idea at the operator level\nby splitting attention across distributed instances.\nSeveral systems instead apply prefill-decode (PD)\ndisaggregation, assigning compute-bound prefill\nand memory-bound decode to different compute\npools (Hu et al., 2024b; Patel et al., 2024; Zhong\net al., 2024; Strati et al., 2024). Mooncake (Qin\net al., 2024) further couples PD disaggregation with\na KV-centric scheduler and distributed cache pool,\nwhile MuxServe (Duan et al., 2024) colocates PD\njobs within each GPU through SM partitioning.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.3 Hardware-aware Execution",
+        "3.3.1 Disaggregated Inference"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b16",
+      "page": 4,
+      "bbox": [
+        305.8062744140625,
+        493.4276123046875,
+        524.8206787109375,
+        547.2227783203125
+      ],
+      "text": "This section focuses on the spatial behaviors of how\nKV caches are placed and migrated across memory\nhierarchies and between compute devices. Figure 5\nvisualizes the architecture and transfer paths.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b18",
+      "page": 4,
+      "bbox": [
+        305.8062744140625,
+        577.1907958984375,
+        524.8069458007812,
+        617.436279296875
+      ],
+      "text": "To scale under memory limits, we survey memory\nhierarchy KV orchestration (MHO) methods that\ndistribute KV caches across memory hierarchies.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.1 Memory Hierarchy KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b12",
+      "page": 4,
+      "bbox": [
+        70.46351623535156,
+        626.7362670898438,
+        290.9507141113281,
+        775.9141845703125
+      ],
+      "text": "Compute offloading relocates partial compute to\nauxiliary devices to reduce GPU bottlenecks, utiliz-\ning hardware heterogeneity and workload features.\nA practical instantiation is CPU offloading,\nwhich leverages host CPUs for memory-intensive\ncompute (He and Zhai, 2024; Park and Egger, 2024;\nChen et al., 2025c; Jiang et al., 2025c). They often\nfollow a compute-near-cache principle for better\nlocality. For example, FastDecode (He and Zhai,\n2024) and Neo (Jiang et al., 2025c) offload both at-\ntention and KV caches, using cost-aware hardware",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "3 KV Execution and Scheduling",
+        "3.3 Hardware-aware Execution",
+        "3.3.2 Compute Offloading"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b19",
+      "page": 4,
+      "bbox": [
+        305.7512512207031,
+        626.8765258789062,
+        526.330810546875,
+        775.9141845703125
+      ],
+      "text": "Cross-device Memory Hierarchy.\nA broad\nrange of methods migrate KV entries across faster\nbut limited GPU HBM, and larger but slower al-\nternatives like CPU DRAM or SSD. Most of these\nworks are importance-aware, designing impor-\ntance scoring policies that maintain only critical\nKV entries on the GPU (Zhao et al., 2024c; Lee\net al., 2024; Xiao et al., 2024a; Chen et al., 2024b,\n2025b; Yu et al., 2025; Hao et al., 2025; Liu et al.,\n2025b; Zhang et al., 2025a; Sun et al., 2025; Jie\net al., 2025; Long et al., 2025; Liu et al., 2025a).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.1 Memory Hierarchy KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b37",
+      "page": 5,
+      "bbox": [
+        305.7512512207031,
+        71.72454071044922,
+        526.2390747070312,
+        302.029541015625
+      ],
+      "text": "2024; Zhong et al., 2024; Lin et al., 2024; Cheng\net al., 2025; Yoon et al., 2025). For instance, Dist-\nServe (Zhong et al., 2024) proposes placement\nschemes for prefill and decode across high and low\nnode-affinity GPU clusters, and uses a pull-based\nscheme where decode GPUs fetch KV as needed\nfrom prefill GPUs. TraCT (Yoon et al., 2025) ex-\nploits CXL shared memory as a substrate for KV\ntransfer across disaggregated PD workers.\nBeyond tightly coupled clusters, CacheGen (Liu\net al., 2024c) targets remote KV transfer in net-\nwork setups. It reduces network delay by encoding\nKV tensors into bitstreams and adaptively stream-\ning them based on runtime bandwidth. Finally,\nCDO also extends to heterogeneous accelerators,\noffloading attention to devices such as PIMs and\nCSDs (Park et al., 2024; Pan et al., 2024).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.2 Compute Device KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b32",
+      "page": 5,
+      "bbox": [
+        70.85653686523438,
+        173.06814575195312,
+        290.78692626953125,
+        197.02931213378906
+      ],
+      "text": "Figure 5: Illustration of KV cache placement and migra-\ntion across memory hierarchies and compute devices.",
+      "kind": "figure",
+      "context": "Placement and migration diagram: intra-GPU L1/L2-HBM hierarchy, cross-device HBM-DRAM-SSD hierarchy, and compute-device-level transfer among GPU, CPU and CSD. No transfer-rate measurements.",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.1 Memory Hierarchy KV Orchestration"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p5-b33",
+      "page": 5,
+      "bbox": [
+        70.2235107421875,
+        214.720703125,
+        291.04425048828125,
+        539.5133666992188
+      ],
+      "text": "For instance, ArkVale (Chen et al., 2024b), Om-\nniKV (Hao et al., 2025), ClusterKV (Liu et al.,\n2025b), PQCache (Zhang et al., 2025a), and\nSpeCache (Jie et al., 2025) offload the full KV\ncache to the CPU and keep only a lightweight proxy\nsignal on the GPU. They then estimate importance\nvia the proxy signal to guide the next prefetch.\nAnother line of cross-device methods optimizes\nKV placement and migration from a system cost\nview. FlexGen (Sheng et al., 2023) places KV\ncaches across GPU, CPU, and disk via a cost model\nthat maximizes throughput under bandwidth and la-\ntency constraints. Recent works further extend this\nhierarchy to compute express link (CXL)-based\nshared or disaggregated memory pools, enabling\nlow-latency KV access and management (Liu and\nYu, 2026; Yang et al., 2025; Yoon et al., 2025).\nAt runtime, many systems make online decisions\nabout KV offloading or reloading based on system-\nlevel signals, such as queueing state, memory pres-\nsure, compute and I/O costs, and future reuse sig-\nnals (Wu et al., 2023; Gao et al., 2024; Strati et al.,\n2024; Xiong et al., 2024; Shen et al., 2024; Jin\net al., 2025; Cheng et al., 2025; Pan et al., 2025).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.1 Memory Hierarchy KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b38",
+      "page": 5,
+      "bbox": [
+        314.66070556640625,
+        313.2768249511719,
+        520.09228515625,
+        414.0732116699219
+      ],
+      "text": "Takeaways & Limitations – Spatial Behavior\nMHO and CDO directly target interconnect bottlenecks\nthrough tiered KV management, and most systems over-\nlap KV transfers with compute to hide latency, which is a\ncentral factor in their effectiveness. However, bandwidth\nis typically handled without explicit modeling contention\namong concurrent KV transfers, making tail behavior hard\nto analyze. Another gap is the explicit joint optimization\nof offload and prefetch under shared memory and intercon-\nnect budgets. More takeaways are provided in App. E.3.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.2 Compute Device KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b40",
+      "page": 5,
+      "bbox": [
+        305.8062744140625,
+        451.3475036621094,
+        524.4251708984375,
+        478.0433044433594
+      ],
+      "text": "This section focuses on structural system behaviors\nof KV cache representation and retention.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b42",
+      "page": 5,
+      "bbox": [
+        306.144287109375,
+        506.72625732421875,
+        526.2306518554688,
+        533.4220581054688
+      ],
+      "text": "KV cache compression (KVCC) is a central re-\nsearch thrust as it directly reduces memory usage.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b34",
+      "page": 5,
+      "bbox": [
+        70.85653686523438,
+        546.62548828125,
+        290.9429016113281,
+        668.5638427734375
+      ],
+      "text": "Intra-GPU Memory Hierarchy.\nAnother line\nof MHO methods migrates KV entries between\non-chip L1/L2 caches and off-chip HBM. Dong\net al. (2025) asynchronously prefetched upcoming\nKV blocks from HBM into L2 so that subsequent\nattention steps mostly hit in L2. Similarly, PRE-\nSERVE (Yüzügüler et al., 2025) fetches KV caches\nand inserts such operations selectively via graph-\nlevel optimization to avoid cache pollution.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.1 Memory Hierarchy KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b44",
+      "page": 5,
+      "bbox": [
+        305.76226806640625,
+        559.159912109375,
+        526.3272094726562,
+        653.6051025390625
+      ],
+      "text": "Quantization compresses floating-point tensors into\nlower-precision formats. Early works enable 8- and\n4-bit KV (Xiao et al., 2023; Sheng et al., 2023).\nLater schemes adopt mixed precision, assigning\nhigh precision to critical KV entries. We compare\nmethods along core algorithmic axes and effective\nbitwidths in Tab. 3 and present key insights here.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.1 KV Cache Quantization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b45",
+      "page": 5,
+      "bbox": [
+        306.144287109375,
+        653.9768676757812,
+        526.3368530273438,
+        775.9141845703125
+      ],
+      "text": "One recurring pattern is asymmetric KV quanti-\nzation (cf. “granularity” in Tab. 3), as keys and val-\nues exhibit distinct outlier patterns and quantization\nsensitivities. For example, a common practice is to\nquantize keys per-channel and values per-token. A\nsecond insight is that outliers play a crucial role\nin quantization, so many methods store them in\nhigher bitwidths or design dedicated outlier han-\ndling techniques (cf. “outlier handling” in Tab. 3).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.1 KV Cache Quantization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b36",
+      "page": 5,
+      "bbox": [
+        70.85653686523438,
+        695.0186767578125,
+        290.49786376953125,
+        775.9141845703125
+      ],
+      "text": "Unlike hierarchical memory, compute device KV\norchestration (CDO) places and moves KV across\ncompute-capable devices to enable distributed or\nheterogeneous serving. A common line performs\nintra-cluster orchestration, typically coupled with\nPD disaggregation (Wu et al., 2023; Patel et al.,",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "4 KV Placement and Migration",
+        "4.2 Compute Device KV Orchestration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-review-table3",
+      "page": 6,
+      "bbox": [
+        68,
+        67,
+        529,
+        326
+      ],
+      "text": "SmoothQuant (Xiao et al., 2023) | shared Channel-wise | Fixed | - | Smoothing via scaling | 8\nFlexGen (Sheng et al., 2023) | shared Group-wise | Fixed | - | - | 4\nWKVQuant (Yue et al., 2024) | shared 2D (channel & token) | Mixed | Current token | Dynamic token-wise q. | ~4\nMiKV (Yang et al., 2024b) | shared Token-wise | Mixed | Existing policy | Outlier balancing | ~4\nQAQ (Dong et al., 2024) | shared Token-wise | Mixed | Attention-aware | Sparse matrix (FP16) | 1.8-2.7\nAtom (Zhao et al., 2024b) | shared Group-wise | Mixed | Outlier channels | Selective high-bits | 4.25\nKIVI (Liu et al., 2024d) | keys Channel-wise; values Token-wise | Mixed | Recent tokens | Channel-wise confining | ~2\nCacheGen (Liu et al., 2024c) | shared Layer-wise | Mixed | Shallow layers | - | 1.9-2.9\nDecoQuant (Liu et al., 2024b) | shared Decomposed-tensor-wise | Mixed | Small tensors | Tensor decomposition | 4\nGEAR (Kang et al., 2024) | keys Channel-wise; values Token-wise | Fixed | - | Sparse matrix (FP16) | 4.4/5.0\nSKVQ (Duanmu et al., 2024) | shared Group-wise | Mixed | Init. & recent tokens | Clipped dynamic q. | 2.25\nKVQuant (Hooper et al., 2024) | keys Channel-wise; values Token-wise | Mixed | First token | Sparse matrix (FP16) | 4.3\nCQ (Zhang et al., 2024c) | shared Token-wise channel-group | Fixed | - | - | 1.3\nZipCache (He et al., 2024) | keys Channel-wise; values Chan.-sep. token-wise | Mixed | Norm. attention | Channel-wise norm. | 3.2\nQJL (Zandieh et al., 2025) | shared Token-wise | Fixed | - | Selective high-bits | 3/5\nVQ-LLM (Liu et al., 2025d) | shared Group-wise (configurable) | Fixed | - | - | 2/4\nSQuat (Wang et al., 2025a) | keys Block-wise; values Token-wise | Fixed | - | - | 3.1\nQoQ (Lin et al., 2025) | shared Channel-wise | Fixed | - | Smooth attention | 4\nCommVQ (Li et al., 2025a) | shared Token-wise vector | Fixed | - | - | 2\nOTT (Su et al., 2025) | keys Channel-wise; values Token-wise | Mixed | Outlier & recent tokens | Full precision | 2.5\nNSNQuant (Son et al., 2025) | shared Token-wise vector | Fixed | - | Token-wise norm. | 1.2/2.2\nChanMix (Liao and Wen, 2026) | keys Channel-wise; values Token-wise | Mixed | Retrieval channels | Chan.-wise bit reallocation | 3.1",
+      "kind": "table",
+      "context": "Table 3: Summary of KV cache quantization (q.) methods. “Avg. bits” shows the average bitwidth per KV element based on the reported main results. This metric indicates memory savings and is comparable across methods.\nMethod | Granularity (keys/values; shared means merged source cell) | Precision mode | Important region | Outlier handling | Average bits per KV element\nValues are the survey-reported main results; source dashes are preserved.",
+      "rows": [
+        "SmoothQuant (Xiao et al., 2023) | shared Channel-wise | Fixed | - | Smoothing via scaling | 8",
+        "FlexGen (Sheng et al., 2023) | shared Group-wise | Fixed | - | - | 4",
+        "WKVQuant (Yue et al., 2024) | shared 2D (channel & token) | Mixed | Current token | Dynamic token-wise q. | ~4",
+        "MiKV (Yang et al., 2024b) | shared Token-wise | Mixed | Existing policy | Outlier balancing | ~4",
+        "QAQ (Dong et al., 2024) | shared Token-wise | Mixed | Attention-aware | Sparse matrix (FP16) | 1.8-2.7",
+        "Atom (Zhao et al., 2024b) | shared Group-wise | Mixed | Outlier channels | Selective high-bits | 4.25",
+        "KIVI (Liu et al., 2024d) | keys Channel-wise; values Token-wise | Mixed | Recent tokens | Channel-wise confining | ~2",
+        "CacheGen (Liu et al., 2024c) | shared Layer-wise | Mixed | Shallow layers | - | 1.9-2.9",
+        "DecoQuant (Liu et al., 2024b) | shared Decomposed-tensor-wise | Mixed | Small tensors | Tensor decomposition | 4",
+        "GEAR (Kang et al., 2024) | keys Channel-wise; values Token-wise | Fixed | - | Sparse matrix (FP16) | 4.4/5.0",
+        "SKVQ (Duanmu et al., 2024) | shared Group-wise | Mixed | Init. & recent tokens | Clipped dynamic q. | 2.25",
+        "KVQuant (Hooper et al., 2024) | keys Channel-wise; values Token-wise | Mixed | First token | Sparse matrix (FP16) | 4.3",
+        "CQ (Zhang et al., 2024c) | shared Token-wise channel-group | Fixed | - | - | 1.3",
+        "ZipCache (He et al., 2024) | keys Channel-wise; values Chan.-sep. token-wise | Mixed | Norm. attention | Channel-wise norm. | 3.2",
+        "QJL (Zandieh et al., 2025) | shared Token-wise | Fixed | - | Selective high-bits | 3/5",
+        "VQ-LLM (Liu et al., 2025d) | shared Group-wise (configurable) | Fixed | - | - | 2/4",
+        "SQuat (Wang et al., 2025a) | keys Block-wise; values Token-wise | Fixed | - | - | 3.1",
+        "QoQ (Lin et al., 2025) | shared Channel-wise | Fixed | - | Smooth attention | 4",
+        "CommVQ (Li et al., 2025a) | shared Token-wise vector | Fixed | - | - | 2",
+        "OTT (Su et al., 2025) | keys Channel-wise; values Token-wise | Mixed | Outlier & recent tokens | Full precision | 2.5",
+        "NSNQuant (Son et al., 2025) | shared Token-wise vector | Fixed | - | Token-wise norm. | 1.2/2.2",
+        "ChanMix (Liao and Wen, 2026) | keys Channel-wise; values Token-wise | Mixed | Retrieval channels | Chan.-wise bit reallocation | 3.1"
+      ],
+      "section": [
+        "5.1.1 KV Cache Quantization"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p6-review-table4",
+      "page": 6,
+      "bbox": [
+        68,
+        333,
+        293,
+        465
+      ],
+      "text": "Cached KV tensors | xKV (Chang et al., 2025a) | layer-group-wise | fixed\nCached KV tensors | ReCalKV (Yan et al., 2025b) | keys head-group-wise; values layer-wise | budget-driven\nCached KV tensors | ShadowKV (Sun et al., 2025) | layer-wise (K-only) | fixed\nW^K, W^V | LoRC (Zhang et al., 2024b) | layer-wise | rule-based\nW^K, W^V | Palu (Chang et al., 2025b) | head-group-wise | searched\nQKV | EigenAttention (Saxena et al., 2024) | layer-wise | budget-driven",
+      "kind": "table",
+      "context": "Table 4: Summary of low-rank approximation methods.\nTarget | Method | Granularity | Rank policy",
+      "rows": [
+        "Cached KV tensors | xKV (Chang et al., 2025a) | layer-group-wise | fixed",
+        "Cached KV tensors | ReCalKV (Yan et al., 2025b) | keys head-group-wise; values layer-wise | budget-driven",
+        "Cached KV tensors | ShadowKV (Sun et al., 2025) | layer-wise (K-only) | fixed",
+        "W^K, W^V | LoRC (Zhang et al., 2024b) | layer-wise | rule-based",
+        "W^K, W^V | Palu (Chang et al., 2025b) | head-group-wise | searched",
+        "QKV | EigenAttention (Saxena et al., 2024) | layer-wise | budget-driven"
+      ],
+      "section": [
+        "5.1.2 KV Cache Low-rank Approximation"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p6-review-table5",
+      "page": 6,
+      "bbox": [
+        303,
+        333,
+        529,
+        469
+      ],
+      "text": "Merging | KVMerger (Wang et al., 2024a) | Token | attention score; similarity/dissimilarity\nMerging | CaM (Zhang et al., 2024d) | Token | attention score\nMerging | KVSharer (Yang et al., 2024d) | Layer | similarity/dissimilarity\nMerging | MiniCache (Liu et al., 2024a) | Layer | similarity/dissimilarity\nMerging | D2O (Wan et al., 2025) | Token | similarity/dissimilarity\nPruning | CHAI (Agarwal et al., 2024) | Head | similarity/dissimilarity\nPruning | ThinK (Xu et al., 2025b) | Channel | query norm\nPruning | ClusterAttn (Zhang et al., 2025c) | Token | attention score",
+      "kind": "table",
+      "context": "Table 5: Summary of structural compression methods.\nFamily | Method | Unit | Signal",
+      "rows": [
+        "Merging | KVMerger (Wang et al., 2024a) | Token | attention score; similarity/dissimilarity",
+        "Merging | CaM (Zhang et al., 2024d) | Token | attention score",
+        "Merging | KVSharer (Yang et al., 2024d) | Layer | similarity/dissimilarity",
+        "Merging | MiniCache (Liu et al., 2024a) | Layer | similarity/dissimilarity",
+        "Merging | D2O (Wan et al., 2025) | Token | similarity/dissimilarity",
+        "Pruning | CHAI (Agarwal et al., 2024) | Head | similarity/dissimilarity",
+        "Pruning | ThinK (Xu et al., 2025b) | Channel | query norm",
+        "Pruning | ClusterAttn (Zhang et al., 2025c) | Token | attention score"
+      ],
+      "section": [
+        "5.1.3 KV Cache Structural Compression"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p6-b10",
+      "page": 6,
+      "bbox": [
+        70.46351623535156,
+        476.5827941894531,
+        291.048828125,
+        775.9141845703125
+      ],
+      "text": "These issues become more pronounced at very low\nbitwidths, where outliers and heterogeneous sen-\nsitivities are harder to preserve under such tight\nbudgets. Thus, the compression-quality trade-off is\nan important practical consideration in this regime.\nRecent advances use vector quantization (VQ)\nto compress groups with codebooks and capture\ninter-element correlation. CQ (Zhang et al., 2024c)\ncouples channels and learns centroids for 1-bit KV.\nVQ-LLM (Liu et al., 2025d) and CommVQ (Li\net al., 2025a) reduce overhead via fused VQ ker-\nnels and RoPE-commutative codebooks. Son et al.\n(2025) further improved calibration robustness.\nIt is worth noting that lower bitwidth does not\nalways translate into end-to-end system gains. Re-\nalized system gains also depend on the runtime cost\nof (de)quantization, extra kernel boundaries, and\nwhether these costs can be fused or overlapped. In\npractice, memory savings are more likely to yield\nlatency or throughput gains when workloads are\nmemory- or I/O-bound and quantization is effec-\ntively integrated into the system stack.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.1 KV Cache Quantization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b18",
+      "page": 6,
+      "bbox": [
+        305.7512512207031,
+        502.64703369140625,
+        526.3347778320312,
+        678.3912963867188
+      ],
+      "text": "Low-rank methods constrain KV-related tensors\nto a low-dimensional subspace, as summarized in\nTab. 4 by target: (i) cached KV, (ii) KV projection\nweights (W K, W V ), or (iii) QKV attention sub-\nspace. For instance, xKV (Chang et al., 2025a)\napplies layer-group singular value decomposition\nto cached KV, while Palu (Chang et al., 2025b) fac-\ntorizes (W K, W V ) with searched rank allocation.\nKV tensor methods are most plug-and-play but add\nprojection cost, whereas weight and QKV ones in-\ncrease kernel coupling and engineering overhead.\nSome low-rank methods learn extra parameters,\nrequiring training and thus out of scope under sKis.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.2 KV Cache Low-rank Approximation"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b20",
+      "page": 6,
+      "bbox": [
+        305.7512512207031,
+        708.5693359375,
+        526.238525390625,
+        775.9141845703125
+      ],
+      "text": "Unlike value-level methods, structural compression\nreduces KV memory by modifying cache organiza-\ntion (e.g., layer, head, channel, token). We compare\nexisting methods in Tab. 5, including (i) pruning,\nwhich drops a subset of structural units, and (ii)",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.3 KV Cache Structural Compression"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-review-table6",
+      "page": 7,
+      "bbox": [
+        68,
+        67,
+        529,
+        340
+      ],
+      "text": "H2O (Zhang et al., 2023) | Dynamic | R + H2 (via accumulated attention) | Uniform\nScissorhands (Liu et al., 2023) | Dynamic | R + Attention scores | Uniform\nRoCo (Ren and Zhu, 2024) | Dynamic | Mean & std. dev. of attention scores | Uniform\nFastGen (Ge et al., 2024) | Static | Hybrid (special/punctuation/locality/H2) | Uniform\nStreamingLLM (Xiao et al., 2024b) | Dynamic | R, S | Uniform\nKeyformer (Adnan et al., 2024) | Dynamic | R + Key (via Gumbel-softmax scores) | Uniform\nPyramidKV (Cai et al., 2024) | Static | Observation window-based identification | Preset (L, pyramid)\nNACL (Chen et al., 2024c) | Dynamic | Attention w.r.t. proxy tokens & randomness | Uniform\nPyramidInfer (Yang et al., 2024a) | Dynamic | R + PvC (via ensemble attention) | Preset (L, pyramid)\nBUZZ (Zhao et al., 2024a) | Dynamic | R, S + Segmented local H2 | Uniform\nTOVA (Oren et al., 2024) | Dynamic | Drop lowest attention score token at each step | Uniform\nVATP (Guo et al., 2024) | Dynamic | S + Attention & value L1-norm | Uniform\nL2KV (Devoto et al., 2024) | Dynamic | Key L2-norm | Uniform\nSnapKV (Li et al., 2024c) | Static | Observation window-based identification | Uniform\nCAKE (Qin et al., 2025) | Dynamic | R + Mean & var. of attention scores | Adaptive (L, layer preference)\nD2O (Wan et al., 2025) | Dynamic | R, S + H2 & recall via merging (§ 5.1.3) | Adaptive (L, attention density)\nSepLLM (Chen et al., 2025a) | Dynamic | R, S + Separator tokens | Uniform\nLaCache (Shi et al., 2025) | Dynamic | Ladder pattern based | Preset (L, ladder)\nKVCompose (Akulov et al., 2025) | Dynamic | Aggregated attention & form composite token | Adaptive (L, composite importance)\nDiffKV (Zhang et al., 2025e) | Dynamic | R + Relative significance of attention scores | Adaptive (H, sparsity pattern)\nEvolKV (Yu and Chai, 2025) | Dynamic | Plug-in (adopt existing eviction methods) | Adaptive (L, evolutionary search)\nDynamicKV (Zhou et al., 2025) | Static | R + Attention w.r.t. instruction tokens | Adaptive (L, task-aware)\nAda-KV (Feng et al., 2025) | Dynamic | Plug-in (adopt existing eviction methods) | Adaptive (H, attention sparsity)",
+      "kind": "table",
+      "context": "Table 6: Summary of representative KV cache eviction methods in chronological order.\nMethod | Mode | Eviction policy | Budget policy\nR = recent tokens; S = attention sink/initial tokens. L = layer-wise; H = head-wise.",
+      "rows": [
+        "H2O (Zhang et al., 2023) | Dynamic | R + H2 (via accumulated attention) | Uniform",
+        "Scissorhands (Liu et al., 2023) | Dynamic | R + Attention scores | Uniform",
+        "RoCo (Ren and Zhu, 2024) | Dynamic | Mean & std. dev. of attention scores | Uniform",
+        "FastGen (Ge et al., 2024) | Static | Hybrid (special/punctuation/locality/H2) | Uniform",
+        "StreamingLLM (Xiao et al., 2024b) | Dynamic | R, S | Uniform",
+        "Keyformer (Adnan et al., 2024) | Dynamic | R + Key (via Gumbel-softmax scores) | Uniform",
+        "PyramidKV (Cai et al., 2024) | Static | Observation window-based identification | Preset (L, pyramid)",
+        "NACL (Chen et al., 2024c) | Dynamic | Attention w.r.t. proxy tokens & randomness | Uniform",
+        "PyramidInfer (Yang et al., 2024a) | Dynamic | R + PvC (via ensemble attention) | Preset (L, pyramid)",
+        "BUZZ (Zhao et al., 2024a) | Dynamic | R, S + Segmented local H2 | Uniform",
+        "TOVA (Oren et al., 2024) | Dynamic | Drop lowest attention score token at each step | Uniform",
+        "VATP (Guo et al., 2024) | Dynamic | S + Attention & value L1-norm | Uniform",
+        "L2KV (Devoto et al., 2024) | Dynamic | Key L2-norm | Uniform",
+        "SnapKV (Li et al., 2024c) | Static | Observation window-based identification | Uniform",
+        "CAKE (Qin et al., 2025) | Dynamic | R + Mean & var. of attention scores | Adaptive (L, layer preference)",
+        "D2O (Wan et al., 2025) | Dynamic | R, S + H2 & recall via merging (§ 5.1.3) | Adaptive (L, attention density)",
+        "SepLLM (Chen et al., 2025a) | Dynamic | R, S + Separator tokens | Uniform",
+        "LaCache (Shi et al., 2025) | Dynamic | Ladder pattern based | Preset (L, ladder)",
+        "KVCompose (Akulov et al., 2025) | Dynamic | Aggregated attention & form composite token | Adaptive (L, composite importance)",
+        "DiffKV (Zhang et al., 2025e) | Dynamic | R + Relative significance of attention scores | Adaptive (H, sparsity pattern)",
+        "EvolKV (Yu and Chai, 2025) | Dynamic | Plug-in (adopt existing eviction methods) | Adaptive (L, evolutionary search)",
+        "DynamicKV (Zhou et al., 2025) | Static | R + Attention w.r.t. instruction tokens | Adaptive (L, task-aware)",
+        "Ada-KV (Feng et al., 2025) | Dynamic | Plug-in (adopt existing eviction methods) | Adaptive (H, attention sparsity)"
+      ],
+      "section": [
+        "5.2.2 KV Cache Eviction"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p7-b4",
+      "page": 7,
+      "bbox": [
+        70.46351623535156,
+        354.6389465332031,
+        290.0419921875,
+        422.37750244140625
+      ],
+      "text": "merging, which fuses units into shared forms. The\ndecisions are often guided by attention or similarity\nmeasures (cf. “signal” in Tab. 5), with clustering\nsometimes used to form groups (Wang et al., 2024a;\nAgarwal et al., 2024; Zhang et al., 2025c).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.1 KV Cache Compression",
+        "5.1.3 KV Cache Structural Compression"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b10",
+      "page": 7,
+      "bbox": [
+        305.8062744140625,
+        372.4745788574219,
+        524.4279174804688,
+        426.2707214355469
+      ],
+      "text": "KV cache eviction reduces memory by discarding\nless critical token KV states under a budget. We\ncompare algorithmic details of existing methods in\nTab. 6 and highlight three key insights.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.2 KV Cache Retention Management",
+        "5.2.2 KV Cache Eviction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b11",
+      "page": 7,
+      "bbox": [
+        305.7842712402344,
+        427.3983154296875,
+        526.3347778320312,
+        630.242919921875
+      ],
+      "text": "First, methods differ in when eviction is applied\n(cf. “mode” in Tab. 6). Static methods evict once\nduring or after prefill and keep the retained set fixed\nin decoding, while dynamic ones update online\nduring decoding to track importance shifts. Second,\neviction policies often retain a recent window or\nattention sink tokens, and select extra tokens by\nlightweight signals such as attention-derived scores,\nheuristics, or robust variants that mitigate bias in\nlocal attention statistics (cf. “eviction policy” in\nTab. 6). Third, recent works move beyond uniform\nbudgets and instead assign budgets across layers\nand even heads via preset and adaptive allocation\n(cf. “budget policy” in Tab. 6). Some methods treat\nbudget policy as a plug-in to existing eviction rules.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.2 KV Cache Retention Management",
+        "5.2.2 KV Cache Eviction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b6",
+      "page": 7,
+      "bbox": [
+        70.85653686523438,
+        457.9378356933594,
+        290.94293212890625,
+        498.18328857421875
+      ],
+      "text": "Going beyond representations, this section focuses\non mechanisms that efficiently manage the reten-\ntion of the KV cache (KVRM) during serving.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.2 KV Cache Retention Management"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b8",
+      "page": 7,
+      "bbox": [
+        70.2235107421875,
+        530.4046630859375,
+        291.0469665527344,
+        775.9141845703125
+      ],
+      "text": "Structure-aware methods redesign KV cache lay-\nouts for flexible allocation and reuse. One line tar-\ngets virtualized allocation (Kwon et al., 2023; Xu\net al., 2024a; Shen et al., 2024; Prabhu et al., 2025).\nA famous example is PagedAttention (Kwon et al.,\n2023), which uses fixed-size pages with logical-\nto-physical mapping to reduce fragmentation and\nsupport memory reuse. Another line builds struc-\ntured indices for prompt sharing (Gim et al., 2024;\nYe et al., 2024; Zheng et al., 2024), exemplified by\nradix tree (Zheng et al., 2024). A third line stan-\ndardizes KV layouts for kernels; Ye et al. (2025)\nintroduced a block-sparse and composable format.\nOrthogonally, semantics-guided methods fur-\nther reduce materialization by computing KV only\nfor critical tokens (Fu et al., 2024) and extend reuse\nto disaggregated LLM serving via an elastic Mem-\nPool system (Hu et al., 2024a).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.2 KV Cache Retention Management",
+        "5.2.1 KV Cache Allocation and Reuse"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b12",
+      "page": 7,
+      "bbox": [
+        314.66070556640625,
+        641.8992919921875,
+        520.1683959960938,
+        766.6068725585938
+      ],
+      "text": "Takeaways & Limitations – Structural Behavior\n• KVCC delivers the most direct memory relief, but such\nsavings may not translate into system gains without sys-\ntem co-design, due to tail (e.g., outlier) behavior, com-\npression overhead, and kernel or runtime constraints.\nPractical deployment of KVCC remains a challenge.\n• KVRM improves effective capacity by deciding which\nKV states exist at runtime. The key challenge is fast\nand stable utility estimation. In practice, policies are\noften workload-sensitive, and robustness under complex\nserving environments remains under-studied.\nMore analysis is provided in Apps. E.4 and E.5.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "5 KV Representation and Retention",
+        "5.2 KV Cache Retention Management",
+        "5.2.2 KV Cache Eviction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-review-table7",
+      "page": 8,
+      "bbox": [
+        68,
+        55,
+        529,
+        235
+      ],
+      "text": "KV-centric scheduling | direct* | direct | direct | indirect | indirect | indirect | indirect\nPipelining and overlapping | direct* | indirect | direct* | unmarked | indirect | indirect | indirect\nHardware-aware execution | direct* | direct | direct* | unmarked | direct | direct | indirect\nMemory hierarchy KV orchestration | indirect | indirect | indirect | indirect | direct* | direct | direct\nCompute device KV orchestration | indirect | indirect | direct* | indirect | direct | direct | direct\nKV cache compression | indirect | indirect | indirect | direct* | direct | direct | direct\nKV cache retention management | indirect | indirect | indirect | direct* | direct | direct | direct",
+      "kind": "table",
+      "context": "Table 7: Behavior × objective matrix of sKis methods. Side bars encode research density (rows/columns). Cells mark relevance levels ( = direct, #= indirect) and high-prevalence flags (⋆: ≥70% of papers report gains).\nBehavior | Mean latency | Tail latency | Throughput | GPU memory | Interconnect I/O | Energy/power | Quality impact (degradation)\ndirect/indirect follow printed symbols; * means at least 70% report gains. unmarked is a blank cell. Color-density bars are not converted into counts.",
+      "rows": [
+        "KV-centric scheduling | direct* | direct | direct | indirect | indirect | indirect | indirect",
+        "Pipelining and overlapping | direct* | indirect | direct* | unmarked | indirect | indirect | indirect",
+        "Hardware-aware execution | direct* | direct | direct* | unmarked | direct | direct | indirect",
+        "Memory hierarchy KV orchestration | indirect | indirect | indirect | indirect | direct* | direct | direct",
+        "Compute device KV orchestration | indirect | indirect | direct* | indirect | direct | direct | direct",
+        "KV cache compression | indirect | indirect | indirect | direct* | direct | direct | direct",
+        "KV cache retention management | indirect | indirect | indirect | direct* | direct | direct | direct"
+      ],
+      "section": [
+        "6.1 Key Observations"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p8-b10",
+      "page": 8,
+      "bbox": [
+        70.85653686523438,
+        274.79168701171875,
+        290.9462585449219,
+        342.1365051269531
+      ],
+      "text": "In this section, we identify key observations from\ntwo complementary lenses: (i) a behavior × objec-\ntive matrix and (ii) a behavior-behavior co-design\naffinity network, which naturally motivate open\nchallenges of future sKis research.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b26",
+      "page": 8,
+      "bbox": [
+        306.144287109375,
+        361.3935852050781,
+        524.4246826171875,
+        373.39910888671875
+      ],
+      "text": "Figure 6: Behavior-behavior co-design affinity network.",
+      "kind": "figure",
+      "context": "Behavior co-design network. Node size denotes research density; edge thickness denotes literature co-occurrence, not validated performance gain. Table 12 and Appendix F define Tanimoto normalization and threshold 0.14.",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.1 Key Observations"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p8-b12",
+      "page": 8,
+      "bbox": [
+        70.46351623535156,
+        369.41241455078125,
+        291.050048828125,
+        776.5687866210938
+      ],
+      "text": "Table 7 (behavior × objective matrix) marks each\nbehavior’s impact on serving objectives as direct\n( ) or indirect (#); stars (⋆) on direct cells statis-\ntically flag ≥70% of papers reporting such gains.\nSide bars show research density. Serving objec-\ntives cover latency, throughput, GPU memory, in-\nterconnect I/O, and energy. We also include qual-\nity impact ↓to capture degradation as a trade-off.\nFigure 6 (behavior-behavior co-design affinity net-\nwork) visualizes cross-behavior co-occurrence in\nthe literature, with edge thickness proportional to\nnormalized weights. Low-score edges are omitted,\nand computation details are provided in App. F).\nThis affinity reflects observed co-design patterns\nrather than validated performance gains. We con-\nclude key observations (O1-O7) as follows.\nO1. Structural works are most studied and dom-\ninate memory savings, while others yield savings\nindirectly (e.g., via migration or reuse), indicating\na community bias toward memory efficiency.\nO2. Temporal behaviors act most directly on\nlatency and throughput, since KVS, OVLP, and\nHAE map cleanly to reductions in scheduling stalls,\npipeline bubbles, and device under-utilization.\nHowever, tail latency reporting is sparse.\nO3. Spatial methods primarily target intercon-\nnect I/O, often paired with OVLP. Their core\nfocus is KV transfer, and by overlapping it with\ncompute, they effectively hide transfer latency.\nO4. Energy is under-explored, although many",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.1 Key Observations"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b27",
+      "page": 8,
+      "bbox": [
+        305.7512512207031,
+        395.4657287597656,
+        526.3358764648438,
+        571.9219970703125
+      ],
+      "text": "methods reduce memory or compute intensity that\nshould translate to energy benefits.\nO5. Quality loss is universal. Temporal methods\nrisk inconsistent request handling; spatial methods\nrisk missed KV data; and structural methods di-\nrectly reduce KV precision. The practical question\nis to ensure such degradation is controllable.\nO6. HAE–CDO is the strongest co-design pat-\ntern. Compute layouts that exploit device het-\nerogeneity often co-design with KV colocating or\ntransfer, yielding joint gains in utilization and I/O.\nO7. KVCC remains isolated despite its popularity,\nwhich suggests a missed opportunity for co-design.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.1 Key Observations"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b29",
+      "page": 8,
+      "bbox": [
+        305.8062744140625,
+        599.5401611328125,
+        526.2305297851562,
+        775.9141845703125
+      ],
+      "text": "The above key observations (O1-O7) reveal both\nprogress and gaps of current sKis research, which\nnaturally motivate the next set of system-level open\nchallenges (C1-C6).\nC1. SLO-driven tail control ←O2. Service-level\nobjectives (SLOs) are critical to LLM serving, with\ntail latency dominating user experience (Dean and\nBarroso, 2013; Wang et al., 2024b), yet most sys-\ntems omit tail metrics. Under long contexts and\nbursts, KV generation, migration, and compres-\nsion may trigger SLO violations, which often arise\nfrom cross-behavior interference rather than a sin-\ngle operation. The real challenge is to attribute",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.2 Open Challenges"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b0",
+      "page": 9,
+      "bbox": [
+        70.46351623535156,
+        71.72454071044922,
+        291.04693603515625,
+        775.9141845703125
+      ],
+      "text": "these SLO violations to concrete KV behaviors\nand paths, motivating future sKis studies on stan-\ndardized preemption and degradation semantics to\nmake tail outcomes controllable.\nC2. Energy-aware sKis ←O4. With surging\ndata center demand, AI infrastructure should be\nenergy-aware (He, 2025), but energy is still rarely\nreported or optimized in sKis methods. Future re-\nsearch could integrate power profiling into runtime\ndecisions, establish serving-time energy models,\nand jointly optimize energy-latency-quality under\npower constraints. Beyond aggregate power, en-\nergy should also be measured as per-request or per-\ntoken energy under serving traces and budgets. An-\nother possible direction is to study energy-friendly\nKV granularities and layouts.\nC3. Trustworthy and efficient sKis ←O5. LLM\nserving must ensure not only quality but also trust-\nworthiness (Han et al., 2025; Yang et al., 2024c),\nyet trust risks are rarely considered, leaving a gap\nbetween efficiency gains and trust failures. For ex-\nample, structural methods can harm robustness in\nways standard metrics miss, as policies may evict or\ncompress low-salience but crucial context, causing\nsevere errors under workload shifts despite stable\nmean accuracy. Notably, sKis techniques can be\ndual-use: Jiang et al. (2025b) turned KV eviction\ninto a defense against jailbreak attacks, suggesting\nthat sKis techniques may become trust mechanisms.\nTrust concerns also span reliability, privacy, and\nsafety across diverse sKis behaviors, as discussed\nin App. G.1, and arise in various downstream set-\ntings (Dong et al., 2026; Chen et al., 2024a; Jiang\nand Ferraro, 2026). Beyond average quality, future\nwork should expose worst-case failures and quality\nlower bounds under stress, making trustworthiness\nbehavior-attributed and SLO-aware.\nC4. Generalizable HAE–CDO ←O6. While\nHAE and CDO form the strongest co-design pat-\ntern, policies are often tailored to specific fabric\nor single-tenant settings. More broadly, although\ncurrent sKis practice is largely GPU-centric, the\ntemporal–spatial–structural lens itself is hardware-\nagnostic. What changes across hardware platforms\nis the concrete hierarchy, interconnect, and ker-\nnel or runtime support. Future directions include\nmaking such pattern portable across heterogeneous\ntopologies (e.g., NVLink, NVSwitch, PCIe, CXL)\nand adaptive to multi-tenant settings.\nC5. Co-optimization and intermediate seman-\ntics ←O7. Most sKis optimize behaviors in isola-\ntion, despite their interactions under bandwidth and",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.2 Open Challenges"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b1",
+      "page": 9,
+      "bbox": [
+        305.87127685546875,
+        71.72454071044922,
+        526.239501953125,
+        424.0126037597656
+      ],
+      "text": "latency constraints. Future studies could explore\nco-optimization under shared budgets. For instance,\nto co-decide eviction, offload, and prefetch given\npredicted reuse, success probability, and I/O con-\ntention. In resource-constrained edge settings, this\nalso suggests coupling KVCC with OVLP: KVCC\nreduces memory footprint, while OVLP helps pre-\nvent (de)compression overhead from negating sys-\ntem gains. Another promising direction is to exploit\nfine-grained intermediate semantics for behaviors\nand view co-optimization as state transitions over\nthem. We give concrete examples in App. G.2\nillustrating how intermediate semantics enable co-\noptimizing eviction, compression, and migration.\nC6. Unified benchmarks. A fundamental chal-\nlenge in sKis lies in establishing standardized\nbenchmarks. We review LLM inference bench-\nmarking practices in App. G.3.1. We find inconsis-\ntent metric definitions and measures across tools,\npreventing reliable apples-to-apples comparisons\nacross papers. We therefore advocate unified sKis\nbenchmarks and offer a concise set of benchmark\ndesign principles, covering metrics (e.g., trust met-\nrics and KV-centric resource metrics), represen-\ntative stress workloads, and reporting standards,\ndetailed in App. G.3.2.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "6 Observations and Open Challenges",
+        "6.2 Open Challenges"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b3",
+      "page": 9,
+      "bbox": [
+        305.8062744140625,
+        457.8958435058594,
+        526.3318481445312,
+        565.8916625976562
+      ],
+      "text": "This survey presents a systematic overview of sKis,\noffering a system behavior-oriented taxonomy cov-\nering temporal, spatial, and structural dimensions.\nBy cross-analyzing behavior-objective impacts and\nbehavior-behavior co-design patterns, we reveal\noverlooked regions and open challenges. We hope\nthis survey inspires continued exploration toward\nefficient and trustworthy LLM serving.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "7 Conclusion"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b5",
+      "page": 9,
+      "bbox": [
+        305.6312561035156,
+        599.77490234375,
+        526.3307495117188,
+        775.9141845703125
+      ],
+      "text": "This paper offers a comprehensive review and sum-\nmary of current methods in the area of system-\naware KV cache optimization. However, given\nthe extensive body of related work and the rapidly\nevolving nature of this research area, we may have\noverlooked some equally valuable contributions.\nWe tried to include all relevant studies and refer-\nences wherever feasible.\nAdditionally, this survey conducts no new ex-\nperiments. Our claims synthesize results reported\nin public papers and open-source implementations,\nprimarily under mainstream platforms and com-\nmon configurations, which may constrain the gen-",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "Limitations"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b0",
+      "page": 10,
+      "bbox": [
+        70.85653686523438,
+        71.72454071044922,
+        290.4978332519531,
+        125.52069091796875
+      ],
+      "text": "erality of our conclusions. We avoid aggregating\nraw speedup or memory numbers across papers,\nbecause the reported gains are tightly coupled with\nmodel, hardware, workload, or baseline choices.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "Limitations"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b2",
+      "page": 10,
+      "bbox": [
+        70.85653686523438,
+        157.921875,
+        290.9492492675781,
+        225.2677001953125
+      ],
+      "text": "Feng Liu is supported by the ARC through grants\nDE240101089, LP240100101, DP230101540, and\nby the NSF&CSIRO Responsible AI program un-\nder grant 2303037. ChatGPT was used only for\nlimited wording and grammar suggestions.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "Acknowledgments"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-review-attention",
+      "page": 19,
+      "bbox": [
+        305.7512512207031,
+        71.72454071044922,
+        532.412353515625,
+        185.0467071533203
+      ],
+      "text": "Then the self-attention operation is applied to each\ntuple (Qi, Ki, Vi) and get the output of Zi:\nZ_i = attention(Q_i, K_i, V_i) = softmax((Q_i K_i^T) / sqrt(d_k)) V_i.\nwhere dk is the dimension of the keys. Finally,\noutputs of all the attention heads are concatenated:\nZ = concat(Z_1, Z_2, ..., Z_h) W^O.",
+      "kind": "text",
+      "context": "Appendix A: Scaled dot-product attention and multi-head output concatenation.",
+      "rows": [],
+      "section": [
+        "A Preliminaries on LLMs"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-review-ffn",
+      "page": 19,
+      "bbox": [
+        305.7512512207031,
+        187.41033935546875,
+        526.2357788085938,
+        312.61199951171875
+      ],
+      "text": "where W O is the trainable parameters. Following\nthis, the output of MHSA is fed into the FFN mod-\nule, which applies two linear transformations with\na nonlinear activation (e.g., ReLU):\nFFN(x) = ReLU(x W_1 + b_1) W_2 + b_2.\nwhere W1, W2, b1, and b2 are learnable parame-\nters of the FFN. These modules together enable\ncontextualized autoregressive modeling in LLMs.",
+      "kind": "text",
+      "context": "Appendix A: Feed-forward network after multi-head self-attention.",
+      "rows": [],
+      "section": [
+        "A Preliminaries on LLMs"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-b18",
+      "page": 19,
+      "bbox": [
+        305.87127685546875,
+        342.72210693359375,
+        526.2332763671875,
+        775.9141845703125
+      ],
+      "text": "Our taxonomy follows a system behavior-oriented\nview of sKis introduced in § 2 and respects the\ndomain boundary. Specifically, we classify tech-\nniques by their operational impact along temporal,\nspatial, and structural dimensions. This behavior-\noriented perspective follows established practice\nin machine learning systems research (Xiao et al.,\n2018; Rajbhandari et al., 2020; Wang et al., 2021;\nJiang et al., 2022; Qiu et al., 2024; Jiang et al.,\n2024; Li et al., 2026) and aligns closely with how\nserving systems are actually built and optimized in\npractice, allowing diverse methods to be interpreted\nunder a unified framework.\nFor example, many methods perform KV cache\nselection by identifying tokens (i.e., KV entries)\nthat are more or less important for future compu-\ntation. In our taxonomy, we do not treat selec-\ntion itself as a category. In contrast, we classify\nmethods based on the system action taken after\nselection: (i) If unimportant KV entries are perma-\nnently discarded to free GPU memory, the method\nis categorized as KV cache eviction (cf. § 5.2.2)\nunder the structural dimension; (ii) If unimportant\nKV entries are offloaded to secondary storage (e.g.,\nCPU RAM) for possible future retrieval and reload,\nthe method falls under memory hierarchy KV or-\nchestration (cf. § 4.1) under the spatial dimension;\nand (iii) If the tokens are retained in GPU mem-\nory but excluded from computation, the method is\nconsidered token-level scheduling, which is cate-\ngorized as KV-centric scheduling (cf. § 3.1) under\nthe temporal dimension.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "B Design of Our Taxonomy"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-review-projections",
+      "page": 19,
+      "bbox": [
+        70.85653686523438,
+        653.6686401367188,
+        290.95147705078125,
+        777.2130737304688
+      ],
+      "text": "LLMs are built from stacked Transformer blocks,\neach with multi-head self-attention (MHSA) and\nfeed-forward network (FFN). These blocks are se-\nquential, where the output of one block serves as\nthe input to the next. For the i-th attention head,\nMHSA applies learned projections to the input fea-\ntures X to get queries, keys, and values:\nQ_i = X W^{Q_i}; K_i = X W^{K_i}; V_i = X W^{V_i}.",
+      "kind": "text",
+      "context": "Appendix A: Transformer query, key and value projections.",
+      "rows": [],
+      "section": [
+        "A Preliminaries on LLMs"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-review-table8",
+      "page": 20,
+      "bbox": [
+        68,
+        67,
+        529,
+        294
+      ],
+      "text": "Miao et al. (2023) | unmarked | yes | unmarked | yes | Algorithm-, system-level\nYuan et al. (2024) | unmarked | yes | unmarked | yes | Optimization layer (parameter-, algorithm-, system-, hardware-level)\nLi et al. (2024a) | unmarked | yes | yes | yes | System component (KV cache and memory, computation, cloud deployment, emerging research fields)\nZhou et al. (2024b) | unmarked | yes | unmarked | yes | Optimization layer (data-, model-, system-level)\nZhen et al. (2025) | unmarked | yes | yes | yes | Serving scale (instance-, cluster-level, emerging scenarios)\nBai et al. (2024) | unmarked | unmarked | unmarked | yes | Lifecycle (architecture design, pre-training, fine-tuning, inference, system design)\nXu et al. (2024b) | unmarked | unmarked | unmarked | yes | Optimization layered (architecture, algorithm, systems)\nShi et al. (2024) | yes | unmarked | unmarked | yes | Lifecycle (training, deploy, post-training)\nLi et al. (2024b) | yes | yes | unmarked | yes | Optimization layer (token-, model-, system-level)\nLiu et al. (2025c) | yes | yes | unmarked | yes | KV compression types (selective token, quantization, attention compression, hybrid)\nThis survey (sKis) | yes | yes | yes | yes | System behaviors (temporal, spatial, structural dimensions)",
+      "kind": "table",
+      "context": "Table 8: Comparison of scope and taxonomy with existing surveys related to efficient LLM inference or serving.\nSurvey | KV-centric | Serving only | No retrain | System metrics | Organizing principle\nyes denotes the printed checkmark; unmarked preserves source blanks. Table 1 and Table 8 are kept separately, including their differing printed cells.",
+      "rows": [
+        "Miao et al. (2023) | unmarked | yes | unmarked | yes | Algorithm-, system-level",
+        "Yuan et al. (2024) | unmarked | yes | unmarked | yes | Optimization layer (parameter-, algorithm-, system-, hardware-level)",
+        "Li et al. (2024a) | unmarked | yes | yes | yes | System component (KV cache and memory, computation, cloud deployment, emerging research fields)",
+        "Zhou et al. (2024b) | unmarked | yes | unmarked | yes | Optimization layer (data-, model-, system-level)",
+        "Zhen et al. (2025) | unmarked | yes | yes | yes | Serving scale (instance-, cluster-level, emerging scenarios)",
+        "Bai et al. (2024) | unmarked | unmarked | unmarked | yes | Lifecycle (architecture design, pre-training, fine-tuning, inference, system design)",
+        "Xu et al. (2024b) | unmarked | unmarked | unmarked | yes | Optimization layered (architecture, algorithm, systems)",
+        "Shi et al. (2024) | yes | unmarked | unmarked | yes | Lifecycle (training, deploy, post-training)",
+        "Li et al. (2024b) | yes | yes | unmarked | yes | Optimization layer (token-, model-, system-level)",
+        "Liu et al. (2025c) | yes | yes | unmarked | yes | KV compression types (selective token, quantization, attention compression, hybrid)",
+        "This survey (sKis) | yes | yes | yes | yes | System behaviors (temporal, spatial, structural dimensions)"
+      ],
+      "section": [
+        "C Related Surveys"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p20-b7",
+      "page": 20,
+      "bbox": [
+        306.144287109375,
+        313.49664306640625,
+        526.238525390625,
+        407.9418029785156
+      ],
+      "text": "tecture change) and aim to provide a deeper under-\nstanding within this scope. By classifying methods\naccording to their impact along temporal, spatial,\nand structural dimensions, our survey enables cross-\nbehavior and behavior×objective analysis, which\ncomplements prior surveys and clarifies actionable\nresearch gaps. Table 8 shows a summary.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "C Related Surveys"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-b6",
+      "page": 20,
+      "bbox": [
+        70.2235107421875,
+        339.0098876953125,
+        291.0430603027344,
+        775.9141845703125
+      ],
+      "text": "Several recent surveys have covered the areas of\nefficient LLM inference and serving. Miao et al.\n(2023) explored both algorithmic innovations and\nsystem architectures for efficient LLM serving,\nYuan et al. (2024) analyzed LLM inference tech-\nniques through a Roofline-based framework, Zhou\net al. (2024b) organized efficient LLM inference\nmethods across data-, model-, and system-level\noptimizations, Li et al. (2024a) examined system-\nlevel enhancements for LLM inference serving,\nZhen et al. (2025) reviewed recent advances across\ndifferent LLM serving scenarios, while Bai et al.\n(2024) and (Xu et al., 2024b) focused on resource-\nefficient LLMs. However, these general surveys\ntypically treat KV cache optimization as a minor\ncomponent within the broader pipelines.\nIn contrast, dedicated surveys that focus on the\nKV cache remain rare. Shi et al. (2024) adopted a\nlifecycle-based taxonomy spanning training-stage,\ndeploy-stage, and post-training optimizations. Li\net al. (2024b) categorized KV cache management\nstrategies into token-level, model-level, and system-\nlevel optimizations. Liu et al. (2025c) focused on\ncompression strategies of the KV cache, such as\nselective token strategies, quantization, and atten-\ntion compression. These KV-specific surveys are\nclosest to our topic. However, they mostly organize\nby lifecycle stages or abstraction levels, leaving the\nserving-time behaviors of KV caches unexamined.\nDifferent from the above surveys, we concentrate\nexclusively on the sKis scope (i.e., serving-time,\nKV-centric, system metrics, no retraining or archi-",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "C Related Surveys"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-b9",
+      "page": 20,
+      "bbox": [
+        305.7842712402344,
+        437.57183837890625,
+        526.2385864257812,
+        775.9141845703125
+      ],
+      "text": "Table 9 provides a supplementary mapping of all\nsurveyed methods across the full taxonomy of\n7 subcategories under 3 major optimization di-\nmensions. The finer-grained categories in this ta-\nble include (i) KV-centric scheduling (cf. § 3.1),\n(ii) pipelining and overlapping (cf. § 3.2), (iii)\nhardware-aware execution (cf. § 3.3), (iv) memory\nhierarchy KV orchestration (cf. § 4.1), (v) com-\npute device KV orchestration (cf. § 4.2), (vi) KV\ncache compression (cf. § 5.1), and (vii) KV cache\nretention management (cf. § 5.2).\nAs discussed in § 2, each method is primarily\ndiscussed under one or two key optimization cat-\negories that reflect its main contributions. These\ncategories are denoted as primary category ( ) in\nTab. 9. However, some methods also touch upon\nadditional optimization aspects that are not covered\nor elaborated in the main sections. For example,\nto support its “hardware-aware execution” design\nof decoupling prefill and decode phases across het-\nerogeneous devices, Splitwise (Patel et al., 2024)\nincorporates a fine-grained layer-wise transmission\nstrategy that transmits the KV cache from the pre-\nfill node to the decode node and overlaps such KV\ncache transmission with the computation in the pre-",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "D Supplementary Paper Categorization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p21-review-table9",
+      "page": 21,
+      "bbox": [
+        68,
+        64,
+        529,
+        777
+      ],
+      "text": "SmoothQuant (Xiao et al., 2023) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nFlexGen (Sheng et al., 2023) | ICML | unmarked | secondary | secondary | primary | unmarked | primary | unmarked\nvLLM (Kwon et al., 2023) | SOSP | unmarked | unmarked | unmarked | secondary | unmarked | unmarked | primary\nFastServe (Wu et al., 2023) | NeurIPS | unmarked | secondary | unmarked | primary | primary | unmarked | unmarked\nH2O (Zhang et al., 2023) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nScissorhands (Liu et al., 2023) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nTetriInfer (Hu et al., 2024b) | arXiv | primary | unmarked | primary | unmarked | secondary | unmarked | unmarked\nRoCo (Ren and Zhu, 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nWKVQuant (Yue et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nMiKV (Yang et al., 2024b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nFastDecode (He and Zhai, 2024) | arXiv | unmarked | primary | primary | unmarked | secondary | secondary | unmarked\nQAQ (Dong et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nAttAcc (Park et al., 2024) | ASPLOS | unmarked | unmarked | primary | unmarked | primary | unmarked | unmarked\nFastGen (Ge et al., 2024) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nStreamingLLM (Xiao et al., 2024b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nPreble (Srivatsa et al., 2024) | ICLR | primary | unmarked | secondary | unmarked | unmarked | unmarked | secondary\nKeyformer (Adnan et al., 2024) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nAtom (Zhao et al., 2024b) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nPromptCache (Gim et al., 2024) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nPyramidKV (Cai et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nSplitwise (Patel et al., 2024) | ISCA | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked\nALISA (Zhao et al., 2024c) | ISCA | unmarked | unmarked | unmarked | primary | unmarked | secondary | secondary\nDistServe (Zhong et al., 2024) | OSDI | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked\nInfinite-LLM (Lin et al., 2024) | arXiv | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked\nInfiniGen (Lee et al., 2024) | OSDI | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked\nCachedAttention (Gao et al., 2024) | ATC | secondary | primary | unmarked | primary | secondary | unmarked | secondary\nLazyLLM (Fu et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nKVMerger (Wang et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nvTensor (Xu et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nKIVI (Liu et al., 2024d) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nCHAI (Agarwal et al., 2024) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nCaM (Zhang et al., 2024d) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nMuxServe (Duan et al., 2024) | ICML | primary | unmarked | primary | unmarked | secondary | unmarked | secondary\nQuest (Tang et al., 2024) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked\nSparQAttention (Ribar et al., 2024) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked\nDéjàVu (Strati et al., 2024) | ICML | unmarked | unmarked | primary | primary | secondary | unmarked | secondary\nCacheGen (Liu et al., 2024c) | SIGCOMM | unmarked | secondary | unmarked | unmarked | primary | primary | unmarked\nDecoQuant (Liu et al., 2024b) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nNACL (Chen et al., 2024c) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nPyramidInfer (Yang et al., 2024a) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nChunkAttention (Ye et al., 2024) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nInstInfer (Pan et al., 2024) | arXiv | unmarked | secondary | primary | unmarked | primary | unmarked | secondary\nTwinPilots (Yu et al., 2024) | SYSTOR | unmarked | secondary | primary | unmarked | secondary | unmarked | unmarked\nGEAR (Kang et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nLoRC (Zhang et al., 2024b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nSKVQ (Duanmu et al., 2024) | COLM | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nLayerKV (Xiong et al., 2024) | arXiv | primary | secondary | unmarked | primary | unmarked | unmarked | secondary\nCComp (Park and Egger, 2024) | PACT | unmarked | primary | primary | unmarked | secondary | unmarked | unmarked\nKVSharer (Yang et al., 2024d) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nLAMPS (Shahout et al., 2024) | arXiv | primary | unmarked | unmarked | secondary | unmarked | unmarked | secondary\nBUZZ (Zhao et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nLoongServe (Wu et al., 2024a) | SOSP | primary | secondary | secondary | unmarked | unmarked | unmarked | secondary\nEigenAttention (Saxena et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nTOVA (Oren et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nVATP (Guo et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nL2KV (Devoto et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nFastSwitch (Shen et al., 2024) | arXiv | secondary | unmarked | secondary | primary | unmarked | unmarked | primary",
+      "kind": "table",
+      "context": "Table 9: Full mapping of representative methods reviewed in this paper to their corresponding sKis categories. Methods are chronologically ordered with publication venues.\nMethod | Venue | KVS | OVLP | HAE | MHO | CDO | KVCC | KVRM\nPrimary/secondary are source legend labels; unmarked preserves blank. KVS scheduling; OVLP overlap; HAE hardware execution; MHO memory hierarchy; CDO compute-device orchestration; KVCC compression; KVRM retention.",
+      "rows": [
+        "SmoothQuant (Xiao et al., 2023) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "FlexGen (Sheng et al., 2023) | ICML | unmarked | secondary | secondary | primary | unmarked | primary | unmarked",
+        "vLLM (Kwon et al., 2023) | SOSP | unmarked | unmarked | unmarked | secondary | unmarked | unmarked | primary",
+        "FastServe (Wu et al., 2023) | NeurIPS | unmarked | secondary | unmarked | primary | primary | unmarked | unmarked",
+        "H2O (Zhang et al., 2023) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Scissorhands (Liu et al., 2023) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "TetriInfer (Hu et al., 2024b) | arXiv | primary | unmarked | primary | unmarked | secondary | unmarked | unmarked",
+        "RoCo (Ren and Zhu, 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "WKVQuant (Yue et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "MiKV (Yang et al., 2024b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "FastDecode (He and Zhai, 2024) | arXiv | unmarked | primary | primary | unmarked | secondary | secondary | unmarked",
+        "QAQ (Dong et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "AttAcc (Park et al., 2024) | ASPLOS | unmarked | unmarked | primary | unmarked | primary | unmarked | unmarked",
+        "FastGen (Ge et al., 2024) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "StreamingLLM (Xiao et al., 2024b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Preble (Srivatsa et al., 2024) | ICLR | primary | unmarked | secondary | unmarked | unmarked | unmarked | secondary",
+        "Keyformer (Adnan et al., 2024) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Atom (Zhao et al., 2024b) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "PromptCache (Gim et al., 2024) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "PyramidKV (Cai et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Splitwise (Patel et al., 2024) | ISCA | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked",
+        "ALISA (Zhao et al., 2024c) | ISCA | unmarked | unmarked | unmarked | primary | unmarked | secondary | secondary",
+        "DistServe (Zhong et al., 2024) | OSDI | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked",
+        "Infinite-LLM (Lin et al., 2024) | arXiv | unmarked | secondary | primary | unmarked | primary | unmarked | unmarked",
+        "InfiniGen (Lee et al., 2024) | OSDI | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked",
+        "CachedAttention (Gao et al., 2024) | ATC | secondary | primary | unmarked | primary | secondary | unmarked | secondary",
+        "LazyLLM (Fu et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "KVMerger (Wang et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "vTensor (Xu et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "KIVI (Liu et al., 2024d) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "CHAI (Agarwal et al., 2024) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "CaM (Zhang et al., 2024d) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "MuxServe (Duan et al., 2024) | ICML | primary | unmarked | primary | unmarked | secondary | unmarked | secondary",
+        "Quest (Tang et al., 2024) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked",
+        "SparQAttention (Ribar et al., 2024) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked",
+        "DéjàVu (Strati et al., 2024) | ICML | unmarked | unmarked | primary | primary | secondary | unmarked | secondary",
+        "CacheGen (Liu et al., 2024c) | SIGCOMM | unmarked | secondary | unmarked | unmarked | primary | primary | unmarked",
+        "DecoQuant (Liu et al., 2024b) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "NACL (Chen et al., 2024c) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "PyramidInfer (Yang et al., 2024a) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "ChunkAttention (Ye et al., 2024) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "InstInfer (Pan et al., 2024) | arXiv | unmarked | secondary | primary | unmarked | primary | unmarked | secondary",
+        "TwinPilots (Yu et al., 2024) | SYSTOR | unmarked | secondary | primary | unmarked | secondary | unmarked | unmarked",
+        "GEAR (Kang et al., 2024) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "LoRC (Zhang et al., 2024b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "SKVQ (Duanmu et al., 2024) | COLM | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "LayerKV (Xiong et al., 2024) | arXiv | primary | secondary | unmarked | primary | unmarked | unmarked | secondary",
+        "CComp (Park and Egger, 2024) | PACT | unmarked | primary | primary | unmarked | secondary | unmarked | unmarked",
+        "KVSharer (Yang et al., 2024d) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "LAMPS (Shahout et al., 2024) | arXiv | primary | unmarked | unmarked | secondary | unmarked | unmarked | secondary",
+        "BUZZ (Zhao et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "LoongServe (Wu et al., 2024a) | SOSP | primary | secondary | secondary | unmarked | unmarked | unmarked | secondary",
+        "EigenAttention (Saxena et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "TOVA (Oren et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "VATP (Guo et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "L2KV (Devoto et al., 2024) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "FastSwitch (Shen et al., 2024) | arXiv | secondary | unmarked | secondary | primary | unmarked | unmarked | primary"
+      ],
+      "section": [
+        "D Supplementary Paper Categorization"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p22-review-table9",
+      "page": 22,
+      "bbox": [
+        68,
+        58,
+        529,
+        777
+      ],
+      "text": "KVQuant (Hooper et al., 2024) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nCQ (Zhang et al., 2024c) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nZipCache (He et al., 2024) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nSnapKV (Li et al., 2024c) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nMiniCache (Liu et al., 2024a) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nInfLLM (Xiao et al., 2024a) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | unmarked | secondary\nRadixAttention (Zheng et al., 2024) | NeurIPS | primary | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nLoki (Singhania et al., 2024) | NeurIPS | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked\nArkVale (Chen et al., 2024b) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | secondary | unmarked\nMemServe (Hu et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nMooncake (Qin et al., 2024) | FAST | primary | secondary | primary | unmarked | secondary | unmarked | unmarked\nIMPRESS (Chen et al., 2025b) | FAST | unmarked | unmarked | unmarked | primary | unmarked | unmarked | secondary\nQJL (Zandieh et al., 2025) | AAAI | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nVQ-LLM (Liu et al., 2025d) | HPCA | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nxKV (Chang et al., 2025a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nSQuat (Wang et al., 2025a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nvAttention (Prabhu et al., 2025) | ASPLOS | unmarked | secondary | unmarked | unmarked | unmarked | unmarked | primary\nPAPI (He et al., 2025) | ASPLOS | unmarked | unmarked | primary | unmarked | unmarked | unmarked | unmarked\nPensieve (Yu et al., 2025) | EuroSys | secondary | secondary | unmarked | primary | unmarked | unmarked | secondary\nAsyncKV (Dong et al., 2025) | arXiv | unmarked | primary | secondary | primary | unmarked | unmarked | unmarked\nPalu (Chang et al., 2025b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nCAKE (Qin et al., 2025) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nD2O (Wan et al., 2025) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | primary\nThinK (Xu et al., 2025b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nMagicPIG (Chen et al., 2025c) | ICLR | unmarked | unmarked | primary | unmarked | unmarked | unmarked | unmarked\nOmniKV (Hao et al., 2025) | ICLR | secondary | unmarked | unmarked | primary | unmarked | unmarked | unmarked\nQoQ (Lin et al., 2025) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nFlashInfer (Ye et al., 2025) | MLSys | primary | unmarked | secondary | secondary | unmarked | unmarked | primary\nNeo (Jiang et al., 2025c) | MLSys | unmarked | primary | primary | unmarked | secondary | unmarked | unmarked\nPRESERVE (Yüzügüler et al., 2025) | arXiv | unmarked | primary | secondary | primary | unmarked | unmarked | unmarked\nReCalKV (Yan et al., 2025b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nClusterKV (Liu et al., 2025b) | DAC | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked\nPQCache (Zhang et al., 2025a) | SIGMOD | unmarked | secondary | unmarked | primary | unmarked | secondary | unmarked\nShadowKV (Sun et al., 2025) | ICML | unmarked | secondary | unmarked | primary | unmarked | primary | unmarked\nSepLLM (Chen et al., 2025a) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nCommVQ (Li et al., 2025a) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nLaCache (Shi et al., 2025) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nSpeCache (Jie et al., 2025) | ICML | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked\nRocketKV (Behnam et al., 2025) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | secondary\nClusterAttn (Zhang et al., 2025c) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nRefreshKV (Xu et al., 2025a) | ACL | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked\nOTT (Su et al., 2025) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nKVPR (Jiang et al., 2025a) | ACL | unmarked | primary | secondary | unmarked | unmarked | secondary | unmarked\nSlimInfer (Long et al., 2025) | arXiv | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked\nRAGCache (Jin et al., 2025) | TOCS | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked\nKVCompose (Akulov et al., 2025) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nLMCache (Cheng et al., 2025) | arXiv | unmarked | secondary | secondary | primary | primary | unmarked | secondary\nDiffKV (Zhang et al., 2025e) | SOSP | unmarked | unmarked | unmarked | unmarked | unmarked | secondary | primary\nTokenSelect (Wu et al., 2025) | EMNLP | primary | unmarked | unmarked | unmarked | unmarked | unmarked | secondary\nEvolKV (Yu and Chai, 2025) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nDynamicKV (Zhou et al., 2025) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nRetrievalAttention (Liu et al., 2025a) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked\nAda-KV (Feng et al., 2025) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary\nNSNQuant (Son et al., 2025) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nKVFlow (Pan et al., 2025) | NeurIPS | secondary | secondary | unmarked | primary | unmarked | primary | unmarked\nTraCT (Yoon et al., 2025) | arXiv | unmarked | unmarked | secondary | primary | primary | unmarked | unmarked\nCXL-SpecKV (Liu and Yu, 2026) | FPGA | unmarked | primary | secondary | primary | unmarked | secondary | unmarked\nChanMix (Liao and Wen, 2026) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked\nBeluga (Yang et al., 2025) | SIGMOD | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked",
+      "kind": "table",
+      "context": "Table 9 (continued).\nMethod | Venue | KVS | OVLP | HAE | MHO | CDO | KVCC | KVRM\nPrimary/secondary are source legend labels; unmarked preserves blank. KVS scheduling; OVLP overlap; HAE hardware execution; MHO memory hierarchy; CDO compute-device orchestration; KVCC compression; KVRM retention.",
+      "rows": [
+        "KVQuant (Hooper et al., 2024) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "CQ (Zhang et al., 2024c) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "ZipCache (He et al., 2024) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "SnapKV (Li et al., 2024c) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "MiniCache (Liu et al., 2024a) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "InfLLM (Xiao et al., 2024a) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | unmarked | secondary",
+        "RadixAttention (Zheng et al., 2024) | NeurIPS | primary | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Loki (Singhania et al., 2024) | NeurIPS | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked",
+        "ArkVale (Chen et al., 2024b) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | secondary | unmarked",
+        "MemServe (Hu et al., 2024a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "Mooncake (Qin et al., 2024) | FAST | primary | secondary | primary | unmarked | secondary | unmarked | unmarked",
+        "IMPRESS (Chen et al., 2025b) | FAST | unmarked | unmarked | unmarked | primary | unmarked | unmarked | secondary",
+        "QJL (Zandieh et al., 2025) | AAAI | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "VQ-LLM (Liu et al., 2025d) | HPCA | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "xKV (Chang et al., 2025a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "SQuat (Wang et al., 2025a) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "vAttention (Prabhu et al., 2025) | ASPLOS | unmarked | secondary | unmarked | unmarked | unmarked | unmarked | primary",
+        "PAPI (He et al., 2025) | ASPLOS | unmarked | unmarked | primary | unmarked | unmarked | unmarked | unmarked",
+        "Pensieve (Yu et al., 2025) | EuroSys | secondary | secondary | unmarked | primary | unmarked | unmarked | secondary",
+        "AsyncKV (Dong et al., 2025) | arXiv | unmarked | primary | secondary | primary | unmarked | unmarked | unmarked",
+        "Palu (Chang et al., 2025b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "CAKE (Qin et al., 2025) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "D2O (Wan et al., 2025) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | primary",
+        "ThinK (Xu et al., 2025b) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "MagicPIG (Chen et al., 2025c) | ICLR | unmarked | unmarked | primary | unmarked | unmarked | unmarked | unmarked",
+        "OmniKV (Hao et al., 2025) | ICLR | secondary | unmarked | unmarked | primary | unmarked | unmarked | unmarked",
+        "QoQ (Lin et al., 2025) | MLSys | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "FlashInfer (Ye et al., 2025) | MLSys | primary | unmarked | secondary | secondary | unmarked | unmarked | primary",
+        "Neo (Jiang et al., 2025c) | MLSys | unmarked | primary | primary | unmarked | secondary | unmarked | unmarked",
+        "PRESERVE (Yüzügüler et al., 2025) | arXiv | unmarked | primary | secondary | primary | unmarked | unmarked | unmarked",
+        "ReCalKV (Yan et al., 2025b) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "ClusterKV (Liu et al., 2025b) | DAC | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked",
+        "PQCache (Zhang et al., 2025a) | SIGMOD | unmarked | secondary | unmarked | primary | unmarked | secondary | unmarked",
+        "ShadowKV (Sun et al., 2025) | ICML | unmarked | secondary | unmarked | primary | unmarked | primary | unmarked",
+        "SepLLM (Chen et al., 2025a) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "CommVQ (Li et al., 2025a) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "LaCache (Shi et al., 2025) | ICML | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "SpeCache (Jie et al., 2025) | ICML | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked",
+        "RocketKV (Behnam et al., 2025) | ICML | primary | unmarked | unmarked | unmarked | unmarked | unmarked | secondary",
+        "ClusterAttn (Zhang et al., 2025c) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "RefreshKV (Xu et al., 2025a) | ACL | primary | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked",
+        "OTT (Su et al., 2025) | ACL | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "KVPR (Jiang et al., 2025a) | ACL | unmarked | primary | secondary | unmarked | unmarked | secondary | unmarked",
+        "SlimInfer (Long et al., 2025) | arXiv | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked",
+        "RAGCache (Jin et al., 2025) | TOCS | unmarked | secondary | unmarked | primary | unmarked | unmarked | unmarked",
+        "KVCompose (Akulov et al., 2025) | arXiv | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "LMCache (Cheng et al., 2025) | arXiv | unmarked | secondary | secondary | primary | primary | unmarked | secondary",
+        "DiffKV (Zhang et al., 2025e) | SOSP | unmarked | unmarked | unmarked | unmarked | unmarked | secondary | primary",
+        "TokenSelect (Wu et al., 2025) | EMNLP | primary | unmarked | unmarked | unmarked | unmarked | unmarked | secondary",
+        "EvolKV (Yu and Chai, 2025) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "DynamicKV (Zhou et al., 2025) | EMNLP | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "RetrievalAttention (Liu et al., 2025a) | NeurIPS | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked",
+        "Ada-KV (Feng et al., 2025) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | unmarked | primary",
+        "NSNQuant (Son et al., 2025) | NeurIPS | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "KVFlow (Pan et al., 2025) | NeurIPS | secondary | secondary | unmarked | primary | unmarked | primary | unmarked",
+        "TraCT (Yoon et al., 2025) | arXiv | unmarked | unmarked | secondary | primary | primary | unmarked | unmarked",
+        "CXL-SpecKV (Liu and Yu, 2026) | FPGA | unmarked | primary | secondary | primary | unmarked | secondary | unmarked",
+        "ChanMix (Liao and Wen, 2026) | ICLR | unmarked | unmarked | unmarked | unmarked | unmarked | primary | unmarked",
+        "Beluga (Yang et al., 2025) | SIGMOD | unmarked | unmarked | unmarked | primary | unmarked | unmarked | unmarked"
+      ],
+      "section": [
+        "D Supplementary Paper Categorization"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p23-b0",
+      "page": 23,
+      "bbox": [
+        70.46351623535156,
+        71.72454071044922,
+        290.9507141113281,
+        166.16973876953125
+      ],
+      "text": "fill phase. They serve as enabling mechanisms that\nmake the decoupled strategy feasible and link Split-\nwise to the “device-level KV transfer” and “pipelin-\ning and overlapping” categories. We summarize\nthese omitted associations in Tab. 9, denoted by G#,\nto provide a more complete mapping for readers\ninterested in cross-cutting techniques.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "D Supplementary Paper Categorization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p23-review-scheduling-takeaways",
+      "page": 23,
+      "bbox": [
+        70.85653686523438,
+        71.72454071044922,
+        525.7827758789062,
+        775.9141845703125
+      ],
+      "text": "KVS and OVLP directly target runtime stalls. KVS\nprioritizes limited resources for the most reusable\nand latency-sensitive work; OVLP is also a type of\nscheduling, aligning compute with data transfer to\nfill pipeline bubbles.\n¤Takeaway:\n✓KVS is a multi-objective optimization problem.\nModern schedulers often prioritize KV usage\nover time rather than FLOPS, and KV reuse-\ndriven scheduling is the default paradigm.\n✓KVS is enhanced by prediction. Lightweight\npredictors plus a robust policy outperform tradi-\ntional FCFS or SJF schemes (Hu et al., 2024b;\nQin et al., 2024; Shahout et al., 2024).\n✓The key to OVLP is to perform at the true bottle-\nneck with asymmetric pipelines. For example,\nkeep compute-bound prefill on GPU, and over-\nlap memory-bound decode attention and KV\nwith I/O or collective communication.\n✓Preferring recompute to transfer (Jiang et al.,\n2025a), or prefetching KV caches into L2 during\ncollectives (Dong et al., 2025; Yüzügüler et al.,\n2025), can substantially reduce pipeline bubbles,\nespecially when bandwidth is the bottleneck.",
+      "kind": "text",
+      "context": "Appendix E.1: Scheduling and overlapping takeaways. The final sentence continues from the left-column bottom to the right-column top of the same page.",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.1 Scheduling and Overlapping"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p23-b9",
+      "page": 23,
+      "bbox": [
+        306.144287109375,
+        134.750732421875,
+        526.3294677734375,
+        375.1971740722656
+      ],
+      "text": "HAE improves throughput, reduces mean/tail la-\ntency, and extends servable context without retrain-\ning, by decoupling phases and mapping execution\nto hardware capabilities.\n¤Takeaway:\n✓Compute should follow hardware capabilities.\nWhen executing on a given device, it is critical\nto specialize kernels, tiling, and memory layouts\nto that device.\n✓Create KV locality within the device rather than\nmoving KV across devices. It is effective to\nkeep hot KV caches close to the compute.\n✓Compute-intensive prefill and memory-bound\ndecode benefit from phase-specific execution\nmappings (cf. § 3.3.2).\n✓HAE should adapt to the access granularity and\nparallelism of the target device.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.2 Hardware-aware Execution"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p23-b1",
+      "page": 23,
+      "bbox": [
+        70.51852416992188,
+        175.50099182128906,
+        291.0458679199219,
+        378.7373352050781
+      ],
+      "text": "Venue Diversity.\nThe sKis methods span a broad\nrange of research communities as shown in Tab. 9.\nThe publication venues include top-tier machine\nlearning and artificial intelligence conferences (e.g.,\nICLR, ICML, NeurIPS, AAAI), natural language\nprocessing venues (e.g., ACL, EMNLP, COLM),\nsystems and architecture conferences (e.g., ASP-\nLOS, ISCA, HPCA, FAST, ATC, EuroSys, OSDI,\nSOSP, SC, SIGCOMM, DAC, FPGA), and interdis-\nciplinary forums such as MLSys and SIGMOD. We\nalso include some impactful arXiv preprints. This\ndiversity underscores the inherently cross-cutting\nnature of KV cache optimization and highlights the\ngrowing recognition of this topic across various\nresearch communities.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "D Supplementary Paper Categorization"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p23-b11",
+      "page": 23,
+      "bbox": [
+        306.144287109375,
+        411.5265197753906,
+        526.3279418945312,
+        775.9141845703125
+      ],
+      "text": "MHO and CDO govern where KV caches reside\nacross the memory hierarchy and how they transfer\nduring serving. They act directly on interconnect\nbandwidth bottlenecks, with GPU memory relief\nemerging as a by-product of tiering and offloading.\n¤Takeaway:\n✓It is a common MHO pattern to keep only future-\nuseful KV caches on the GPU, demote the rest\nto CPU or SSD, and reload guided by attention\ncues. Cost models can be effectively used to\nchoose CPU, GPU, SSD paths (Sheng et al.,\n2023; Jin et al., 2025).\n✓Most MHO and CDO solutions overlap I/O\ntransfers with compute or collectives to hide\nlatency, although they often serve OVLP as a\nsecondary category.\n✓Under interconnect bottlenecks, co-adaptation\nof transfer paths, precisions, or decoding strate-\ngies can reduce TTFT and SLO violations com-\npared with static schemes (Zhong et al., 2024;\nLiu et al., 2024c; Shen et al., 2024).\n✓Migration granularity and path should align with\nattention access patterns and device access units.\n✓Prefetch-evict co-design is rare. The field would\nbenefit from a unified objective that jointly ac-\ncounts for prefetch deadlines and eviction risk.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.3 Placement and Migration"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p23-b3",
+      "page": 23,
+      "bbox": [
+        70.46351623535156,
+        413.6276550292969,
+        290.4950866699219,
+        440.32342529296875
+      ],
+      "text": "Through a comprehensive literature review of sKis,\nwe discovered takeaways across several domains.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p24-b4",
+      "page": 24,
+      "bbox": [
+        306.144287109375,
+        71.72454071044922,
+        526.2349853515625,
+        418.0382995605469
+      ],
+      "text": "✓KV cache eviction is important in both prefill\nand decode. The former focuses on the KV\ncache to be computed, while the latter focuses\non the KV cache that has been computed.\n✓Most systems retain a small recent window, a\ntiny set of “attention sink” anchor tokens (Xiao\net al., 2024b; Gu et al., 2025), and a few “heavy\nhitters” (Zhang et al., 2023).\n✓Token importance should not be judged by atten-\ntion scores alone. KV norms provide strong and\nlow-overhead signals (Guo et al., 2024; Devoto\net al., 2024). We also note broader links to in-\nterpretability work on importance scoring (Sun-\ndararajan et al., 2017; Yang et al., 2023a,b).\n✓It is effective to use heterogeneous budgets\nacross layers or heads, rather than a uniform\nupper bound, as shown in Tab. 6. For example,\nshallow layers often deserve larger retention,\nwhile deeper layers emphasize global semantics\nand tolerate more sparsity.\n✓Pairing KV cache eviction with similarity-based\nrecall or merge is stronger than hard deletion,\npreserving salient context under tight budgets\nand improving long-context consistency (Wan\net al., 2025).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.5 KV Cache Eviction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p24-b1",
+      "page": 24,
+      "bbox": [
+        70.46351623535156,
+        89.97148895263672,
+        291.04541015625,
+        665.8026733398438
+      ],
+      "text": "KV caches can quickly overwhelm the memory\ncapacity of GPUs and pose bandwidth pressure as\ncontext length or batch size increases, since the\nsize of the KV cache scales linearly with these two\nfactors. Consequently, prior works have proposed\nvarious approaches to directly compress the KV\ncache, such as quantization, low-rank approxima-\ntion, and structural compression.\n¤Takeaway:\n✓Outliers dominate performance at low bitwidths\nor ranks (Su et al., 2025). Isolating outliers (e.g.,\nhigher bitwidths) for value-level compression\nmethods prevents worst-case error explosions.\n✓Recent advances trend toward applying vector\nquantization (VQ) (Gray, 1984) for KV cache\nquantization, and they often reach very low-bit\n(i.e., 1-2 bits) quantization with modest quality\nloss (Zhang et al., 2024c; Liu et al., 2025d; Son\net al., 2025; Li et al., 2025a).\n✓KVCC has been developed mostly at the algo-\nrithm level, while system-level integration is\nthin (cf. Fig. 6). Thus, memory reductions often\nfail to translate into lower mean/tail latency or\nhigher throughput unless KVCC is co-designed\nwith execution, migration, and runtime control,\nwhich is consistent with recent observations in\nDeltaKV (Hao et al., 2026).\nWe further discuss the co-design of KVCC with\nexecution, migration, and runtime control (the last\nakeaway) as follows: (i) Co-design with execution:\nquantization/de-quantization and low-rank updates\ncan be fused into attention kernels or overlapped\nwith compute, so compression overhead does not\nre-introduce stalls in the decode pipeline; (ii) Co-\ndesign with migration: aligning compressed pack-\ning units with device access units ensures that mem-\nory footprint reductions translate into fewer, fully\nutilized transfer chunks that fit overlap windows.\n(iii) Co-design with runtime control: exposing tun-\nable parameters (e.g., bitwidth, rank, sparsity) to\nthe runtime and adjusting them under SLOs re-\nmains an opportunity beyond static configurations.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.4 KV Cache Compression"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p24-b6",
+      "page": 24,
+      "bbox": [
+        305.7512512207031,
+        461.7870178222656,
+        525.7861328125,
+        637.53125
+      ],
+      "text": "Below we detail the compute procedure of behavior\npairs’ normalized co-occurrence strengths, which\nare reflected by the edge thicknesses in Fig. 6.\nLet B\n={KVS, OVLP, HAE, MHO, CDO,\nKVCC, KVRM} denote the set of behaviors and\nP the set of papers. For p ∈P and i ∈B, let\nthe categorical label be ℓp,i ∈{P, S, NA}, which\nmeans primary category ( ), secondary category\n(G#), or no category. Each ℓp,i can be observed\nfrom Tab. 9. We map labels to numeric weights\nby ω(ℓp,i) = 1[ℓp,i=P] + α1[ℓp,i=S] with α = 0.5,\nwhere 1[·] is the indicator function that equals 1\nwhen the stated condition holds and 0 otherwise.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p24-review-cooccurrence",
+      "page": 24,
+      "bbox": [
+        305.6312561035156,
+        644.0383911132812,
+        526.3349609375,
+        775.9141845703125
+      ],
+      "text": "Constructing raw co-occurrence.\nThe raw co-\noccurrence matrix C ∈R|B|×|B| aggregates pair-\nwise co-appearance strength, as shown in Tab. 11.\nEach cell Cij of the behavior pair i, j is defined by\nsumming the per-paper products of their weights:\nC_ij = sum_{p in P} omega(l_{p,i}) omega(l_{p,j}).\nConstructing normalized co-design affinity.\nWhile the raw co-occurrence matrix C captures ab-",
+      "kind": "text",
+      "context": "Appendix F: Raw weighted co-occurrence of behavior categories; Table 11. Primary weight 1; secondary weight 0.5. Normalization continues on page 25.",
+      "rows": [],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p24-b3",
+      "page": 24,
+      "bbox": [
+        70.85653686523438,
+        694.6316528320312,
+        290.95074462890625,
+        776.5687866210938
+      ],
+      "text": "KV cache eviction decides which past tokens re-\nmain resident under tight memory and bandwidth\nbudgets, so that long contexts can be served. It oper-\nates in both phases and trades memory and transfer\ncost against utility to the attention compute.\n¤Takeaway:",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "E Takeaways",
+        "E.5 KV Cache Eviction"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-review-table11",
+      "page": 25,
+      "bbox": [
+        68,
+        68,
+        292,
+        210
+      ],
+      "text": "KVS | – | 2.5 | 4.75 | 4 | 1.75 | 0 | 6.5\nOVLP | 2.5 | – | 9.25 | 8.5 | 6.5 | 2.75 | 2.25\nHAE | 4.75 | 9.25 | – | 3.75 | 10 | 1.25 | 3.25\nMHO | 4 | 8.5 | 3.75 | – | 3 | 3.5 | 5.75\nCDO | 1.75 | 6.5 | 10 | 3 | – | 1.25 | 2.75\nKVCC | 0 | 2.75 | 1.25 | 3.5 | 1.25 | – | 1.75\nKVRM | 6.5 | 2.25 | 3.25 | 5.75 | 2.75 | 1.75 | –",
+      "kind": "table",
+      "context": "Table 11: Raw (pre-normalization) co-occurrence ma- trix that encodes the weighted co-occurrence strength between system behaviors across papers.\nBehavior | KVS | OVLP | HAE | MHO | CDO | KVCC | KVRM\nSource dashes denote diagonal cells. Weights: primary 1, secondary 0.5; raw weighted co-occurrence.",
+      "rows": [
+        "KVS | – | 2.5 | 4.75 | 4 | 1.75 | 0 | 6.5",
+        "OVLP | 2.5 | – | 9.25 | 8.5 | 6.5 | 2.75 | 2.25",
+        "HAE | 4.75 | 9.25 | – | 3.75 | 10 | 1.25 | 3.25",
+        "MHO | 4 | 8.5 | 3.75 | – | 3 | 3.5 | 5.75",
+        "CDO | 1.75 | 6.5 | 10 | 3 | – | 1.25 | 2.75",
+        "KVCC | 0 | 2.75 | 1.25 | 3.5 | 1.25 | – | 1.75",
+        "KVRM | 6.5 | 2.25 | 3.25 | 5.75 | 2.75 | 1.75 | –"
+      ],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p25-b15",
+      "page": 25,
+      "bbox": [
+        305.7512512207031,
+        90.78980255126953,
+        526.2384643554688,
+        199.17742919921875
+      ],
+      "text": "As discussed in C3, efficiency optimizations typi-\ncally account for average quality loss, but trustwor-\nthiness is rarely measured or attributed. Trust risks\nare especially concerning in high-stakes and safety-\ncritical scenarios (Wang et al., 2025b; Zeng et al.,\n2025b; Wu et al., 2024b; Shen and Zhang, 2026; Li\net al., 2025c; Zhang et al., 2024a; Sunmola et al.,\n2025) where errors can have severe consequences.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.1 Trustworthy sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-b16",
+      "page": 25,
+      "bbox": [
+        305.8062744140625,
+        200.5789794921875,
+        526.3306274414062,
+        484.7226257324219
+      ],
+      "text": "One representative example (also related to our\ndiscussion in C3) is that KV cache eviction and\ncompression can compromise quality robustness.\nThey may drop rare but critical tokens with low ac-\ncumulated attention (e.g., an exception clause in a\ncontract, or a high value in a financial limit), which\ncan lead to catastrophic errors on a small subset\nof inputs while the system still appears efficient\nand accurate on average. This failure mode can be\namplified by distribution shift in workloads, such\nas in autonomous agent workloads (Zhou et al.,\n2024a; Zhang et al., 2025b), where statistically\nsparse tokens become logically important. Opti-\nmizations tuned to the original distribution may\nprune these sparse critical dependencies, causing\nagents to hallucinate success. Moreover, given\nthat modern LLMs can be sensitive to prompt-level\nvariations such as tone/politeness (Cai et al., 2025),\nsuch structural methods may interact with these\nvariations and affect robustness to prompt-level\nshifts.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.1 Trustworthy sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-review-table12",
+      "page": 25,
+      "bbox": [
+        68,
+        219,
+        292,
+        373
+      ],
+      "text": "KVS | – | 0.09 | 0.16 | 0.11 | 0.07 | 0 | 0.14\nOVLP | 0.09 | – | 0.42 | 0.30 | 0.38 | 0.06 | 0.05\nHAE | 0.16 | 0.42 | – | 0.10 | 0.53 | 0.02 | 0.06\nMHO | 0.11 | 0.30 | 0.10 | – | 0.10 | 0.06 | 0.10\nCDO | 0.07 | 0.38 | 0.53 | 0.10 | – | 0.03 | 0.06\nKVCC | 0 | 0.06 | 0.02 | 0.06 | 0.03 | – | 0.02\nKVRM | 0.14 | 0.05 | 0.06 | 0.10 | 0.06 | 0.02 | –",
+      "kind": "table",
+      "context": "Table 12: Normalized co-design affinity matrix that encodes relative co-occurrence strength between behav- iors across papers. Scores greater than the threshold θ = 0.14 are highlighted and visualized in Fig. 6.\nBehavior | KVS | OVLP | HAE | MHO | CDO | KVCC | KVRM\nSource dashes denote diagonal cells. Tanimoto-normalized co-occurrence on [0,1]; not measured performance gains. Rounded source values retained.",
+      "rows": [
+        "KVS | – | 0.09 | 0.16 | 0.11 | 0.07 | 0 | 0.14",
+        "OVLP | 0.09 | – | 0.42 | 0.30 | 0.38 | 0.06 | 0.05",
+        "HAE | 0.16 | 0.42 | – | 0.10 | 0.53 | 0.02 | 0.06",
+        "MHO | 0.11 | 0.30 | 0.10 | – | 0.10 | 0.06 | 0.10",
+        "CDO | 0.07 | 0.38 | 0.53 | 0.10 | – | 0.03 | 0.06",
+        "KVCC | 0 | 0.06 | 0.02 | 0.06 | 0.03 | – | 0.02",
+        "KVRM | 0.14 | 0.05 | 0.06 | 0.10 | 0.06 | 0.02 | –"
+      ],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p25-review-squared-weight",
+      "page": 25,
+      "bbox": [
+        70.85653686523438,
+        393.5986328125,
+        290.495849609375,
+        504.68060302734375
+      ],
+      "text": "solute overlap, it is biased by marginal popularity,\nbecause the behaviors with larger research density\ntend to have larger Cij. We therefore normalize\nC using the Tanimoto coefficient. We define the\nper-behavior squared weight Qi:\nQ_i = sum_{p in P} w_{p,i}^2.",
+      "kind": "text",
+      "context": "Appendix F: Constructing normalized co-design affinity, continued from page 24. Per-behavior squared weight for Tanimoto normalization.",
+      "rows": [],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-b17",
+      "page": 25,
+      "bbox": [
+        306.144287109375,
+        486.1242370605469,
+        526.238525390625,
+        717.0652465820312
+      ],
+      "text": "Trustworthiness risks extend beyond robustness\nto reliability, privacy, and safety, and can arise from\ndiverse sKis behaviors. For instance, temporal\nasynchrony may expose stale KV and introduce\nnondeterminism, harming reliability; cross-tier mi-\ngration can leave residual KV state or transfer KV\nin plaintext, harming privacy.\nA key gap is that many methods only measure\naverage metrics on relatively easy workloads, but\nrarely consider quality lower bound, recall SLO,\nor semantic violation metrics, so such worst-case\nfailures remain invisible. A promising direction\nis to consider trustworthy metrics and integrate\nruntime mechanisms, such as violation detectors,\nrecovery policies, and potentially targeted rectifica-\ntion mechanisms (Yang et al., 2026), to provide a\nquality lower bound under stress.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.1 Trustworthy sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-review-tanimoto",
+      "page": 25,
+      "bbox": [
+        70.46351623535156,
+        509.13543701171875,
+        290.9474792480469,
+        717.943359375
+      ],
+      "text": "Then the Tanimoto-normalized co-design affinity\nmatrix S ∈R|B|×|B| reflects relative co-occurrence\nstrength on a [0, 1] scale, as shown in Tab. 12. Each\ncell in Sij of the behavior pair i, j is defined as\nthe ratio of their shared weighted presence to their\nsquared union:\nS_ij = C_ij / (Q_i + Q_j - C_ij).\nCompared to Cij, this score controls marginal sizes\nand is visualized in Fig. 6. We draw an undirected\nedge between behaviors i and j iff Sij > θ, where\nwe set the threshold θ = 0.14; edges below the\nthreshold are omitted to reduce clutter. Edge thick-\nness is proportional to Sij.",
+      "kind": "text",
+      "context": "Appendix F: Tanimoto-normalized co-design affinity of behavior categories; Table 12 and Figure 6. This is literature co-occurrence, not performance gain.",
+      "rows": [],
+      "section": [
+        "F Behavior-behavior Co-design Affinity Computation"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-b13",
+      "page": 25,
+      "bbox": [
+        70.85653686523438,
+        749.2183837890625,
+        289.1311950683594,
+        775.9141845703125
+      ],
+      "text": "Due to space constraints, this section complements\n§ 6.2 with further discussion on open challenges.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p25-b19",
+      "page": 25,
+      "bbox": [
+        305.6312561035156,
+        749.2183837890625,
+        526.2372436523438,
+        776.5687866210938
+      ],
+      "text": "We here provide additional discussion of interme-\ndiate semantics as a supplement to C5.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.2 Intermediate Semantics for Behaviors"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b0",
+      "page": 26,
+      "bbox": [
+        69.40546417236328,
+        71.72454071044922,
+        290.9471740722656,
+        328.76885986328125
+      ],
+      "text": "Intuitively, intermediate semantics for sKis be-\nhaviors aim to bridge the gap between binary\ndecisions (e.g., “retain” vs. “evict”); examples\ninclude “reclaimable on GPU”, “compressed on\nGPU”, “compressed on CPU”, “summarized on\nCPU/SSD”, etc. In this way, a co-optimization\nstrategy can be formalized as a transition between\nthese states.\nFor instance, the compress-then-\noffload strategy first transitions a KV unit from\na “keep” state to “compressed on GPU”, then to\n“compressed on CPU”. This creates a low-fidelity\nresident state that trades precision for I/O band-\nwidth. Similarly, lazy eviction transitions a KV\nunit to “reclaimable on GPU” with a grace period\nto allow cheap recovery before the final transition\nto permanent eviction (i.e., state “evict”). These\nconcrete examples show how future work can co-\noptimize eviction, compression, and migration by\nexploiting intermediate semantics.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.2 Intermediate Semantics for Behaviors"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b5",
+      "page": 26,
+      "bbox": [
+        305.7842712402344,
+        71.72454071044922,
+        526.2315063476562,
+        179.720458984375
+      ],
+      "text": "tokens per second (TPS), and requests per second\n(RPS). The companion tool GenAI-Perf (NVIDIA,\n2025a) emits the defined metrics and implements\nthe stable-window analysis across OpenAI-API-\ncompatible backends. However, although client-\nside tools offer specific metrics for LLM-based ap-\nplications, we find inconsistent metric definitions\nand measurements across different tools.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b6",
+      "page": 26,
+      "bbox": [
+        305.87127685546875,
+        186.9496612548828,
+        526.23828125,
+        430.8369445800781
+      ],
+      "text": "Benchmark suites.\nThey are standardized pack-\nages of workloads, procedures, and reporting rules\nthat specify what to run, how to run it, and what\nto report. Such suites typically cover multiple sys-\ntems and hardware and enable reproducible com-\nparisons. MLPerf Inference (Reddi et al., 2020)\nemphasizes inference system comparison, and its\nv5.0 includes LLM scenarios with accuracy valida-\ntion. LLM-Inference-Bench (Chitty-Venkata et al.,\n2024) evaluates the inference performance of the\nLLaMA model family across a variety of hardware\nplatforms. BALI (Jurkschat et al., 2025) measures\nLLM inference across six frameworks or acceler-\nation approaches. It divides inference into three\nmeasured stages: setup, tokenize, and generate,\nand supports two settings: a technical setting with\na fixed number of tokens, and a prompt-to-answer\nsetting that includes tokenization.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b2",
+      "page": 26,
+      "bbox": [
+        70.85653686523438,
+        354.5376892089844,
+        290.95074462890625,
+        476.08221435546875
+      ],
+      "text": "Here, we focus on system-performance benchmark-\ning during serving, which measures actual perfor-\nmance metrics like latency, throughput, service-\nlevel objectives (SLOs), KV cache memory and\nbandwidth, and energy. In contrast, task or quality\nbenchmarks focus on datasets and accuracy met-\nrics. In our survey they serve only as quality gates\nand are not primary evaluation objectives. We refer\nreaders to the survey (Li et al., 2024b) for details.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b7",
+      "page": 26,
+      "bbox": [
+        306.144287109375,
+        438.06610107421875,
+        526.2305297851562,
+        548.9088745117188
+      ],
+      "text": "G.3.2\nBenchmark Design Principles\nBuilding on the review, we offer a concise design\nchecklist for sKis to improve comparability across\nsystems. Here, we do not aim to define a complete,\nreproducible benchmark suite. Instead, we distill a\nset of benchmark design principles covering met-\nrics, workloads, and reporting standards that future\ncommunity benchmarks should instantiate.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b3",
+      "page": 26,
+      "bbox": [
+        70.51852416992188,
+        482.5083312988281,
+        290.95074462890625,
+        661.1004638671875
+      ],
+      "text": "G.3.1\nReview of sKis Benchmarking Practices\nMany popular inference frameworks or sys-\ntems,\nsuch as vLLM (Kwon et al., 2023),\nTensorRT-LLM (NVIDIA, 2023), and DeepSpeed-\nInference (Aminabadi et al., 2022), provide bench-\nmark scripts that measure system metrics for their\nlocal checks but remain framework-specific. We\ntherefore view them as systems under test rather\nthan the benchmark itself. In this section, we sur-\nvey benchmarking efforts that provide a platform-\nand framework-agnostic way to obtain system mea-\nsurements. They primarily fall into two categories:\nclient-side tools and benchmark suites.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b8",
+      "page": 26,
+      "bbox": [
+        306.144287109375,
+        556.1389770507812,
+        526.2393188476562,
+        775.9141845703125
+      ],
+      "text": "Metrics.\nBesides standard metrics, we recom-\nmend that future sKis benchmark suites report the\nfollowing two types of important metrics:\n1. Trustworthy metrics that reflect the reliability\nof the serving system in satisfying SLOs, such\nas tail latency (P90, P95, P99 latency), SLO vio-\nlation rate (% of requests > P99 target), goodput\n(throughput meeting SLOs), recall SLO (suc-\ncess rate of certain semantic segments), and se-\nmantic violation rate.\n2. KV-related resource metrics that measure the\nutilization of resources, such as KV cache mem-\nory footprint (as % of total GPU memory), av-\nerage effective KV bitwidth (for compression\nmethods), KV-related interconnect I/O (the vol-\nume of KV transferred across memory tiers),",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p26-b4",
+      "page": 26,
+      "bbox": [
+        70.85653686523438,
+        667.5265502929688,
+        290.95074462890625,
+        775.9141845703125
+      ],
+      "text": "Client-side tools.\nThey define and enforce metric\nsemantics. Using one tool across systems yields di-\nrectly comparable numbers. LLMPerf (Ray, 2024)\ntargets API benchmark and provides system metric\nmeasurement on service endpoints. NVIDIA NIM\nbenchmarking guide (NVIDIA, 2025b) defines the\ncommon metrics of time to first token (TTFT), end-\nto-end request latency, inter-token latency (ITL),",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p27-b0",
+      "page": 27,
+      "bbox": [
+        84.02019500732422,
+        71.72454071044922,
+        291.0494384765625,
+        125.52069091796875
+      ],
+      "text": "KV hit rate in memory tiers, KV-related stalls (%\nof time spent waiting for KV transfers), effective\nbandwidth utilization (useful KV transfer ratio),\nand energy efficiency (Joules per token/request).",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p27-b1",
+      "page": 27,
+      "bbox": [
+        70.85653686523438,
+        132.8958282470703,
+        290.94476318359375,
+        368.2138366699219
+      ],
+      "text": "Workloads.\nA future sKis benchmark should\ncover the following three workload types to stress\ntemporal, spatial, and structural KV behaviors:\n1. Multi-tenant or bursty online serving workloads\nto test the stability of temporal scheduling under\nhigh concurrency.\n2. Long-context task workloads to test KV cache\nplacement and migration when memory and I/O\nbecome bottlenecks.\n3. Heterogeneous workloads, such as agent work-\nloads (Zeng et al., 2025c; Zhou et al., 2024a),\nstructured editing (Zeng et al., 2025d), or\ndomain-shifted workloads (Tian et al., 2024,\n2026; Li et al., 2023, 2025b; Yan et al., 2025a;\nZeng et al., 2025a), to test the robustness of\nstructural KV cache optimizations against dis-\ntribution shift.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p27-b2",
+      "page": 27,
+      "bbox": [
+        70.46351623535156,
+        375.5889892578125,
+        290.9507141113281,
+        516.0582275390625
+      ],
+      "text": "Reporting standards.\nIn addition to the basic in-\nformation like model, hardware, and configuration,\nwe recommend the following reporting standards\nfor sKis benchmarks:\n1. Performance under graduated context lengths to\nvalidate scalability.\n2. Accuracy vs.\nmemory curves for structural\nmethods to reveal the trade-offs.\n3. Detailed hardware and topology setups, espe-\ncially for temporal and spatial methods.",
+      "kind": "text",
+      "context": "",
+      "rows": [],
+      "section": [
+        "G Extended Discussion on Challenges",
+        "G.3 Benchmarking for sKis"
+      ],
+      "context_reviewed": false
+    }
+  ],
+  "source_block_mapping": {
+    "p19-review-projections": [
+      {
+        "block_id": "p19-b8",
+        "page": 19,
+        "bbox": [
+          70.85653686523438,
+          653.6686401367188,
+          290.95147705078125,
+          748.1148071289062
+        ]
+      },
+      {
+        "block_id": "p19-b9",
+        "page": 19,
+        "bbox": [
+          87.18635559082031,
+          762.3665161132812,
+          272.80841064453125,
+          777.2130737304688
+        ]
+      }
+    ],
+    "p19-review-attention": [
+      {
+        "block_id": "p19-b10",
+        "page": 19,
+        "bbox": [
+          305.8062744140625,
+          71.72454071044922,
+          524.418701171875,
+          98.98444366455078
+        ]
+      },
+      {
+        "block_id": "p19-b11",
+        "page": 19,
+        "bbox": [
+          306.1443176269531,
+          104.66250610351562,
+          532.412353515625,
+          134.0631866455078
+        ]
+      },
+      {
+        "block_id": "p19-b12",
+        "page": 19,
+        "bbox": [
+          305.7512512207031,
+          137.47283935546875,
+          525.9384765625,
+          164.16864013671875
+        ]
+      },
+      {
+        "block_id": "p19-b13",
+        "page": 19,
+        "bbox": [
+          342.7831115722656,
+          170.79391479492188,
+          487.7860107421875,
+          185.0467071533203
+        ]
+      }
+    ],
+    "p19-review-ffn": [
+      {
+        "block_id": "p19-b14",
+        "page": 19,
+        "bbox": [
+          305.7512512207031,
+          187.41033935546875,
+          526.2313842773438,
+          245.1656494140625
+        ]
+      },
+      {
+        "block_id": "p19-b15",
+        "page": 19,
+        "bbox": [
+          328.83740234375,
+          254.09083557128906,
+          501.7317810058594,
+          266.63653564453125
+        ]
+      },
+      {
+        "block_id": "p19-b16",
+        "page": 19,
+        "bbox": [
+          305.7512512207031,
+          272.36553955078125,
+          526.2357788085938,
+          312.61199951171875
+        ]
+      }
+    ],
+    "p24-review-cooccurrence": [
+      {
+        "block_id": "p24-b7",
+        "page": 24,
+        "bbox": [
+          305.7512512207031,
+          644.0383911132812,
+          526.3349609375,
+          711.7769775390625
+        ]
+      },
+      {
+        "block_id": "p24-b8",
+        "page": 24,
+        "bbox": [
+          359.095947265625,
+          710.1101684570312,
+          404.82696533203125,
+          733.56591796875
+        ]
+      },
+      {
+        "block_id": "p24-b9",
+        "page": 24,
+        "bbox": [
+          388.70538330078125,
+          721.0201416015625,
+          471.4739074707031,
+          750.078857421875
+        ]
+      },
+      {
+        "block_id": "p24-b10",
+        "page": 24,
+        "bbox": [
+          305.6312561035156,
+          748.8256225585938,
+          526.330810546875,
+          775.9141845703125
+        ]
+      }
+    ],
+    "p25-review-squared-weight": [
+      {
+        "block_id": "p25-b6",
+        "page": 25,
+        "bbox": [
+          70.85653686523438,
+          393.5986328125,
+          290.495849609375,
+          461.5075378417969
+        ]
+      },
+      {
+        "block_id": "p25-b7",
+        "page": 25,
+        "bbox": [
+          147.14434814453125,
+          464.7118835449219,
+          189.81820678710938,
+          488.1676330566406
+        ]
+      },
+      {
+        "block_id": "p25-b8",
+        "page": 25,
+        "bbox": [
+          173.69667053222656,
+          473.322021484375,
+          212.85035705566406,
+          504.68060302734375
+        ]
+      }
+    ],
+    "p25-review-tanimoto": [
+      {
+        "block_id": "p25-b9",
+        "page": 25,
+        "bbox": [
+          70.51852416992188,
+          509.13543701171875,
+          289.5143737792969,
+          590.0309448242188
+        ]
+      },
+      {
+        "block_id": "p25-b10",
+        "page": 25,
+        "bbox": [
+          127.8443832397461,
+          600.7081298828125,
+          232.15032958984375,
+          635.9244384765625
+        ]
+      },
+      {
+        "block_id": "p25-b11",
+        "page": 25,
+        "bbox": [
+          70.46351623535156,
+          636.4848022460938,
+          290.9474792480469,
+          717.943359375
+        ]
+      }
+    ],
+    "p23-review-scheduling-takeaways": [
+      {
+        "block_id": "p23-b5",
+        "page": 23,
+        "bbox": [
+          70.85653686523438,
+          470.1174621582031,
+          291.0472717285156,
+          748.8148193359375
+        ]
+      },
+      {
+        "block_id": "p23-b6",
+        "page": 23,
+        "bbox": [
+          84.0751953125,
+          749.2183837890625,
+          290.49652099609375,
+          775.9141845703125
+        ]
+      },
+      {
+        "block_id": "p23-b7",
+        "page": 23,
+        "bbox": [
+          319.3629455566406,
+          71.72454071044922,
+          525.7827758789062,
+          98.42034912109375
+        ]
+      }
+    ]
+  },
+  "semantic_metadata_exclusions": [
+    {
+      "block_id": "p1-b1",
+      "page": 1,
+      "bbox": [
+        138.11090087890625,
+        66.97897338867188,
+        456.65557861328125,
+        101.5851058959961
+      ],
+      "reason": "bibliographic/front-matter metadata; source identity and title retained in manifest, excluded from semantic evidence index"
+    },
+    {
+      "block_id": "p1-b2",
+      "page": 1,
+      "bbox": [
+        162.14610290527344,
+        105.45201873779297,
+        435.62384033203125,
+        121.51985931396484
+      ],
+      "reason": "bibliographic/front-matter metadata; source identity and title retained in manifest, excluded from semantic evidence index"
+    },
+    {
+      "block_id": "p1-b3",
+      "page": 1,
+      "bbox": [
+        107.84342956542969,
+        119.68769073486328,
+        487.4397888183594,
+        189.684814453125
+      ],
+      "reason": "bibliographic/front-matter metadata; source identity and title retained in manifest, excluded from semantic evidence index"
+    },
+    {
+      "block_id": "p1-b5",
+      "page": 1,
+      "bbox": [
+        131.91859436035156,
+        193.86964416503906,
+        478.63671875,
+        205.825439453125
+      ],
+      "reason": "bibliographic/front-matter metadata; source identity and title retained in manifest, excluded from semantic evidence index"
+    },
+    {
+      "block_id": "p1-b10",
+      "page": 1,
+      "bbox": [
+        83.51016998291016,
+        764.584228515625,
+        230.05445861816406,
+        775.3892822265625
+      ],
+      "reason": "bibliographic/front-matter metadata; source identity and title retained in manifest, excluded from semantic evidence index"
+    }
+  ]
+}

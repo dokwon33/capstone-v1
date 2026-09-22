@@ -6,7 +6,7 @@
     "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
     "dimension": 768,
     "max_input_tokens": 512,
-    "local_path": null,
+    "local_path": "outputs/models/e5-pinned",
     "device": "cpu",
     "batch_size": 8
   },
@@ -29,8 +29,8 @@
         "TurboQuant": "direct"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/turboquant.json",
+      "structure_override_sha256": "8fb11be84f7ca982812896c0154de0c49a9739f70f23b6ed99d5cd58e6ccebd8",
       "scope_by_section": {}
     },
     {
@@ -46,26 +46,26 @@
         "ITME": "direct"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/itme.json",
+      "structure_override_sha256": "69a8b99fe2ddfc8875e25c3acaacb8b22432ea63135e16d7b1bd26a592f23a69",
       "scope_by_section": {}
     },
     {
       "doc_id": "pagedattention",
       "path": "papers/pagedattention.pdf",
-      "version": "2309.06180v4",
+      "version": "2309.06180v1",
       "sha256": "55b3b324d779a67c59dac2519445e3b07c14e6ff5c656fadb47a3d7b5997469e",
       "pages": 16,
       "title": "PagedAttention / vLLM",
       "publication_date": "2023-09-12",
-      "ref": "https://arxiv.org/abs/2309.06180",
+      "ref": "https://arxiv.org/abs/2309.06180v1",
       "scope_by_tech": {
         "TurboQuant": "category",
         "ITME": "category"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/pagedattention.json",
+      "structure_override_sha256": "f416bd494c12d5bfdf010de432e82c65a032ff67b9f44ed717fb62e64b91f473",
       "scope_by_section": {}
     },
     {
@@ -82,8 +82,8 @@
         "ITME": "category"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/lmcache.json",
+      "structure_override_sha256": "d4e4768314e40379979e8f9a38e852985ca8b8f25db1f41555a7215d9a30e2eb",
       "scope_by_section": {}
     },
     {
@@ -100,8 +100,8 @@
         "ITME": "category"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/mooncake.json",
+      "structure_override_sha256": "65b1a8d997bace3f9dbd6ff7ab6aabf5cf0c6a86555d321b35cd4490dce2a4b4",
       "scope_by_section": {}
     },
     {
@@ -118,8 +118,8 @@
         "ITME": "category"
       },
       "self_reported": true,
-      "structure_override": null,
-      "structure_override_sha256": null,
+      "structure_override": "structure_reviews/kv_survey.json",
+      "structure_override_sha256": "fee8a6e87f300a512e6ea5cf3fff6d6d3cf98cb131f9f836784cbebd801eff8f",
       "scope_by_section": {}
     }
   ]

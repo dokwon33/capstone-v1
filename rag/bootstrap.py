@@ -9,7 +9,7 @@ from pathlib import Path
 from .contracts import Contracts, EvidenceAllocator
 from .embeddings import E5Tokenizer, LocalE5Encoder
 from .llm import StructuredLLM
-from .models import Manifest, RuntimePolicy
+from .models import Manifest, RetrievalPolicy, RuntimePolicy
 from .store import DenseStore, EmbeddingCache
 from .subgraph import (
     JsonlAudit,
@@ -35,6 +35,47 @@ def load_policy(binding_path: Path) -> tuple[RuntimePolicy, dict]:
     return RuntimePolicy.from_config(config, binding["runtime_exports"]), binding
 
 
+def load_retrieval_policy(binding_path: Path) -> tuple[RetrievalPolicy, dict]:
+    """Read only the settings needed before LLM grading/extraction."""
+    binding = load_bindings(binding_path)
+    config = importlib.import_module("config")
+    names = {
+        "top_k": "TOP_K",
+        "search_retries": "SEARCH_RETRY",
+        "use_cache": "USE_CACHE",
+    }
+    if any(binding["runtime_exports"].get(key) != name for key, name in names.items()):
+        raise ValueError("retrieval bindings differ from project config exports")
+    policy = RetrievalPolicy(**{key: getattr(config, name) for key, name in names.items()})
+    return policy, binding
+
+
+def build_retriever(
+    manifest_path: Path,
+    index_path: Path,
+    binding_path: Path,
+    cache_path: Path | None = None,
+):
+    """Load the pinned local index without constructing a generative LLM client."""
+    policy, binding = load_retrieval_policy(binding_path)
+    manifest = Manifest.load(manifest_path)
+    if manifest.purpose != "production":
+        raise ValueError("production service cannot use fixture manifest")
+    tokenizer = E5Tokenizer(manifest.embedding)
+    encoder = LocalE5Encoder(manifest.embedding, tokenizer)
+    store = DenseStore(index_path, encoder.identity)
+    from .ingest import ingestion_fingerprint
+
+    if store.fingerprint != ingestion_fingerprint(manifest, encoder.identity):
+        raise ValueError("manifest differs from index fingerprint; reindex required")
+    cache = (
+        EmbeddingCache(cache_path, encoder.identity)
+        if policy.use_cache and cache_path
+        else None
+    )
+    return LocalRetriever(store, encoder, cache), tokenizer, store, policy, binding
+
+
 def build_service(
     manifest_path: Path,
     index_path: Path,
@@ -44,29 +85,17 @@ def build_service(
     cache_path: Path | None = None,
 ):
     policy, binding = load_policy(binding_path)
-    manifest = Manifest.load(manifest_path)
-    if manifest.purpose != "production":
-        raise ValueError("production service cannot use fixture manifest")
+    retriever, tokenizer, store, _, _ = build_retriever(
+        manifest_path, index_path, binding_path, cache_path
+    )
     contracts = Contracts.from_project(binding["common_prompt_export"])
-    tokenizer = E5Tokenizer(manifest.embedding)
-    encoder = LocalE5Encoder(manifest.embedding, tokenizer)
-    store = DenseStore(index_path, encoder.identity)
-    from .ingest import ingestion_fingerprint
-
-    if store.fingerprint != ingestion_fingerprint(manifest, encoder.identity):
-        raise ValueError("manifest differs from index fingerprint; reindex required")
     module, name = binding["chat_factory"].split(":", 1)
     factory = getattr(importlib.import_module(module), name)
     llm = StructuredLLM(policy, contracts.common_system_prompt, factory)
-    cache = (
-        EmbeddingCache(cache_path, encoder.identity)
-        if policy.use_cache and cache_path
-        else None
-    )
     nodes = RagNodes(
         policy,
         tokenizer,
-        LocalRetriever(store, encoder, cache),
+        retriever,
         llm,
         JsonlAudit(audit_path),
     )

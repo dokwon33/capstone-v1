@@ -1,0 +1,4454 @@
+{
+  "document_sha256": "a1b6a90258c7e9091f24603ca4cff85f9f47410be10f5de89b7f902a2d3f6417",
+  "parser_version": "structure-v1",
+  "status": "approved",
+  "reviewer": "Codex (AI-assisted visual review)",
+  "reviewed_at": "2026-09-22T02:57:40Z",
+  "review_notes": "AI-assisted visual review of all figure/table pages rendered at 120 dpi from the hash-pinned original PDF. Reviewer is Codex, not a claimed human reviewer. status=approved records this AI structural review; human PR review remains separate. Removed false table detections inside charts/diagrams and isolated visual-label fragments. Preserved source captions and substantive prose, with page/bbox provenance; figure claims come from captions and explanatory text, not pixel interpolation. Recovered raw captions swallowed by table detection; reconstructed numbered section metadata from original bold headings, replacing the erroneous arXiv-sidebar section. References and page/sidebar furniture remain excluded. Actual tables were transcribed into rows with repeated column, unit and condition context. Non-evidence title/author/affiliation/copyright blocks are kept in source/audit rather than separately indexed. Equation fragments are grouped with their source explanations, and short introduction/continuation blocks with the relevant prose, preserving original text and the union of same-page source bounding boxes. Restored Figure 1; corrected API underscores from source text, added missed Tables 1/4/5, retained original Table 4 Single-node values without guessing a correction. Review coverage and every original blocking issue resolution are listed below.",
+  "review_method": "AI-assisted visual PDF/text-layer comparison",
+  "source_issue_count": 34,
+  "resolved_issue_ids": [
+    "p1-table0",
+    "p1-table1",
+    "p10-b1",
+    "p10-b10",
+    "p10-table0",
+    "p11-b12",
+    "p12-b29",
+    "p12-b59",
+    "p13-b26",
+    "p13-b32",
+    "p14-b20",
+    "p14-b39",
+    "p14-b47",
+    "p14-table0",
+    "p14-table1",
+    "p15-b28",
+    "p15-b7",
+    "p3-b40",
+    "p3-b50",
+    "p3-b67",
+    "p3-table0",
+    "p3-table1",
+    "p3-table2",
+    "p3-table3",
+    "p4-b2",
+    "p5-b19",
+    "p5-table0",
+    "p7-b45",
+    "p7-table0",
+    "p7-table1",
+    "p7-table2",
+    "p8-b1",
+    "p8-b30",
+    "p8-table0"
+  ],
+  "reviewed_pages": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "original_issue_count": 34,
+  "issue_resolutions": [
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 1,
+      "block_id": "p1-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 1,
+      "block_id": "p1-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-b40",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-b50",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-b67",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-table2",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 3,
+      "block_id": "p3-table3",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 4,
+      "block_id": "p4-b2",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-b19",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 5,
+      "block_id": "p5-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-b45",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 7,
+      "block_id": "p7-table2",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-b1",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-b30",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 8,
+      "block_id": "p8-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "transcribed_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-b1",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-b10",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 10,
+      "block_id": "p10-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "transcribed_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 11,
+      "block_id": "p11-b12",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-b29",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 12,
+      "block_id": "p12-b59",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 13,
+      "block_id": "p13-b26",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 13,
+      "block_id": "p13-b32",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "replace_original_table_caption_with_contextual_structured_table"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 14,
+      "block_id": "p14-b20",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 14,
+      "block_id": "p14-b39",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 14,
+      "block_id": "p14-b47",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 14,
+      "block_id": "p14-table0",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "TABLE_CONTEXT_REVIEW_REQUIRED",
+      "page": 14,
+      "block_id": "p14-table1",
+      "severity": "blocking",
+      "detail": "Review rows/header/caption/conditions. Empty cells are not filled by inference.",
+      "resolution": "remove_false_table_chart_or_diagram"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 15,
+      "block_id": "p15-b7",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    },
+    {
+      "code": "VISUAL_CONTEXT_REVIEW_REQUIRED",
+      "page": 15,
+      "block_id": "p15-b28",
+      "severity": "blocking",
+      "detail": "Link caption, units, conditions and referenced explanation; do not infer pixels.",
+      "resolution": "caption_context_visually_verified"
+    }
+  ],
+  "false_table_blocks_removed": [
+    "p1-table0",
+    "p1-table1",
+    "p3-table0",
+    "p3-table1",
+    "p3-table2",
+    "p3-table3",
+    "p5-table0",
+    "p7-table0",
+    "p7-table1",
+    "p7-table2",
+    "p14-table0",
+    "p14-table1"
+  ],
+  "heading_corrections": [
+    {
+      "block_id": "p1-b5",
+      "section": [
+        "1 Introduction"
+      ]
+    },
+    {
+      "block_id": "p2-b8",
+      "section": [
+        "2 Motivation and Real-world Usage Statistics"
+      ]
+    },
+    {
+      "block_id": "p2-b9",
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.1 KV Cache in LLM Inference"
+      ]
+    },
+    {
+      "block_id": "p3-b51",
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ]
+    },
+    {
+      "block_id": "p3-b69",
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.3 Need an Efficient KV Caching Layer for Moving KV Cache"
+      ]
+    },
+    {
+      "block_id": "p4-b5",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work"
+      ]
+    },
+    {
+      "block_id": "p4-b6",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching"
+      ]
+    },
+    {
+      "block_id": "p4-b8",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.1 Challenge #1: I/O inefficiency under paged memory"
+      ]
+    },
+    {
+      "block_id": "p4-b11",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.2 Challenge #2: Compatible with fast-evolving inference engines"
+      ]
+    },
+    {
+      "block_id": "p4-b13",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.3 Challenge #3: Lack of management APIs"
+      ]
+    },
+    {
+      "block_id": "p5-b1",
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ]
+    },
+    {
+      "block_id": "p5-b21",
+      "section": [
+        "4 Overview of LMCACHE"
+      ]
+    },
+    {
+      "block_id": "p6-b2",
+      "section": [
+        "5 Performance Optimizations"
+      ]
+    },
+    {
+      "block_id": "p6-b5",
+      "section": [
+        "5 Performance Optimizations",
+        "5.1 Batched Operations"
+      ]
+    },
+    {
+      "block_id": "p6-b12",
+      "section": [
+        "5 Performance Optimizations",
+        "5.2 Compute-I/O Overlapping"
+      ]
+    },
+    {
+      "block_id": "p7-b48",
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ]
+    },
+    {
+      "block_id": "p8-b33",
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ]
+    },
+    {
+      "block_id": "p9-b4",
+      "section": [
+        "7 Controller Interfaces"
+      ]
+    },
+    {
+      "block_id": "p10-b12",
+      "section": [
+        "8 Evaluation"
+      ]
+    },
+    {
+      "block_id": "p10-b13",
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ]
+    },
+    {
+      "block_id": "p11-b20",
+      "section": [
+        "8 Evaluation",
+        "8.2 Single-node CPU Offloading"
+      ]
+    },
+    {
+      "block_id": "p12-b31",
+      "section": [
+        "8 Evaluation",
+        "8.3 Real-trace Driven Evaluation"
+      ]
+    },
+    {
+      "block_id": "p12-b61",
+      "section": [
+        "8 Evaluation",
+        "8.4 Centralized Storage Server"
+      ]
+    },
+    {
+      "block_id": "p13-b28",
+      "section": [
+        "8 Evaluation",
+        "8.5 PD disaggregation"
+      ]
+    },
+    {
+      "block_id": "p13-b34",
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ]
+    },
+    {
+      "block_id": "p14-b49",
+      "section": [
+        "8 Evaluation",
+        "8.7 Sensitivity Study"
+      ]
+    },
+    {
+      "block_id": "p15-b9",
+      "section": [
+        "8 Evaluation",
+        "8.8 SGLang Results"
+      ]
+    },
+    {
+      "block_id": "p15-b11",
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ]
+    },
+    {
+      "block_id": "p16-b6",
+      "section": [
+        "10 Conclusion and Outlook"
+      ]
+    },
+    {
+      "block_id": "p16-b8",
+      "section": [
+        "11 Acknowledgement"
+      ]
+    }
+  ],
+  "grouped_source_blocks": [
+    {
+      "block_id": "p6-b6-grouped",
+      "source_block_ids": [
+        "p6-b6",
+        "p6-b7",
+        "p6-b9",
+        "p6-b15"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p7-b54-grouped",
+      "source_block_ids": [
+        "p7-b54",
+        "p7-b55"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p9-b0-grouped",
+      "source_block_ids": [
+        "p9-b0",
+        "p9-b1"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    },
+    {
+      "block_id": "p11-b17-grouped",
+      "source_block_ids": [
+        "p11-b17",
+        "p11-b18",
+        "p11-b19"
+      ],
+      "reason": "retain equation or continuation with its explanatory source paragraph; union bbox"
+    }
+  ],
+  "excluded_raw_blocks": [
+    {
+      "block_id": "p1-b0",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b1",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b2",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b3",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b38",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p1-b7",
+      "reason": "non_evidence_front_matter_title_authors_affiliations_copyright"
+    },
+    {
+      "block_id": "p1-b37",
+      "reason": "sidebar_or_page_number"
+    },
+    {
+      "block_id": "p1-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p1-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b49",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b48",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b47",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b65",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b58",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b59",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b60",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b66",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b64",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b57",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b63",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b56",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b54",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b61",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b55",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p3-b62",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p4-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p5-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p7-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p8-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p10-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p11-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b56",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b40",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b39",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b57",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b47",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b58",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b54",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b51",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b50",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b55",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b53",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b49",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b48",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p12-b52",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p13-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b12",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b11",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b38",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b28",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b37",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b30",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b31",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b36",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b32",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b33",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b34",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b35",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b29",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b8",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b10",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b7",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b9",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b46",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b44",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b42",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b43",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b45",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p14-b41",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b5",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b6",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b3",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b4",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b2",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b1",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b0",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b26",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b27",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b16",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b15",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b14",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b13",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b19",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b20",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b18",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b17",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b23",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b24",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b22",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b21",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p15-b25",
+      "reason": "visual_fragment_replaced_by_contextual_caption_or_table"
+    },
+    {
+      "block_id": "p17-b0",
+      "reason": "references_heading"
+    },
+    {
+      "block_id": "p17-b1",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b2",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b3",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b4",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b5",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b6",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b7",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b8",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b9",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b10",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b11",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b12",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b13",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b14",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b15",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b16",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b17",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b18",
+      "reason": "references"
+    },
+    {
+      "block_id": "p17-b19",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b0",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b1",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b2",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b3",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b4",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b5",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b6",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b7",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b8",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b9",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b10",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b11",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b12",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b13",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b14",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b15",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b16",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b17",
+      "reason": "references"
+    },
+    {
+      "block_id": "p18-b18",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b0",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b1",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b2",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b3",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b4",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b5",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b6",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b7",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b8",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b9",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b10",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b11",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b12",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b13",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b14",
+      "reason": "references"
+    },
+    {
+      "block_id": "p19-b15",
+      "reason": "references"
+    }
+  ],
+  "blocks": [
+    {
+      "block_id": "p1-b4",
+      "page": 1,
+      "section": [
+        "Abstract"
+      ],
+      "kind": "text",
+      "text": "KV cache has traditionally been stored in GPU memory to\naccelerate the decoding phase of large language model (LLM)\ninference. However, it is increasingly necessary to move KV\ncaches outside GPU devices, to enable cache reuse across\ndifferent queries, and inference engines. Our real-world usage\nstatistics confirm this trend: over time, the total KV cache\nstored by users has grown rapidly, far exceeding the capacity\nof GPU memory. Despite this need, there lacks an efficient so-\nlution for offloading and transferring KV caches. We present\nLMCACHE, the first and so far the most efficient open-source\nKV caching solution, which extracts and stores KV caches\ngenerated by modern LLM engines (vLLM and SGLang)\nout of the GPU memory and shares them across engines and\nqueries. LMCACHE supports both cache offloading (prefix\nreuse across queries) and prefill–decode (PD) disaggrega-\ntion (cross-engine/GPU cache transfer). LMCACHE’s high\nperformance and wide adoption stem from the following con-\ntributions: (i) highly optimized KV cache data movement\npowered by batched data movement operations, compute and\nI/O pipelining; (ii) a modular KV cache connector compo-\nnent, decoupling LMCACHE from the rapid evolution of in-\nference engines; (iii) a first-class control API, such as pinning,\nlookup, cleanup, movement, and compression, for flexible\ncache orchestration across GPU, CPU, storage, and network\nlayers. Our evaluation shows that combining LMCACHE with\nvLLM achieves up to 15× improvement in throughput across\nworkloads such as multi-round question answering and doc-\nument analysis. Large-scale adoption of LMCACHE in en-\nterprise settings provide us valuable insights, for example,\nfetching KV cache from remote storage has unsurprisingly\nbenefits to prefill delay, and that context truncation, which\nis a widely applied technique in industry, can greatly reduce\nprefix cache hit ratio by half. The source code of LMCACHE\nis at: https://github.com/LMCache/LMCache.",
+      "bbox": [
+        53.64099884033203,
+        160.8633575439453,
+        295.7772521972656,
+        565.2900390625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b6",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Today, large-language model (LLM) inference has outpaced\ntraining in growth. LLM inference powers millions of applica-\ntions, from interactive customer support and code generation\nto retrieval-based document analysis and agentic workflows.\nTo build the systems for LLM inference, KV cache, the inter-\nmediate states of large language model (LLM) inference, has",
+      "bbox": [
+        53.691001892089844,
+        631.9968872070312,
+        295.85882568359375,
+        701.9193725585938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b33",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "figure",
+      "text": "Figure 1: Upper: LMCACHE is being used by more and more\nusers over time. Middle: LMCACHE is being used to store\nKV cache of larger size. Bottom: LMCACHE’s docker image\npull counts have continued to increase.",
+      "bbox": [
+        317.5509948730469,
+        413.61968994140625,
+        558.003662109375,
+        459.37060546875
+      ],
+      "context": "Figure 1. LMCache adoption: normalized user count, stored KV-cache size and Docker image pull count over days. Aggregate usage statistics, not model accuracy measurements.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p1-b34",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "now become a de facto optimization to make inference faster.\nTraditionally, KV cache has been used during new token\ngeneration to skip re-computing the KV cache of the input\nprompts, within a single query. Thus, every query is processed\nindependently by one instance of the inference engine, and\na LLM query’s lifecycle, including computation and I/O op-\nerations, happens in the GPUs and the GPU memory of one\ninference engine.\nHowever, recent trends has advanced to propose moving\nKV cache outside the GPU memory, including two emerging\ndirections:",
+      "bbox": [
+        317.8800048828125,
+        479.242919921875,
+        559.7429809570312,
+        612.0700073242188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b35",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Cross-query caching to avoid redundant compute: KV\ncache can be persisted (e.g., to lower-tier storage devices)\nbeyond the lifecycle of a query to avoid any re-computation\nof the shared prefix for another query.",
+      "bbox": [
+        317.8800048828125,
+        621.243408203125,
+        558.6652221679688,
+        667.238037109375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b36",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Prefill–decode disaggregation for higher utilization: There\nis an arising trend to decouple the prefill and decode phase\non different GPUs, to ensure that latency-sensitive decoding\nphase is not affected by throughput-oriented prefill phase.",
+      "bbox": [
+        317.8800048828125,
+        676.5643920898438,
+        559.7423095703125,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b0",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Such prefill-decode (PD) diaggregation requires KV cache\nproduced by the prefill GPUs to be transferred to the decode\nGPUs.\nOur real-world usage statistics confirm the trend of moving\nKV cache out from the GPU memory. As will be discussed in\ndetail soon (§2.2), over time, the total size of KV cache that\nis stored by the users continues to grow, and it far exceeds the\ncapacity of the GPU memory. This suggests that KV cache\nmay need to be frequently evicted from GPU memory as more\nand more requests come in. Also, in order for it to be reused\nby another query, it needs to be offloaded from GPU memory,\nand then loaded back to GPU memory for reuse.\nTo make these ideas practical, the LLM inference systems\nmust be augmented with new KV cache semantics. In particu-\nlar, inference engines should support the new interface that\nextracts KV caches from a normal inference call and re-loads\nKV caches into subsequent queries on demand. The system\nalso must allow the extracted KV caches to be stored persis-\ntently and transferred across distributed inference engines.\nMost importantly, for such interface extensions to be practical,\nKV cache extraction, re-loading, storage, and transfer must\nbe efficient, and the new interfaces must remain compatible\nwith rapidly evolving inference engines such as vLLM Kwon\net al. (2023) and SGLang Zheng et al. (2024).\nWe introduce LMCACHE, the first open-source library that\nprovides a high-performance implementation of these new\nKV cache semantics. With LMCACHE, KV cache can be ex-\ntracted from and loaded back to inference engines efficiently,\nstored in a hierarchy of storage devices (CPU memory, local\ndisk, remote disk, and Redis), and transferred over different\nnetworks (Ethernet, RDMA, NVLink).\nLMCACHE makes three distinct contributions.",
+      "bbox": [
+        53.64099884033203,
+        74.33230590820312,
+        295.8623046875,
+        458.33306884765625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b1",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "#1. Highly optimized performance: LMCACHE incorpo-\nrates a series of performance optimizations that make stor-\ning and loading KV cache efficient and practical in real de-\nployments. For instance, LMCACHE batches operations to\npipeline the storing and loading of KV cache, as well as to\npipeline GPU compute and data loading/storing (e.g., loading\nnext layer’s KV cache while performing computations for\nthe current layer). Moreover, rather than storing/loading KV\ncache at the granularity of the inference engine’s native small\npage size, LMCACHE stores/loads KV cache at a configurable\nchunk size, often much larger than page size, to fully utilize\nthe bandwidth between storage devices and GPU memory.\nLMCACHE also minimizes the copies of KV cache data when\nmoving them among different storage tiers, by implementing\nzero-copy operations.",
+      "bbox": [
+        54.0,
+        466.66644287109375,
+        295.8622741699219,
+        644.1680297851562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b2",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "#2. Standardized interface with inference engines: LM-\nCACHE defines standardized connector interfaces that remain\ncompatible with fast-changing inference engine backends. On\naverage, 15–20 new open-weight models are released every\nweek in 2025, so to best utilize new hardware for the new\nmodels, modern LLM inference engines must evolve rapidly,",
+      "bbox": [
+        53.64099884033203,
+        652.5014038085938,
+        295.7606506347656,
+        722.3973999023438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b3",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "potentially changing the KV cache layout in GPU memory\nand thus affecting the LMCACHE interface. To address this,\nLMCACHE designs and implements a modular KV cache\nconnector interface that decouples LMCACHE with the infer-\nence engine backend, so LMCACHE can easily adapt to the\nevolving APIs in the inference engines.",
+      "bbox": [
+        317.8800048828125,
+        74.33230590820312,
+        559.6565551757812,
+        144.14505004882812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b4",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "#3. Flexible KV cache management interface: The inter-\nface augmentation introduced by LMCACHE exposes KV\ncache, a new data structure in LLM inference. LMCACHE\nexposes APIs that allow developers and operators to locate,\nmove, pin, and even compress KV cache extracted from in-\nference engines. These first-class APIs allow higher-level\napplications, such as query schedulers or routers, to make\nbetter decisions, such as KV cache-aware query routing.",
+      "bbox": [
+        317.8800048828125,
+        155.6734161376953,
+        559.6510620117188,
+        249.48904418945312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b5",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Our evaluation demonstrates that LMCACHE consistently\noutperforms both built-in KV caching mechanisms in open-\nsource inference frameworks and commercial inference APIs,\ndelivering up to 15× higher throughput and at least 2× lower\nlatency across diverse settings, including local prefix caching,\ndistributed prefix reuse, and PD disaggregation.",
+      "bbox": [
+        317.8800048828125,
+        255.51441955566406,
+        559.64892578125,
+        325.2530822753906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b6",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Beyond quantitative gains, LMCACHE has seen adoption\nacross several enterprises and open-source projects, providing\nuseful insights and lessons in KV cache-driver optimizations\nat production scale. This includes surprising gain in latency\nbrought by remote storage backend, reduction in prefix cache\nhit rate because of context truncation, and that the flexibility\nto evolve faster and integration smoothness is more important\nthan the language performance itself.",
+      "bbox": [
+        317.8800048828125,
+        331.24554443359375,
+        558.3493041992188,
+        424.9280700683594
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b7",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "The remainder of this paper details the motivation (§2)\nand challenges (§3), LMCACHE architecture and key design\nchoices (§4, §5, and §6), deployment experiences (§9) and\nexperimental evaluation (§8).",
+      "bbox": [
+        317.8800048828125,
+        430.8782958984375,
+        558.669677734375,
+        476.7820739746094
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b10",
+      "page": 2,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.1 KV Cache in LLM Inference"
+      ],
+      "kind": "text",
+      "text": "KV cache was originally introduced to accelerate a single\ninference query by storing the attention states, in the form of\nK and V tensors, for input tokens and previously generated\ntokens directly in GPU memory. KV cache effectively stores\nthe attention information between each pair of tokens that\nhave been seen so far in this query. In short, it is a LLM-native\nrepresentation of knowledge.",
+      "bbox": [
+        317.5509948730469,
+        576.6510620117188,
+        558.0046997070312,
+        658.5980224609375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b11",
+      "page": 2,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.1 KV Cache in LLM Inference"
+      ],
+      "kind": "text",
+      "text": "Nowadays, the contexts have grow longer and longer, and\npeople have started to augment inference with background\nknowledge. Given this trend, it is popular to share KV cache\nacross different user queries to reduce the redundant compu-\ntations for the long contexts or background knowledge.",
+      "bbox": [
+        317.8800048828125,
+        664.6159057617188,
+        559.6493530273438,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b40",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.1 KV Cache in LLM Inference"
+      ],
+      "kind": "figure",
+      "text": "Figure 2: LMCACHE supports both context caching (KV cache offloading and sharing across queries) and PD disaggregation\n(cross-engine transfer of KV caches.",
+      "bbox": [
+        53.33300018310547,
+        224.9884033203125,
+        558.0030517578125,
+        246.91761779785156
+      ],
+      "context": "Figure 2. Context caching reuses KV across queries; prefill-decode disaggregation transfers KV between inference engines. Section 2.1; architecture illustration, no measured values.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b50",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ],
+      "kind": "figure",
+      "text": "Figure 3: Weekly growth of KV cache size, including portions\nthat fit in GPU memory and those that exceed it.",
+      "bbox": [
+        54.0,
+        374.50811767578125,
+        294.11956787109375,
+        396.3645935058594
+      ],
+      "context": "Figure 3. Weekly stored KV-cache size in bytes, divided into GPU and non-GPU portions. Five-week real-world usage statistics; section 2.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b52",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ],
+      "kind": "text",
+      "text": "KV Cache Size Exceeds GPU memory: Although KV cache\nhas been kept inside GPU memory for all traditional LLM\ninference systems, we observe that the required size of KV\ncache is now far exceeding the GPU memory capacity, from\nour real-world usage statistics, gathered by usage tracker vol-\nuntarily turned on by users.\nFigure 3 shows the weekly growth of KV cache size over\nthe past five weeks, for caches that fit within GPU memory\n(green) and those that exceed GPU memory capacity (blue).\nThe portion of KV cache that no longer fits in GPU memory\nhas increased significantly over time, showing that GPU mem-\nory alone is insufficient for storing all caches. To enable KV\ncache reuse across queries, especially those generated long\nbefore reuse, it becomes necessary to move KV cache out of\nGPU memory, for instance, by offloading it to CPU memory\nor other storage tiers.",
+      "bbox": [
+        53.67100143432617,
+        440.8873596191406,
+        295.858154296875,
+        631.1450805664062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b53",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ],
+      "kind": "text",
+      "text": "Reuse per Token has Greatly Increased: We also observe\nthat reuses per token has greatly increased over time.\nAs shown on the left side of Figure 4, where we plot the\nratio between reused tokens and all stored tokens, beyond\nthe GPU memory, plotted with top-10 users. We denote this\nratio as reuses per token. The reuses per token has grown\nsignificantly over the past several weeks, which indicates that",
+      "bbox": [
+        54.0,
+        639.661865234375,
+        294.11981201171875,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b67",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ],
+      "kind": "figure",
+      "text": "Figure 4: Left: Average reuse per token for top users. Right:\nDistributions of average reuse per token across different users.",
+      "bbox": [
+        317.52099609375,
+        355.119384765625,
+        559.7398071289062,
+        377.0762023925781
+      ],
+      "context": "Figure 4. Average reuse per token for top users by week and cumulative distribution across users. Section 2.2 defines reuse as reused tokens divided by stored tokens beyond GPU memory.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p3-b68",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.2 Real-world Usage Statistics"
+      ],
+      "kind": "text",
+      "text": "tokens that cannot fit inside GPU memory are being more and\nmore frequently reused by inference. This suggests that more\nand more tokens need to be loaded back to GPU memory.\nOn the right hand side, the figure shows the distribution of\nreuse per token for different users over the past week. More\nthan 19% of users reuse stored tokens for more than 1.5 times,\nsuggesting the trend of users accessing a token multiple times\nafter it is stored.",
+      "bbox": [
+        317.8800048828125,
+        394.3994140625,
+        559.24951171875,
+        488.3500671386719
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b70",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.3 Need an Efficient KV Caching Layer for Moving KV Cache"
+      ],
+      "kind": "text",
+      "text": "From the above observations from the statistics gathered in\nreal-world deployments, we find two important trends of KV\ncaching. First, the KV cache that cannot simply fits in GPU\nmemory keeps growing, potentially due to growing length of\nthe contexts or larger amount of user traffic. Second, reuses\nper token stored beyond the GPU memory has also increased\nover time. Both trends suggest that we need to move KV cache\nout of GPU memory. Specifically, in the current industry, two\nscenarios which move KV cache out from GPU exist:",
+      "bbox": [
+        317.8800048828125,
+        542.249267578125,
+        558.3551025390625,
+        647.9290161132812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b71",
+      "page": 3,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.3 Need an Efficient KV Caching Layer for Moving KV Cache"
+      ],
+      "kind": "text",
+      "text": "1. Context caching (i.e.,cross-query KV cache reuse) persists\nKV cache segments from one query and reusing them\nfor subsequent queries that share a common prefix. Ex-\namples include document analysis where the same doc-\nument (chunk) remains constant across multiple queries,\nand multi-turn dialogues with a fixed system prompt or",
+      "bbox": [
+        318.8760070800781,
+        652.5697021484375,
+        559.6567993164062,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-table1-reviewed",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.1 I/O inefficiency under paged memory"
+      ],
+      "kind": "table",
+      "text": "64KB | 4GBps\n256KB | 13GBps\n1MB | 30GBps\n10MB | 46GBps\n16MB | 49GBps\n100MB | 49GBps",
+      "bbox": [
+        53.69,
+        72,
+        295.78,
+        191.44
+      ],
+      "context": "Table 1. Transfer message size vs achieved throughput using RCCL; UCCL Team (2025). Two AMD GPU nodes, eight Broadcom Thor-2 400Gbps NICs. Columns: Message size | Transfer throughput (GBps, bytes per second).",
+      "rows": [
+        "64KB | 4GBps",
+        "256KB | 13GBps",
+        "1MB | 30GBps",
+        "10MB | 46GBps",
+        "16MB | 49GBps",
+        "100MB | 49GBps"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p4-b3",
+      "page": 4,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.3 Need an Efficient KV Caching Layer for Moving KV Cache"
+      ],
+      "kind": "text",
+      "text": "long preamble. Prefix caching reduces redundant compu-\ntation during the prefill phase, directly lowering TTFT and\nGPU-hours per query Chen et al. (2024, 2025); Gao et al.\n(2024); Jin et al. (2024, 2025); Liu et al. (2024a); Qin et al.\n(2025a); Ren et al. (2025).\n2. Prefill–decode (PD) disaggregation (i.e.,cross-engine KV\ncache transfer) splits inference into a prefill stage (pro-\ncessing the entire input prompt) and a decode stage (au-\ntoregrssive token generation) across different GPUs or\nnodes. This approach reduces tail latency by maximizing\nthe decoding speed without being interrupted by the prefill\nphase Patel et al. (2024); Shi et al. (2025); Zhong et al.\n(2024).",
+      "bbox": [
+        54.996002197265625,
+        208.8801727294922,
+        295.8664855957031,
+        363.8100891113281
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b4",
+      "page": 4,
+      "section": [
+        "2 Motivation and Real-world Usage Statistics",
+        "2.3 Need an Efficient KV Caching Layer for Moving KV Cache"
+      ],
+      "kind": "text",
+      "text": "However, there lacks a library to support efficient extraction\nand loading from and to the GPU memory due to the system\nchallenges as discussed soon (3).",
+      "bbox": [
+        54.0,
+        368.85443115234375,
+        294.1241760253906,
+        402.65106201171875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b7",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching"
+      ],
+      "kind": "text",
+      "text": "Despite their potential, the practical adoption of prefix caching\nand PD disaggregation is limited by three interrelated systems\nchallenges:",
+      "bbox": [
+        54.0,
+        483.8594055175781,
+        294.1199035644531,
+        517.6570434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b9",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.1 Challenge #1: I/O inefficiency under paged memory"
+      ],
+      "kind": "text",
+      "text": "KV cache storage and transfer used to rely on PyTorch se-\nrialization (torch.save / torch.load) or primitive tensor\ncopying, with a typical transfer speed of only sub-1GB/s.\nThese methods introduce non-trivial delay overhead, espe-\ncially when handling large data structures like KV caches,\nand lack zero-copy support with various storage devices (local\nor remote), causing extra CPU-GPU data copies.\nRecent high-throughput inference\nengines, such as\nvLLM Kwon et al. (2023) and SGLang Zheng et al. (2024),\nmake KV cache storage and transfer even more challenging.\nThey employ paged attention memory, dividing the attention\nbuffer into small, fixed-size pages (typically 16–64 KB). For\ninstance, vLLM uses 62.5-KB page in Llama-3.1-8B-Instruct",
+      "bbox": [
+        53.691001892089844,
+        568.416259765625,
+        295.8675231933594,
+        722.3853149414062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b10",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.1 Challenge #1: I/O inefficiency under paged memory"
+      ],
+      "kind": "text",
+      "text": "model. The paged memory architecture is widely used be-\ncause it improves batching and memory utilization.\nHowever, because the pages of a KV cache are not always\ncontiguous, the paged memory architecture dramatically in-\ncreases the number of small-sized I/O operations required\nto persist or transfer a KV cache. Transferring such small\nchunks of data is known to suffer from network bandwidth\nunderutilization and reduce throughput Kwon et al. (2025);\nMeta Engineering (2024); NVIDIA Developer Forums (2020).\nPrior work (Table 1) has shown that, on a setup with two AMD\nGPU nodes connected by eight Broadcom Thor-2 400Gbps\nNICs, the transfer size must reach at least 16 MB to saturate\nthe available network bandwidth Zhou et al. (2025). Further-\nmore, prior work has shown that only transferring a data size\nof megabyte range (e.g., 1–2MB) can achieve 75–80% of the\ntheoretical PCIe 5.0 bandwidth Xie et al. (2025).",
+      "bbox": [
+        317.8800048828125,
+        74.33230590820312,
+        559.7473754882812,
+        263.9730529785156
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b12",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.2 Challenge #2: Compatible with fast-evolving inference engines"
+      ],
+      "kind": "text",
+      "text": "With the widespread use of AI, new LLMs and hardware accel-\nerators are introduced at a rapid pace. In 2025, one prominent\nLLM was released on average every 4 days bes (2025). In\nresponse, inference engines must evolve just as quickly.\nEach update to accommodate new models or hardware of-\nten changes GPU memory allocation, which in turn changes\nthe KV cache interface. For example, when vLLM adopts\na new attention kernel that produces KV caches with dif-\nferent dimensions, the KV caching library must be updated\nto translate the new kernel’s output KV cache format into\none compatible with the KV cache library. Keeping up with\nthese frequent changes requires tremendous effort, given the\nfast-moving inference engines.",
+      "bbox": [
+        317.4119873046875,
+        313.2914123535156,
+        559.6575317382812,
+        466.9160461425781
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b14",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.3 Challenge #3: Lack of management APIs"
+      ],
+      "kind": "text",
+      "text": "As KV caching becomes a first-class citizen in the LLM infer-\nence backend, various components (in addition to the LLM in-\nference engines), as well as ML ops teams, will need to make\ndecisions in a KV-cache-aware manner. Yet, without a unified\nmanagement interface to locate, evict, pin, or compress caches,\nthese upper-layer modules cannot make informed placement\nor eviction decisions. This leads to inefficient cache utiliza-\ntion, duplicated storage, and unpredictable eviction policies.\nFor instance, inference query routers, which assign each query\nto one of the inference engine instances, need to know the\nlocations of KV caches, in order to route queries to instances\nthat already hold the KV cache for matched prefix tokens\nlocally (e.g., in CPU memory).\nMoreover, applications now also demand such KV-cache\nmanagement interfaces. In early 2025, for instance, a financial\ncompany1 that has worked closely with LMCACHE in the",
+      "bbox": [
+        317.52099609375,
+        504.2784118652344,
+        559.745849609375,
+        693.7930297851562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b15",
+      "page": 4,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.3 Challenge #3: Lack of management APIs"
+      ],
+      "kind": "text",
+      "text": "1For confidentiality, we do not disclose names of enterprise users in this\nreport.",
+      "bbox": [
+        317.8800048828125,
+        703.108642578125,
+        558.0005493164062,
+        721.9256591796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b0",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.1 Challenges of Efficient KV Caching",
+        "3.1.3 Challenge #3: Lack of management APIs"
+      ],
+      "kind": "text",
+      "text": "production setting asked for an interface that allows users\nto explicitly pin frequently accessed financial documents in\nthe KV caching system, for more efficient access to popular\ncontexts. As another example, an agent company requested\na series of APIs that allow them to identify the KV cache\nof a given content, compress the KV cache, and transfer the\ncompressed KV cache across nodes.",
+      "bbox": [
+        54.0,
+        74.33230590820312,
+        294.2892761230469,
+        156.10104370117188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b2",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "Several KV cache handling mechanisms exist, but none of\nthem fully address the above challenges:",
+      "bbox": [
+        54.0,
+        193.61929321289062,
+        294.1246032714844,
+        215.61209106445312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b3",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "Inference frameworks: Since the release of vLLM Pro-\nduction Stack vLLM project (2025) in January 2025, there\nhave been several open-source distributed inference stacks, in-\ncluding Nvidia’s Dynamo NVIDIA Corporation (2025), AIB-\nrix Team et al. (2025), llm-d llm-d Project (2025), SGLang\nOME Team (2025), and KServe Contributors (2025b). They\nfocus on easy deployment of inference engine solutions over\nKubernetes, and technically, they all support various query\nrouters based on load or prefix cache awareness and support\nKV caching, where LMCACHE is used in vLLM production\nstack, Dynamo, llm-d, and KServe.",
+      "bbox": [
+        54.0,
+        223.15541076660156,
+        295.77410888671875,
+        352.8370666503906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b4",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "Inference engine-native KV caching: Open-source infer-\nence engines, like vLLM and SGLang, also offer native GPU-\nto-CPU KV cache transfers, but it is designed for single-node\ninference, so they lack cross-node transfer optimization or\nhierarchical storage support for KV cache. We will evaluate\ntheir performance and compare it against LMCACHE in §8.",
+      "bbox": [
+        54.0,
+        360.3794250488281,
+        295.7708740234375,
+        430.2850646972656
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b5",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "KV cache storage layers: Mooncake Qin et al. (2025b), Re-\ndis Redis (2025), InfiniStore ByteDance (2025), and 3FS Con-\ntributors (2025a) provide distributed object storage or caching,\nbut they lack an efficient “glue” layer between the inference\nengines to efficiently move small tensors frequently across\ndifferent storage tiers, or are tightly coupled with a specific\ninference framework.",
+      "bbox": [
+        54.0,
+        437.96978759765625,
+        295.77532958984375,
+        519.6890258789062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b6",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "Proprietary implementations: Proprietary inference APIs\n(e.g., Fireworks AI, Together AI) implement their own prefix\ncaching internally, but these are tied to their closed-source\nserving stacks and are not accessible to operators deploying\ntheir own infrastructure.",
+      "bbox": [
+        53.67100143432617,
+        527.28173828125,
+        294.37017822265625,
+        585.1830444335938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b7",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "Source code for research: Several research proposals have\nopen-sourced prototypes for their KV cache optimizations,\nincluding prefix caching Chen et al. (2025); Gao et al. (2024);\nGim et al. (2024); Jin et al. (2024, 2025); Kwon et al. (2023);\nLee et al. (2024); Yang et al. (2025); Ye et al. (2024); Yu\net al. (2025); Zhao et al. (2024); Zheng et al. (2024), PD\ndisaggregation Patel et al. (2024); Shi et al. (2025); Zhong\net al. (2024), and KV cache compression Du et al. (2025); Ge\net al. (2024); Jegou et al. (2024); Li et al. (2025, 2024); Liu\net al. (2024b); Qin et al. (2025c); Tang et al. (2024); Xiao et al.\n(2024a,b); Zhang et al. (2025). However, these prototypes are",
+      "bbox": [
+        53.67100143432617,
+        592.7938842773438,
+        295.8674011230469,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b19",
+      "page": 5,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "figure",
+      "text": "Figure 5: LMCACHE sits between LLM inference engines\nand heterogeneous storage/network devices.",
+      "bbox": [
+        317.8800048828125,
+        233.09506225585938,
+        558.0025634765625,
+        255.08961486816406
+      ],
+      "context": "Figure 5. LMCache is a KV-cache layer between inference engines and heterogeneous storage/network devices. Section 4; architecture illustration, no quantitative result.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p5-b20",
+      "page": 5,
+      "section": [
+        "3 Challenges of Efficient KV Caching and Related Work",
+        "3.2 Related Work and Existing Solutions"
+      ],
+      "kind": "text",
+      "text": "typically built on research-oriented inference framworks, such\nas HuggingFace Transformers, not fully enterprise-ready, or\nare not designed to evolve alongside the rapidly changing\ninference engine ecosystem, such as SGLang and vLLM.",
+      "bbox": [
+        317.8800048828125,
+        272.6854248046875,
+        558.1666259765625,
+        318.43707275390625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b22",
+      "page": 5,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "text",
+      "text": "LMCACHE addresses these challenges by a unified, high-\nperformance KV caching layer capable of efficient storage,\nmovement, and explicit management of KV caches for paged-\nmemory inference engines, making prefix caching and PD\ndisaggregation practical at enterprise scale.\nAs a KV caching layer, LMCACHE sits between LLM infer-\nence engines and heterogeneous storage/network devices (Fig-\nure 5). Its goal is to provide a standardized, high-performance\nsubstrate for KV cache movement and management, while\nremaining compatible with rapidly evolving inference frame-\nworks such as vLLM and SGLang.\nFigure 6 shows the end-to-end system. Below, we walk\nthrough two example workflows: storing and retrieving KV\ncache.",
+      "bbox": [
+        317.52099609375,
+        364.0954284667969,
+        559.6561889648438,
+        530.6920776367188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b23",
+      "page": 5,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "text",
+      "text": "Store: When a new query arrives, it first passes through the\nKV connector, which prepares metadata such as the tokenized\ninput prompt and GPU memory addresses of the relevant\npages. The query then goes to the token processor, which\ndetermines how many new tokens are not yet in the backend\nand need to be stored. Finally, the storage manager saves the\nKV cache for these new tokens to the backend via the transfer\nchannel, which handles the data transfer logic.",
+      "bbox": [
+        317.5509948730469,
+        538.7722778320312,
+        558.004638671875,
+        632.5270385742188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b24",
+      "page": 5,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "text",
+      "text": "Retrieve: When a query requires loading KV cache from\nthe backend, it also starts with the KV connector to prepare\nmetadata. The token processor identifies the number of prefix-\nmatched tokens already in the backend. Next, the event man-\nager checks if the same query ID has been seen before. If\nso, the cached memory addresses are already tracked and\ncan be returned directly to the GPU connector, which loads",
+      "bbox": [
+        317.8800048828125,
+        640.54638671875,
+        559.65234375,
+        722.4226684570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b6-grouped",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.1 Batched Operations"
+      ],
+      "kind": "text",
+      "text": "To address the I/O inefficiency caused by small KV cache\nunits, LMCACHE introduces a set of optimizations.\n\nConfigurable Chunk Size: Rather than transferring KV\ncache at the page level, LMCACHE groups multiple pages\nfrom multiple layers into larger chunks, with a default size of\n\n256 tokens per chunk3. This is achieved using an intermediate\nstreaming GPU buffer. For storing, the KV cache are first\ncopied from the scattered paged GPU memory into a contigu-\nous streaming buffer with a customized CUDA kernel, then\noffloaded collectively to lower-tier storage (e.g., CPU mem-\nory) with DMA engines at the granularity of chunks rather\nthan individual pages. For loading, chunks are first retrieved\nfrom the storage layer into the GPU buffer with DMA en-\ngines and subsequently split into paged memory with CUDA\nkernels.\n\n3The chunk size is configurable to different I/O speeds.",
+      "bbox": [
+        53.691001892089844,
+        72.75493621826172,
+        559.6522216796875,
+        721.9256591796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b0",
+      "page": 6,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "text",
+      "text": "the KV cache back into GPU memory. The event manager\nalso launches asynchronous, layer-wise loading events as de-\nscribed in §5.2. If the query ID is new, it is forwarded to the\nstorage manager to look up the CPU memory addresses of\nthe stored KV cache.",
+      "bbox": [
+        54.0,
+        74.33230590820312,
+        295.7728271484375,
+        132.19009399414062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b1",
+      "page": 6,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "text",
+      "text": "Lookup: When a query needs to check whether the KV\ncache for specific tokens exists in the backend, higher-level\ncomponents such as routers query the cache controller. The\ncache controller maintains a token pool that records all tokens\ncurrently stored in the KV cache backend. Whenever a LM-\nCACHE instance stores or evicts a KV cache, the LMCACHE\nworker inside the instance updates the token pool with the new\nstatus. This ensures the token pool always has the up-to-date\ninformation of tokens in the backend.",
+      "bbox": [
+        53.64099884033203,
+        140.4033966064453,
+        295.76708984375,
+        246.17410278320312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b3",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations"
+      ],
+      "kind": "text",
+      "text": "An important aspect of LMCACHE is improving the efficiency\nof KV cache movement across devices. In enterprise-scale\nLLM inference, LMCACHE addresses three key challenges:",
+      "bbox": [
+        53.64099884033203,
+        293.5084228515625,
+        294.4658508300781,
+        327.3050842285156
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b4",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations"
+      ],
+      "kind": "text",
+      "text": "• Modern LLM inference engines manage KV cache at the\ngranularity of pages2, which are typically 20 KB–63 KB\nfor popular models including Llama, Qwen, GPT-OSS etc.\nSuch small units are inefficient for transferring, as they\ncannot saturate bandwidth Xie et al. (2025); Zhou et al.\n(2025).\n• KV cache transfers often need to run concurrently with\nLLM inference. This introduces overhead from two\nsources. First, data movement can stall inference if trans-\nfers are executed in the same CUDA stream as computa-\ntion. Second, launching memory-copy CUDA functions\nincurs CPU overhead, as each call consumes CPU cycles\nand the consumption can be substantial when there are\nmany layers and pages.\n• During LLM inference, large volumes of queries generate\nsignificant amount of KV caches. Duplicating them on any\nstorage device wastes space and introduces copy overhead,\nwhich slows down inference.\nEach of these challenges arose from hard lessons in both\nopen-source and enterprise deployments. This section de-\nscribes these challenges in detail and motivates LMCACHE’s\ndesign decisions.",
+      "bbox": [
+        54.0,
+        329.65582275390625,
+        295.86358642578125,
+        594.7440795898438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b8",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.1 Batched Operations"
+      ],
+      "kind": "text",
+      "text": "2Each page is 16 tokens for a single layer in vLLM.",
+      "bbox": [
+        64.85900115966797,
+        712.5736694335938,
+        230.07521057128906,
+        721.9256591796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b10",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.1 Batched Operations"
+      ],
+      "kind": "text",
+      "text": "Parallel Store/load Operations: LMCACHE supports par-\nallel storage and retrieval of KV caches across multiple stor-\nage tiers, including local CPU DRAM or disks, remote CPU\nDRAM or disks, and object storage (e.g., S3). In practical\nLLM serving workloads, KV caches often need to be migrated\nacross devices concurrently—for instance, transferring the\nKV cache of a hot context from GPU to CPU memory while\nsimultaneously offloading a cold context from CPU memory\nto local disk. To maximize link utilization, LMCACHE ’s store\nand load APIs accept multiple source and destination devices,\nenabling concurrent data movement across heterogeneous\nlinks. Moreover, these operations can be executed in parallel\nwhen the interconnect supports full-duplex communication\n(e.g., PCIe).",
+      "bbox": [
+        317.52099609375,
+        199.88818359375,
+        559.6529541015625,
+        365.4120788574219
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b11",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.1 Batched Operations"
+      ],
+      "kind": "text",
+      "text": "Delayed Decode KV Cache Storing:\nLMCACHE also\nsupports storing newly generated KV caches during de-\ncoding. Instead of offloading each token’s KV cache im-\nmediately—a naive approach that triggers frequent small\nwrites—LMCACHE buffers KV caches and performs batched\nstorage once a predefined number of tokens (i.e., a chunk)\nhave been generated. This chunk-based delayed storing strat-\negy reduces write frequency, minimizes I/O overhead, and\nsignificantly improves overall storage throughput.",
+      "bbox": [
+        317.52099609375,
+        373.3114318847656,
+        559.6575317382812,
+        479.0820617675781
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b13",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.2 Compute-I/O Overlapping"
+      ],
+      "kind": "text",
+      "text": "LMCACHE employs multiple optimizations aiming for over-\nlapping LLM inference computations with I/O to maximize\nGPU utilization.",
+      "bbox": [
+        317.8800048828125,
+        519.3190307617188,
+        559.656494140625,
+        553.1840209960938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b14",
+      "page": 6,
+      "section": [
+        "5 Performance Optimizations",
+        "5.2 Compute-I/O Overlapping"
+      ],
+      "kind": "text",
+      "text": "Layer-wise pipelining: LMCACHE overlaps KV cache trans-\nfers with inference computation through layer-wise pipelining.\nSpecifically, it assigns separate CUDA streams for inference\ncomputation and data movement within each layer. For ex-\nample, before performing inference on the first layer, its KV\ncache is loaded into the GPU buffer and transformed into\npages. While the first layer is running inference, the KV cache\nfor the second layer is asynchronously fetched into the buffer\nand similarly transformed. Note that the second layer’s KV\ncache loading is happened after the first layer’s KV cache\nis put into the right paged memory. This design ensures that\nonly a fixed-size GPU buffer—whose size is a single layer’s",
+      "bbox": [
+        317.8800048828125,
+        561.2363891601562,
+        559.7474365234375,
+        702.724853515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b45",
+      "page": 7,
+      "section": [
+        "4 Overview of LMCACHE"
+      ],
+      "kind": "figure",
+      "text": "Figure 6: End-to-end system workflow for LMCACHE.",
+      "bbox": [
+        196.05799865722656,
+        330.8940124511719,
+        413.45196533203125,
+        341.0330810546875
+      ],
+      "context": "Figure 6. LMCache workflow: connectors, token processor, cache engine, storage manager and transfer channel. Sections 4-5 explain store/retrieve workflows. Architecture diagram, no measured values.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p7-b46",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.2 Compute-I/O Overlapping"
+      ],
+      "kind": "text",
+      "text": "KV cache—is required, while enabling overlapping between\ndata transfer and computation.",
+      "bbox": [
+        54.0,
+        357.4643859863281,
+        294.11737060546875,
+        379.36407470703125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b47",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.2 Compute-I/O Overlapping"
+      ],
+      "kind": "text",
+      "text": "Asynchronous compute & prefetch: In many scenarios,\nthere is a time gap between when the inference scheduler\nadmits a query and when the query’s KV cache is actually\nneeded for inference. For example, if a query (with cache hit)\narrives when the inference engine is processing other queries,\nthe arriving query has to wait in queue. LMCACHE exploits\nthis idle interval to prefetch the queued queries’ KV cache\nfrom slower storage tiers into faster ones (e.g., from remote\ndisk to local CPU memory or GPU memory). As a result,\nwhen the actual inference computation starts, the required KV\ncache can be loaded or used directly from faster-tier storage,\nsignificantly reducing loading delay. LMCACHE allows users\nto configure the target tier for prefetching based on their own\nneeds in latency SLO and resource constraints.",
+      "bbox": [
+        53.64099884033203,
+        387.8734436035156,
+        295.3675537109375,
+        553.4200439453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b49",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "A naive implementation of KV cache movement would create\nadditional copies of data at each transfer step, especially when\ndealing with heterogeneous storage types, leading to redun-\ndant memory usage and unnecessary overhead. LMCACHE\navoids this by maintaining only the minimum required copies.",
+      "bbox": [
+        53.64099884033203,
+        598.2403564453125,
+        295.8674621582031,
+        655.9228515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b50",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "Zero-Copy Operations: When transferring KV cache to\nmultiple devices simultaneously, LMCACHE minimizes data\nduplication through a reference counter. Specifically, when\nKV cache is written to multiple destinations—such as writ-\ning from local CPU memory to local disk and remote object",
+      "bbox": [
+        54.0,
+        664.4564208984375,
+        295.7708435058594,
+        722.4130859375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b51",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "storage at the same time—LMCACHE increments a reference\ncounter on the shared data for each transfer instead of creat-\ning new copies. Each completed read or write decrements the\ncounter, and once the count reaches zero, the data is released.\nThis design ensures that data is shared across concurrent read\nand write operations without unnecessary replication, thus re-\nducing memory pressure and improving efficiency. This tech-\nnique is simlar to PCB counter in operating systems Strecker\n(1978).",
+      "bbox": [
+        317.5509948730469,
+        357.52142333984375,
+        559.7428588867188,
+        463.0500793457031
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b52",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "Dynamic Offloading: Modern inference engines such as\nvLLM maintain a pool of free pages in GPU memory, i.e.,,\npages whose KV cache is not currently used by active queries.\nInstead of duplicating all free pages to CPU memory, LM-\nCACHE duplicates only a subset. This mechanism is imple-\nmented using three pointers:",
+      "bbox": [
+        317.6310119628906,
+        471.1334228515625,
+        559.7474975585938,
+        541.0390625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b53",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "• Start pointer: the start address of the free-page region in\nGPU memory.\n• Current pointer: the index of the free pages that have\nalready been offloaded to CPU memory.\n• End pointer: the end address of the free pages that are\nscheduled to be offloaded.",
+      "bbox": [
+        321.3669738769531,
+        545.8427734375,
+        558.00048828125,
+        618.9300537109375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b54-grouped",
+      "page": 7,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "As illustrated in Figure 7, dynamic offloading has four\npossible states:\n\n• State #1 (Initialization): the start and current pointers\noverlap. The region between the start/current pointers and\nthe end pointer marks the pages pending duplication.\n• State #2 (In-progress): the current pointer moves toward\nthe end pointer. Pages between the start and current point-\ners have already been offloaded to CPU memory.",
+      "bbox": [
+        317.8800048828125,
+        624.0182495117188,
+        559.6588745117188,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-table0",
+      "page": 8,
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ],
+      "kind": "table",
+      "text": "get_num_new_matched_tokens(query) → Optional[matched_tokens] | Returns the number of cache-hit tokens found in LMCache’s backend. Returns None if LMCache lets vLLM process other requests first and returns this request to the waiting queue.\nupdate_state_after_alloc(query, blocks, num_external_blocks) | Updates whether a query needs to transfer KV cache from LMCache’s backend.\nbuild_connector_meta(scheduler_output) → kv_connector_metadata | Builds metadata for KV-cache transfers between the backend and GPU memory, including GPU memory addresses for KV-cache pages.\nstart_load_kv(kv_pointers) | Starts loading KV cache from lower-tier storage into GPU memory before LLM inference.\nwait_load_kv(kv_pointers, layer_id) | Synchronizes KV-cache loading so data is available when computation requires it.\nstart_store_kv(kv_pointer) | Starts offloading KV cache to lower-tier storage after computation.\nwait_store_kv(kv_pointer, layer_id) | Synchronizes KV-cache storing to ensure the current layer is offloaded.",
+      "bbox": [
+        54,
+        72,
+        558,
+        280
+      ],
+      "context": "Table 2. Functions in LMCache’s connector. Columns: Function signature | Description. API identifiers and underscores transcribed from original text layer and visually verified; not runtime guarantees.",
+      "rows": [
+        "get_num_new_matched_tokens(query) → Optional[matched_tokens] | Returns the number of cache-hit tokens found in LMCache’s backend. Returns None if LMCache lets vLLM process other requests first and returns this request to the waiting queue.",
+        "update_state_after_alloc(query, blocks, num_external_blocks) | Updates whether a query needs to transfer KV cache from LMCache’s backend.",
+        "build_connector_meta(scheduler_output) → kv_connector_metadata | Builds metadata for KV-cache transfers between the backend and GPU memory, including GPU memory addresses for KV-cache pages.",
+        "start_load_kv(kv_pointers) | Starts loading KV cache from lower-tier storage into GPU memory before LLM inference.",
+        "wait_load_kv(kv_pointers, layer_id) | Synchronizes KV-cache loading so data is available when computation requires it.",
+        "start_store_kv(kv_pointer) | Starts offloading KV cache to lower-tier storage after computation.",
+        "wait_store_kv(kv_pointer, layer_id) | Synchronizes KV-cache storing to ensure the current layer is offloaded."
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p8-b30",
+      "page": 8,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "figure",
+      "text": "Figure 7: Illustration of dynamic offloading in LMCACHE.",
+      "bbox": [
+        55.66999816894531,
+        563.3760375976562,
+        289.96044921875,
+        573.5150756835938
+      ],
+      "context": "Figure 7. Dynamic offloading states: initialization, in-progress, query arrival and steady state. Start/current/end pointers delimit free pages, duplicated pages and pending copies; section 5.3.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p8-b31",
+      "page": 8,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "• State #3 (Query Arrival): when new queries acquire\nsome of the free pages, the end pointer is moved forward\nby the number of allocated pages. This ensures sufficient\nGPU memory is available for future active queries that\nneed to acquire free pages.\n• State #4 (Steady state): the current pointer overlaps with\nthe end pointer, indicating that all scheduled pages have\nbeen duplicated.\nNote that if a query attempts to allocate pages beyond\nthe current pointer, the allocation must stall until the current\npointer moves right enough to cover the required pages. Thus,",
+      "bbox": [
+        54.0,
+        589.1508178710938,
+        295.3694763183594,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b32",
+      "page": 8,
+      "section": [
+        "5 Performance Optimizations",
+        "5.3 Minimum Data Copy"
+      ],
+      "kind": "text",
+      "text": "a key trade-off in this design is that: the number of dupli-\ncated pages—i.e.,, the region defined by end pointer – start\npointer –between GPU and CPU memory. A smaller duplica-\ntion window reduces the duplication ratio but increases the\nlikelihood of allocation stalls. For instance, if only one page\nis duplicated and an inference query requires three pages, the\nquery must wait until the current and end pointers advance\nby two additional pages. On the other hand, if three pages are\nduplicated, the same query can proceed immediately without\nstalling, though at the cost of higher duplication ratio. Though\nnot supported, the same dynamic offloading strategies can\nalso be extended to other storage tiers beyong CPU and GPU.",
+      "bbox": [
+        317.8800048828125,
+        301.9582824707031,
+        559.7435913085938,
+        443.4825439453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b34",
+      "page": 8,
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ],
+      "kind": "text",
+      "text": "Modern LLM inference engines, such as vLLM and SGLang,\nevolve rapidly to support newly released models with diverse\narchitectures. For example, in 2025, an average of 15–20 new\nmodels are released each week. Supporting these new archi-\ntectures often requires non-trivial modifications to inference\nengines, such as adding support for Sliding Window Atten-\ntion or Multi-Head Latent Attention. These code changes\nfrequently alter how KV cache is managed internally, making\nit infeasible for LMCACHE to adapt in an ad-hoc manner.\nTo address this challenge, LMCACHE introduces a stan-\ndardized KV cache connector interface that decouples KV\ncache management from the inference engine backend. This\ndesign ensures that LMCACHE remains compatible regard-\nless of how the upstream inference engine evolves.\nWe note that the design of this API is initiated by LMCache\nteam, but the implementation and the maintainance of this\nAPI are the collaborative effort of both LMCache team and\nvLLM team.",
+      "bbox": [
+        317.52099609375,
+        507.1829833984375,
+        559.6553344726562,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b0-grouped",
+      "page": 9,
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ],
+      "kind": "text",
+      "text": "Design objectives: The key design objectives are:\n\n• Maximum flexibility: it enables as much KV cache opera-\ntions as possible.\n• vLLM-native: it aligns with the design direction of vLLM,\nincluding strict scheduler — worker separation, prefix\ncaching as the first-class citizen, and piece-wise CUDA\ngraph, where vLLM only captures CUDA graph for non-\nattention operations.\n• Friendly to out-of-tree connector: it allow intergrating\nwith out-of-tree connectors without vLLM-side code mo-\ntification.\n• Minimum API-level overhead: it does not introduce over-\nheads (e.g., inter-process communication) at API level.\nTo be compatible with the scheduler — model runner sepa-\nration philosophy in vLLM, the connector API contains two\nsets of interfaces: 1) the scheduler, where the extra cache-hit\ntokens from the connector are treated as normal prefix-cached\ntokens in vLLM and directly influences scheduling decisions\nand are changed by LMCACHE (i.e., if there is cache hit\nin LMCACHE, the number of tokens that need to be newly\nprefilled changes); and 2) the model runner, where we add\nhooks before and after model execution, and also before and\nafter attention computation, to enable both bulky KV cache\noffloading and layer-wise KV cache offloading.\nThe remainder of this section lists all the interfaces in Ta-\nble 2, discusses the design for important APIs, and then traces\nhow a query interacts with these interfaces end-to-end.\nThe interfaces listed in Table 2 form the foundation of LM-\nCACHE ’s KV cache loading and storage across lower-tier\nstorage. Among them, the first three interfaces are imple-\nmented within the vLLM scheduler, where they prepare the\nnecessary metadata based on the number of matched tokens\nfound in LMCACHE ’s KV cache backend. The remaining\nfour interfaces reside in the model runner, which is responsi-\nble for executing the actual KV cache transfers between the\ninference engine and LMCACHE ’s KV cache backend.\nPutting it together, when a query comes in, the scheduler\nfirst calls get_num_new_matched_tokens which queries\nLMCACHE to see cache hit tokens in the backend. The func-\ntion can return None if LMCache decides to let vLLM put the\ncurrent request back to waiting queue and process other re-\nquests first, overlapping this request’s I/O with other requests’\ncomputation. Then the update_state_after_alloc func-\ntion decides whether each page in vLLM needs to be loaded\nfrom external storage backend based on matched tokens infor-\nmation from LMCACHE. If the cache hit tokens are greater\nthan zero, build_connector_meta function is called to pre-\npare necessary metadata to load or store KV cache from stor-\nage devices.\nOnce the query reaches the model runner, in the case of lay-\nerwise pipelining, start_load_kv is called to start loading\nKV cache of the first layer to GPU memory. Then before each\nlayer’s LLM inference computation starts, wait_load_kv",
+      "bbox": [
+        54.0,
+        74.31652069091797,
+        295.783935546875,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b2",
+      "page": 9,
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ],
+      "kind": "text",
+      "text": "is called to synchronize the KV cache loading for this\nlayer, and starts the KV cache loading for the next layer.\nAfter each layer’s inference computation, in the layerwise\ncase, wait_store_kv is called to wait until the KV cache\nfor the previous layer has finished storing, and then calls\nstart_store_kv to start the storing of KV cache for the\nnewly generated KV cache layer.\nIn the case of non-layerwise pipelining, before the first\nlayer’s LLM inference starts, start_load_kv is called to\nload the entire KV cache to GPU memory in a blocking\nmanner. LLM inference will happen after the KV cache is\nput to the right GPU memory paged addresses. Then after the\nLLM inference has done for the current scheduling iteration,\nstart_store_kv is called store the generated KV cache to\nlower-tier storage synchronously.",
+      "bbox": [
+        317.52099609375,
+        74.33230590820312,
+        559.7423095703125,
+        251.81808471679688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b3",
+      "page": 9,
+      "section": [
+        "6 Standardized Interface for Connecting the KV Caching Layer and Inference Engine"
+      ],
+      "kind": "text",
+      "text": "Impact: This API is out for over six months in vLLM. During\nthese six months, we see open-source adoptions, including\nNVIDIA dynamo project, llm-d project from RedHat, AIBrix\nproject from ByteDance, and vLLM production stack project.\nWe also see multiple proprietary connectors from different\ncompanies that use the KV connector API.",
+      "bbox": [
+        317.4119873046875,
+        259.5423583984375,
+        559.7446899414062,
+        329.2950744628906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b5",
+      "page": 9,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "LMCACHE operates as a distributed caching system built\naround a centralized KV cache controller responsible for\nglobal metadata management, cache manipulation, and re-\nquest routing. To support these functionalities, LMCACHE\nprovides two categories of APIs: (1) external APIs, which are\ndirectly accessible to users or system operators, and (2) inter-\nnal APIs, which are used by individual LMCACHE instances.\nMechanically, the KV cache controller consists of two lay-\ners: a centralized controller manager and per-instance work-\ners. The controller manager runs as a standalone process and\nserves as a global coordination point, while per-instance work-\ners collocate with each peer LMCACHE instance and handle\nlocal operations or issue global requests to the manager. Exter-\nnal API calls are handled by the centralized manager, which,\nif necessary, dispatches the appropriate operations to each\nworker. Per-instance workers can also proactively interact\nwith the centrailzed manager via internal APIs for metadata\nupdate or lookup.\nThe KV cache controller underpins a series of advanced\noptimizations, including cross-node KV cache sharing, cache-\naware request routing, and dynamic KV cache migration. The\nremainder of this section demonstrates how these optimiza-\ntions could leverage the controller interfaces through concrete\nexamples.",
+      "bbox": [
+        317.52099609375,
+        371.7262878417969,
+        559.7465209960938,
+        656.8860473632812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b6",
+      "page": 9,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "KV cache–aware routing: In this case, higher-level routers\naim to direct requests to the instance with the highest ex-\npected cache hit rate. Each LMCACHE instance reports its\ncache admission and eviction decisions to the controller man-\nager via the batched_admit and batched_evict interfaces.",
+      "bbox": [
+        317.8800048828125,
+        664.559326171875,
+        559.7462768554688,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-table0",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "table",
+      "text": "Internal | batched_admit/batched_evict(hashes, inst_id, device) | Sends KV admission/eviction messages from an LMCache instance to the controller manager.\nInternal | batched_p2p_lookup(hashes) → list[inst_id, device, hit_chunks] | Looks up peer KV-cache existence from an LMCache instance based on the given hashes.\nExternal | lookup(tokens) → list[inst_id, device, hit_tokens] | Looks up global KV-cache existence for the given tokens.\nExternal | move((src_inst_id, src_device), (dst_inst_id, dst_device), tokens) | Moves the KV cache of the given tokens from the source location to the destination location.\nExternal | clear(tokens, inst_id, device) | Clears the KV cache for corresponding tokens from device in instance inst_id.\nExternal | pin/unpin(tokens, instance, storage_device) | Pins/unpins corresponding tokens at location (inst_id, device).\nExternal | compress/decompress(tokens, instance, device, method) | Compresses/decompresses corresponding tokens at location (inst_id, device) with the specified method.",
+      "bbox": [
+        54,
+        72,
+        558,
+        280
+      ],
+      "context": "Table 3. APIs in LMCache Controller. Columns: API category | Function signature | Description. Identifier spelling is preserved from the original table.",
+      "rows": [
+        "Internal | batched_admit/batched_evict(hashes, inst_id, device) | Sends KV admission/eviction messages from an LMCache instance to the controller manager.",
+        "Internal | batched_p2p_lookup(hashes) → list[inst_id, device, hit_chunks] | Looks up peer KV-cache existence from an LMCache instance based on the given hashes.",
+        "External | lookup(tokens) → list[inst_id, device, hit_tokens] | Looks up global KV-cache existence for the given tokens.",
+        "External | move((src_inst_id, src_device), (dst_inst_id, dst_device), tokens) | Moves the KV cache of the given tokens from the source location to the destination location.",
+        "External | clear(tokens, inst_id, device) | Clears the KV cache for corresponding tokens from device in instance inst_id.",
+        "External | pin/unpin(tokens, instance, storage_device) | Pins/unpins corresponding tokens at location (inst_id, device).",
+        "External | compress/decompress(tokens, instance, device, method) | Compresses/decompresses corresponding tokens at location (inst_id, device) with the specified method."
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p10-b2",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "The controller manager aggregates these updates and main-\ntains a global in-memory view of the KV cache state across\nall instances. When the router calls lookup(tokens), the\ncontroller consults its in-memory global KV cache states\nand returns a list of (instance_id, storage_device,\nhit_tokens), indicating where and how many of the re-\nquested tokens are currently cached.",
+      "bbox": [
+        53.691001892089844,
+        302.3562927246094,
+        296.6610412597656,
+        384.12506103515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b3",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "KV cache migration:\nWhen an instance holding KV\ncache is about to be scaled down or load balancing\nis required, the KV cache may need to be migrated\nto another instance. The controller manager hadles such\noperations through move((src_inst_id, src_deivce),\n(dst_inst_id, dst_deivce), tokens) API call by dis-\npatching the request to the source instance. The source in-\nstance will try to establish connection to the destination in-\nstance if one does not exist, and transfers the specified KV\ncache from the source storage device src_device to the desti-\nnation location indicated by (dst_inst_id, dst_deivce).",
+      "bbox": [
+        53.49198913574219,
+        395.1004333496094,
+        296.660888671875,
+        524.76904296875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b4",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "P2P KV cache sharing: LMCACHE supports peer-to-peer\nKV cache sharing, allowing an instance to fetch KV cache\nfrom another peer when a local cache miss occurs. Upon a\ncache miss, the instance’s local worker can query the central-\nized controller manager via batched_p2p_lookup. The man-\nager will return a list of (inst_id, device, hit_chunks),\nrepresenting the number of hit chunks and the location that\nhold these chunks. The instance can then choose to, for exam-\nple, load KV cache from a peer with maximum hit_chunks.",
+      "bbox": [
+        54.0,
+        535.782958984375,
+        295.7792663574219,
+        641.5137939453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b5",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "KV cache clearance: Applications may clear cache when\nswitching models or reclaiming memory. Upon recieving a\nclear(tokens, inst_id, location) call, the controller\nmanager dispatches the operation to the corresponding in-\nstance identified by inst_id. The instance’s worker then\nremoves the KV cache associated with tokens stored from a",
+      "bbox": [
+        54.0,
+        652.5014038085938,
+        295.7708435058594,
+        722.392578125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-table4-reviewed",
+      "page": 10,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "table",
+      "text": "CPU Offload | Single-node | N.A. | Single-node CPU Offloading\nCentral Storage | Single-node | Ethernet | Centralized Storage Server\nPD | Single-node | NVLink | PD Disaggregation",
+      "bbox": [
+        328.89,
+        300,
+        547,
+        408.17
+      ],
+      "context": "Table 4. Evaluation scenarios setup. Columns: Scenario acronym | Single-node/Multi-node | Network medium | Real-world example. Values reproduce the table as printed (including Single-node for Central Storage); section 8.4 separately describes a remote backend.",
+      "rows": [
+        "CPU Offload | Single-node | N.A. | Single-node CPU Offloading",
+        "Central Storage | Single-node | Ethernet | Centralized Storage Server",
+        "PD | Single-node | NVLink | PD Disaggregation"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p10-b11",
+      "page": 10,
+      "section": [
+        "7 Controller Interfaces"
+      ],
+      "kind": "text",
+      "text": "specific stroage device device.\nSome APIs are not covered in the above applications, such\nas\ncompress/decompress(tokens, inst_id, device,\ncompression_method) which compresses/decompresses\nKV cache stored in location (inst_id, device) with a\nspecified compression_method and pin/unpin(tokens,\ninst_id, device) which can pin/unpin the specifed KV\ncache at a certain location (inst_id, device). Users can\nfreely call these APIs to explicitly manage the KV cache in\ntheir own applications based on their needs.",
+      "bbox": [
+        317.8800048828125,
+        431.67364501953125,
+        560.541015625,
+        550.6640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b14",
+      "page": 10,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "We evaluate LMCACHE under three different scenarios, as\nshown in Table 4. The three scenarios are representative se-\ntups that are commonly used by the users of LMCACHE.",
+      "bbox": [
+        317.4119873046875,
+        622.061279296875,
+        559.6510009765625,
+        656.009033203125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b15",
+      "page": 10,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Models:\nWe\ncompare\nLMCACHE\nagainst baseline\nsolutions\non\npopular open\nsource\nmodels\nadopted\nby\nindustry:\nmeta-llama/Llama-3.1-8B-Instruct,\nSao10K-L3-8B, meta-llama/Llama-3.1-70B-Instruct,\nQwen/Qwen2.5-Coder-32B-Instruct,",
+      "bbox": [
+        317.8800048828125,
+        664.4564208984375,
+        559.2454833984375,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b12",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.2 Single-node CPU Offloading"
+      ],
+      "kind": "figure",
+      "text": "Figure 8: Compared to basic vLLM, basic vLLM CPU offloading, and two commercial alternatives, LMCACHE has 1.9–\n8.1× smaller TTFT, and supports 2.3–14× higher inference throughput. Basic vLLM CPU offloading fails to run on\nQwen3-Coder-480B, and commercial alternatives do not have the option to deploy Qwen3-Coder-480B.",
+      "bbox": [
+        54.0,
+        272.455078125,
+        559.4892578125,
+        306.40460205078125
+      ],
+      "context": "Figure 8. Single-node CPU offloading: TTFT and ITL (seconds) versus QPS across five models. Multi-round Q&A, 500GB CPU-cache limit; Llama-3.1-8B input 20K tokens, other models 10K, output at most 100. Section 8.2.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p11-b17-grouped",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Baselines: We compare LMCACHE v0.3.6 with several\nbaselines, including:\n\n• Basic vLLM: vLLM v0.10.2 which enables prefix\ncaching by default, but only keeps KV cache inside GPU\nmemory, so only a small portion of it can be kept;\n\n• Basic vLLM CPU Offloading: vLLM v0.11.0 with its\nown implementation of CPU offloading;\n• Commercial offerings #1 and #2: provides dedicated end-\npoint service that reserves GPUs for users to run a user-\ndefined model. We ran these baselines accessed on Septem-\nber 10th.",
+      "bbox": [
+        54.0,
+        322.3956298828125,
+        559.6569213867188,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b13",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8,\nQwen/Qwen2.5-72B-Instruct.",
+      "bbox": [
+        54.0,
+        322.3956604003906,
+        254.69647216796875,
+        344.7920837402344
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b14",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Datasets:\nLMCACHE is evaluated on several datasets,\nincluding emulated multi-round question answering, long\ncontext question answering from LongBench Bai et al.\n(2024), and random dataset from vLLM official benchmarking\nscript Kwon et al. (2023).",
+      "bbox": [
+        53.67100143432617,
+        353.9344482421875,
+        295.86224365234375,
+        411.88507080078125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b15",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Hardware: For single-node evaluation, we run LMCACHE\non an 8×H100 server provided by GMI Cloud GMI Cloud\n(2025). Because different models require varying numbers\nof GPUs to be served, we allocate the minimum number of\nH100 GPUs necessary to successfully start each model in\nour evaluation. For multi-node evaluation, we use the same\nnumber of GPUs as in the single-node setup and configure\na centralized remote storage backend that leverages CPU\nmemory for KV cache storage. For PD disaggregation, the\nprefiller and decoder instances are both set up with the number\nof GPUs as in single-node evaluation, and the prefiller and\ndecoder instances are connected with NVLink.",
+      "bbox": [
+        53.67100143432617,
+        421.0882263183594,
+        294.28582763671875,
+        562.6640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b16",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.1 Setup"
+      ],
+      "kind": "text",
+      "text": "Metrics: For each experiment, we show both time-to-first-\ntoken (TTFT), which is the prefill delay, and inter-token-\nlatency (ITL), which is the average delay between the genera-\ntion of two consecutive output tokens. For component-wise\nanalysis which breaks down the delay for CPU offloading or\nPD disaggregation, we report the delay for each component\nseparately.",
+      "bbox": [
+        54.0,
+        571.806396484375,
+        295.7708740234375,
+        653.6670532226562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b21",
+      "page": 11,
+      "section": [
+        "8 Evaluation",
+        "8.2 Single-node CPU Offloading"
+      ],
+      "kind": "text",
+      "text": "We first evaluate LMCACHE on the CPU Offload scenario as\nin Table 4. In this experiment, we use multi-round Q&A work-\nloads that emulate a typical chatbot-based document analysis\nscenario. By default, each LLM query contains 10K tokens,\nconsisting of a document (roughly a 12-page PDF) used as\ncontext and a unique short question. Llama-3.1-8B-Instruct\nmodel takes 20K tokens as input, since smaller models are\ngenerally better can handle more and longer queries. The\nLLM output is a short answer of 100 tokens at max. The chat\nsession begins with 40 users, and additional users join accord-\ning to a specified arrival rate (QPS). We set the maximum\nCPU memory LMCACHE can offload KV cache to 500 GB.\nAs shown in Figure 8, LMCACHE consistently outperforms\nall baselines in both TTFT and ITL. For instance, under low\nQPS (e.g., QPS = 1), LMCACHE has 1.9 to 8.1× smaller\nTTFT. LMCACHE achieves 2.3–14× higher query processing\nrate (i.e., throughput), at the same TTFT, than the strongest\nbaseline across five evaluated models. In terms of ITL, LM-\nCACHE also outperforms the baselines, as they incur a long\ndelay before generating the first token, which in turn causes\nsubsequent token generation to be queued. Specifically, com-\npared to the best baseline, LMCACHE has 7% to 92% smaller\nITL, at QPS=1. For Qwen3-Coder-480B, commercial options\n#1 and #2 do not provide support for hosting the model.",
+      "bbox": [
+        317.4119873046875,
+        436.7909240722656,
+        559.6548461914062,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b29",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.3 Real-trace Driven Evaluation"
+      ],
+      "kind": "figure",
+      "text": "Figure 9: Comparing LMCACHE and basic vLLM on three\ndifferent models based on real trace drawn from company F’s\ninput and output distributions. LMCACHE has at least 4.4-\n6.6× smaller TTFT, and 34-58% smaller ITL, at high QPS.",
+      "bbox": [
+        54.0,
+        294.1310729980469,
+        295.77093505859375,
+        340.03558349609375
+      ],
+      "context": "Figure 9. Real-trace company F evaluation: TTFT/ITL (seconds) versus QPS for Llama-3.1-70B, Qwen-2.5-72B and Qwen3-Coder-480B. Traces compressed to one-hour runs; maximum CPU DRAM 500GB. Section 8.3.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p12-b30",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.2 Single-node CPU Offloading"
+      ],
+      "kind": "text",
+      "text": "Understanding LMCACHE’s gains: LMCACHE outper-\nforms baselines for several reasons. Compared with basic\nvLLM, which caches KV data only in GPU memory, LM-\nCACHE leverages CPU offloading. Since CPU memory can\nhold far more KV cache than GPU memory, LMCACHE\nachieves significantly higher cache hit ratios. Compared to\nbasic vLLM CPU offloading, which employs per-layer and\nper-16-token transmission and is unable to fully utilize the\nloading bandwidth, LMCACHE has more efficient implemen-\ntation of the transmission module as it loads KV cache at\nchunk level with high-performance data loading CUDA ker-\nnels. Our comparison with closed-source commercial alterna-\ntives is conducted in a black-box manner since their internal\nimplementations are not publicly available. From the end-to-\nend results, we hypothesize that Commercial Option #1 lacks\na KV cache offloading mechanism to secondary storage. In\ncontrast, Commercial Option #2 likely supports KV cache\noffloading to secondary storage, yet its performance is still\nworse than LMCACHE.",
+      "bbox": [
+        53.64099884033203,
+        358.43743896484375,
+        295.7784423828125,
+        583.7600708007812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b32",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.3 Real-trace Driven Evaluation"
+      ],
+      "kind": "text",
+      "text": "We evaluate LMCACHE on a real trace drawn from company\nF and company G’s distribution of input and output tokens.\nSince we do not have access to company F’s proprietary\nmodels, we run the trace using five different models. To make\nthe experiment tractable, we stretch the original trace which\nlasts for several days so that the workload we run completes\nwithin one hour. LMCACHE is set to use 500 GB of CPU\nDRAM at maximum, and we compare it with latest basic",
+      "bbox": [
+        53.53200149536133,
+        628.8076782226562,
+        295.86236572265625,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b59",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.3 Real-trace Driven Evaluation"
+      ],
+      "kind": "figure",
+      "text": "Figure 10: Upper and middle figures: comparing LMCACHE\nand basic vLLM on Qwen 2.5 Coder 32B Instruct and Sao10K\nL3 8B models based on real trace drawn from company F.\nLower figure: comparing LMCACHE and basic vLLM on\nLlama 3.1 70B Instruct on company drawn from company G’s\ninput/output data distribution. LMCACHE achieves 3.7-6.8×\nsmaller TTFT and 19–44% smaller ITL.",
+      "bbox": [
+        317.60101318359375,
+        294.2623291015625,
+        559.7479248046875,
+        375.9015808105469
+      ],
+      "context": "Figure 10. Real-trace TTFT/ITL (seconds) versus QPS: company F on Qwen-2.5-Coder-32B and Sao10K-L3-8B; company G on Llama-3.1-70B. Maximum CPU DRAM 500GB; section 8.3.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p12-b60",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.3 Real-trace Driven Evaluation"
+      ],
+      "kind": "text",
+      "text": "vLLM with GPU prefix caching.\nAs shown in Figure 9 and Figure 10, LMCACHE consis-\ntently outperforms basic vLLM on the real trace on different\nQPS across the five models. Specifically, LMCACHE reduces\nTTFT by at least 3.7–6.8×, and reduces ITL by at least 19-\n58%, across five models at high QPS.",
+      "bbox": [
+        317.5710144042969,
+        390.3104553222656,
+        559.6533813476562,
+        460.0480651855469
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b62",
+      "page": 12,
+      "section": [
+        "8 Evaluation",
+        "8.4 Centralized Storage Server"
+      ],
+      "kind": "text",
+      "text": "Next, we run LMCACHE for KV cache sharing through a cen-\ntralized remote server, that is connected to the GPU instance\nwith a bandwidth of 15 Gbps, following the setup of central\nstorage in Table 4. For this experiment, we evaluate using the\nTriviaQA dataset from LongBench Bai et al. (2024), a widely\nadopted benchmark for long-context evaluation. We follow\nthe official vLLM benchmarking scripts Kwon et al. (2023),\nwhich generate inference queries according to a Poisson dis-\ntribution at a specified QPS.\nAs shown in Figure 11, LMCACHE consistently outper-\nforms all baselines across different QPS levels, providing\n1.3–3× improvement in inference throughput. The improve-\nment comes from the fact that the remote backend can store\nfar more KV cache than CPU memory, thereby achieving\nhigher cache hit ratios.\nWe note, however, that loading KV cache from the remote\nbackend introduces greater latency than loading from CPU\nmemory, since the remote backend has a much lower band-\nwidth. As a result, the loading delay may even surpass the",
+      "bbox": [
+        317.13299560546875,
+        497.3274230957031,
+        559.6583251953125,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b26",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.4 Centralized Storage Server"
+      ],
+      "kind": "figure",
+      "text": "Figure 11: Compared to basic vLLM, LMCACHE with remote backend offloading has 1.3 to 3× improvement in inference\nthroughput, under the same TTFT.",
+      "bbox": [
+        54.0,
+        272.34881591796875,
+        558.0018310546875,
+        294.4495849609375
+      ],
+      "context": "Figure 11. Centralized remote backend over 15Gbps Ethernet; TriviaQA from LongBench, Poisson arrivals. TTFT/ITL (seconds) versus QPS for four models. Section 8.4.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p13-b27",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.4 Centralized Storage Server"
+      ],
+      "kind": "text",
+      "text": "prefill delay, particularly when the input context is short or\nmodel is small, as prefilling is too fast in such cases—a sce-\nnario that we will demonstrate later in 8.7. Thus, adaptive\ndecisions between KV cache loading and prefilling need to\nbe made when KV cache resides in a remote storage server.",
+      "bbox": [
+        54.0,
+        310.84429931640625,
+        295.7767028808594,
+        368.70306396484375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b29",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.5 PD disaggregation"
+      ],
+      "kind": "text",
+      "text": "In this experiment, we evaluate the performance in a PD\ndisaggregation setting. Here, we compare LMCACHE with\nvLLM’s native PD disaggregation with the official benchmark-\ning script for random input and output workload. We use 8K\ntokens input and 200 tokens output. As shown in Figure 12, it\npresents the 95th percentile TTFT for both LMCACHE and\nvLLM’s native PD disaggregation, showing that LMCACHE\nachieves significantly better tail latency. In terms of mean\nTTFT, LMCACHE also greatly outperforms vLLM native PD\ndisaggregation. Specifically, LMCACHE reduces mean TTFT\nby 1.53–1.84×, and reduces mean ITL by 1.12–1.66×, across\nthe four models.\nThe performance gains of LMCACHE over the baseline\nstem from its more efficient design for PD disaggregation.\nSpecifically, LMCACHE copies each chunk of the KV cache\n(generated during chunked prefill) to a buffer in the GPU\nmemory of the prefiller instance, and then transfers it to the\ncorresponding buffer on the decoder instance. Once received,\nthe KV cache is copied into the paged memory of the decoder\ninstance.\nIn contrast, vLLM’s native PD disaggregation sends the\npaged KV cache generated by the prefiller directly to the\ndecoder, using NIXL’s memory copy function. This function\ntakes as input the memory addresses of the KV cache pages on\nthe prefiller side and copies them to the destination addresses\non the decoder side. However, when the paged memory for",
+      "bbox": [
+        53.67100143432617,
+        411.8672790527344,
+        295.8622741699219,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-table5-reviewed",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "table",
+      "text": "LMCache | 400 Gbps\nvLLM’s Native CPU Offloading | 88 Gbps",
+      "bbox": [
+        317.57,
+        309,
+        558.01,
+        392.09
+      ],
+      "context": "Table 5. Achieved loading bandwidth from CPU memory. Columns: Method | Achieved bandwidth (Gbps, bits per second). Section 8.6 contrasts chunk-wise LMCache transfer with page-wise native offloading.",
+      "rows": [
+        "LMCache | 400 Gbps",
+        "vLLM’s Native CPU Offloading | 88 Gbps"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p13-b33",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.5 PD disaggregation"
+      ],
+      "kind": "text",
+      "text": "the KV cache is scattered across the prefiller’s GPU memory,\nthe transfer is performed in a page by page manner, which\nleads to bandwidth underutilization, as discussed in §5.",
+      "bbox": [
+        317.8800048828125,
+        409.6969299316406,
+        559.2410888671875,
+        443.5240783691406
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b35",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "text",
+      "text": "To further understand the gain brought by LMCACHE, we\nalso perform component-wise analysis to break down the\ndelay of each component in the end-to-end system.",
+      "bbox": [
+        317.5710144042969,
+        484.7413024902344,
+        558.0047607421875,
+        518.6890258789062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b36",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "text",
+      "text": "PD disaggregation: Figure 14 shows the latency breakdown\nof LLM inference, including both prefill and decode computa-\ntion, as well as the transmission of KV cache between prefiller\nand decoder instances. The prefill and decode computation\ntimes are the same for LMCACHE and vLLM’s native PD\ndisaggregation. However, as discussed in §8.5, vLLM’s native\ndesign transmits KV cache at a much finer granularity, which\nresults in bandwidth underutilization. In contrast, LMCACHE\nemploys a more efficient KV cache transfer mechanism, en-\nabling significantly faster transmission and thereby reducing\nthe overall end-to-end delay in PD disaggregation.",
+      "bbox": [
+        317.8800048828125,
+        526.8814697265625,
+        559.6568603515625,
+        656.4140625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b37",
+      "page": 13,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "text",
+      "text": "CPU offloading: In Table 5, we perform an ablation study to\ntest the achieved loading bandwidth from CPU for LMCACHE\nand vLLM’s native CPU offloading. The reason LMCACHE\nachieves higher transfer bandwidth than vLLM’s native CPU\noffloading is due to the transfer granularity. While native CPU",
+      "bbox": [
+        317.8800048828125,
+        664.609375,
+        558.0038452148438,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b20",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.5 PD disaggregation"
+      ],
+      "kind": "figure",
+      "text": "Figure 12: Compared to vLLM’s native PD disaggregation, LMCACHE’s PD disaggregation has significantly lower tail latency,\nand achieving 1.5–1.8× lower mean TTFT, and 1.1 to 1.7× lower mean ITL.",
+      "bbox": [
+        54.0,
+        272.0116271972656,
+        559.7454223632812,
+        293.8876037597656
+      ],
+      "context": "Figure 12. Prefill-decode disaggregation: TTFT/ITL (seconds) CDFs for Llama-8B/70B and Qwen-32B/72B. Random workload with 8K input and 200 output tokens, NVLink-connected prefill/decode instances; section 8.5.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p14-b39",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "figure",
+      "text": "Figure 13: With request asynchronization, LMCACHE over-\nlaps KV cache loading and inference computation (either\nprefill or decode).",
+      "bbox": [
+        54.0,
+        562.3310546875,
+        295.7730407714844,
+        596.2586059570312
+      ],
+      "context": "Figure 13. Request timelines (seconds): asynchronous LMCache versus synchronous vLLM I/O, with prefill/decode/loading. Middle segment of a longer run for illustration; section 8.6.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p14-b40",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "text",
+      "text": "offloading performs data movement page by page, LMCACHE\ntransfers data chunk by chunk. Each transfer operation trig-\ngers a CUDA memory copy, which involves preparing meta-\ndata beforehand and sending a completion signal afterward.\nThese per-transfer operations add overhead to every memory\ncopy kernel. By transferring larger chunks of data per copy,\nLMCACHE reduces the overall overhead, resulting in a much\nhigher effective bandwidth.",
+      "bbox": [
+        53.691001892089844,
+        628.8343505859375,
+        295.8647766113281,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b47",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "figure",
+      "text": "Figure 14: Compared to vLLM’s native PD disaggregation,\nLMCACHE achieves much smaller transmission latency, thus\nreducing end-to-end delay.",
+      "bbox": [
+        317.8800048828125,
+        413.80908203125,
+        559.7424926757812,
+        447.75860595703125
+      ],
+      "context": "Figure 14. End-to-end latency breakdown (seconds): prefill, decode and KV transfer for LMCache versus native vLLM prefill-decode disaggregation. Section 8.6.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p14-b48",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.6 Component-wise Evaluation"
+      ],
+      "kind": "text",
+      "text": "Asynchronous Compute: We also show the benefit of LM-\nCACHE’s asynchronous compute in terms of reducing end-to-\nend delay. Figure 13 shows the timeline of queries loading\nand inference computation. The figure is drawn from the\nmiddle of a longer run for illustration purpose. As shown\nin the figure, without query asynchronization, prefill/decode\ncomputation and loading happen sequentially. With query\nasynchronization, the prefill/decode computation can overlap\nwith KV cache loading, which reduces the end-to-end delay\nby 1.46×.",
+      "bbox": [
+        317.52099609375,
+        464.9309997558594,
+        559.6526489257812,
+        582.5700073242188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b50",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.7 Sensitivity Study"
+      ],
+      "kind": "text",
+      "text": "We also perform several sensitivity evaluation to see how\nLMCACHE’s delay changes under different context lengths\nand different types of remote backends.",
+      "bbox": [
+        317.4119873046875,
+        622.623291015625,
+        558.3597412109375,
+        656.571044921875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b51",
+      "page": 14,
+      "section": [
+        "8 Evaluation",
+        "8.7 Sensitivity Study"
+      ],
+      "kind": "text",
+      "text": "Impact of context lengths: Figure 15 shows the prefill delay\non B200 machines and the loading delay under different net-\nwork bandwidths. When the network bandwidth is low (i.e.,\n32 Gbps), LMCACHE’s KV cache loading outperforms naive\nprefilling only when the input context length exceeds 256K",
+      "bbox": [
+        317.52099609375,
+        664.609375,
+        559.74609375,
+        722.4310302734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b7",
+      "page": 15,
+      "section": [
+        "8 Evaluation",
+        "8.7 Sensitivity Study"
+      ],
+      "kind": "figure",
+      "text": "Figure 15: At network bandwidth of 32Gbps, LMCACHE’s KV\ncache offloading only outperforms basic vLLM’s prefill when\ninput length is more than 256K tokens. At network bandwidth\nof 64 or 128Gbps, LMCACHE’s KV cache offloading is better\nthan prefill across all input lengths.",
+      "bbox": [
+        54.0,
+        210.3797149658203,
+        294.4244384765625,
+        268.0855712890625
+      ],
+      "context": "Figure 15. Loading/prefill latency (seconds) versus context length (K tokens); B200 machines and network bandwidths 32/64/128Gbps. Section 8.7 discusses when loading is beneficial.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p15-b8",
+      "page": 15,
+      "section": [
+        "8 Evaluation",
+        "8.7 Sensitivity Study"
+      ],
+      "kind": "text",
+      "text": "tokens. In contrast, when the bandwidth is higher (i.e., 64 or\n128 Gbps), LMCACHE’s loading consistently achieves lower\ndelay than naive prefilling across all context lengths. These\nresults suggest that LMCACHE’s KV cache loading should\nbe adaptive: under low bandwidth, loading should be enabled\nonly when the context length surpasses the crossover point\nwhere loading becomes faster than prefilling.",
+      "bbox": [
+        53.25299835205078,
+        285.82940673828125,
+        294.2893371582031,
+        367.7110595703125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b10",
+      "page": 15,
+      "section": [
+        "8 Evaluation",
+        "8.8 SGLang Results"
+      ],
+      "kind": "text",
+      "text": "Although our primary evaluation uses vLLM, we also eval-\nuate LMCACHE integrated with SGLang. Figure 16 reports\nresults for Qwen3-32B served on two H100 GPUs (TP=2)\nwith LMCACHE ’s CPU offloading enabled. Compared to\nSGLang without CPU offloading, LMCACHE achieves higher\nthroughput and lower mean TTFT and mean end-to-end la-\ntency. Compared to SGLang’s native CPU offloading, LM-\nCACHE achieves comparable performance. These results con-\nfirm that LMCACHE is also effective on another inference\nengine. Although SGLang’s native CPU offloading achieves\nperformance comparable to LMCACHE ’s CPU offloading\non SGLang, it lacks a distributed storage backend capable of\nefficiently offloading data across a hierarchical set of storage\ndevices, such as local disks and remote CPU/disk resources.",
+      "bbox": [
+        53.64099884033203,
+        410.2812805175781,
+        295.77764892578125,
+        575.7263793945312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b12",
+      "page": 15,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Loading from remote storage is faster than prefill: Tradi-\ntionally, it was believed that loading KV cache from remote\nstorage primarily improves cache hit rates and reduces storage\ncosts by leveraging cheaper storage devices, but at the cost of\nincreased inference latency, since loading data from remote\ndevices was thought to be slower than performing a full pre-\nfill. This assumption was largely due to the historically low\nthroughput of remote object stores such as Amazon S3, which",
+      "bbox": [
+        54.0,
+        628.6866455078125,
+        295.77838134765625,
+        722.3828735351562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b28",
+      "page": 15,
+      "section": [
+        "8 Evaluation",
+        "8.8 SGLang Results"
+      ],
+      "kind": "figure",
+      "text": "Figure 16: On Qwen3-32B model, LMCACHE’s CPU of-\nfloading achieves comparable performance as SGLang’s na-\ntive CPU offloading.",
+      "bbox": [
+        317.8800048828125,
+        370.8374328613281,
+        559.6568603515625,
+        405.0445861816406
+      ],
+      "context": "Figure 16. SGLang with LMCache/native CPU offloading: Qwen3-32B, two H100 GPUs, tensor parallelism 2. Throughput (QPS), mean TTFT and mean latency (seconds) versus request rate (QPS); section 8.8.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p15-b29",
+      "page": 15,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "offered loading speeds as low as 100 MBps. Recently, how-\never, there has been a major boost in remote storage perfor-\nmance, for example, with Amazon S3 Express, the throughput\nhas increased from 100 MBps to nearly 1 GBps. Our users,\nsuch as Company C, have adopted LMCACHE to load KV\ncaches from their own remote object store, achieving 22–32%\nlower TTFT compared to full prefill. This insight suggests\nthat remote backends can simultaneously improve cache hit\nratios and reduce TTFT.",
+      "bbox": [
+        317.8800048828125,
+        428.3077697753906,
+        559.6534423828125,
+        533.9800415039062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b30",
+      "page": 15,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Context truncation lowers prefix cache hit rates: Many\nindustry users employ a sliding-window mechanism to han-\ndle long-context inputs constrained by limited model context\nwindows or GPU memory. For instance, when input tokens\nexceed the context window limit, some companies truncate\nthe input to keep only the most recent tokens. However, this\napproach significantly reduces prefix cache hit ratios, since\ntruncated inputs no longer match the prefixes of previously\ncached contexts. In practice, using real traces from Company\nF, we observe that prefix cache hit ratios drop from roughly\n85% to 45% when truncating input contexts to keep only\nthe latest tokens. Other studies have also discussed this phe-\nnomenon, emphasizing that dynamically adding or removing\ncontext tokens should be avoided, as it invalidates prefix KV\ncache reuse Ji (2025).",
+      "bbox": [
+        317.52099609375,
+        544.9053955078125,
+        559.6533813476562,
+        722.4070434570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b0",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Containerized code is preferred: With the growing scale of\nLLM inference, most production environments now rely on\nKubernetes to manage GPU clusters. Consequently, deploying\ninference engines (e.g., vLLM or SGLang) and LMCACHE\nthrough containerized environments, typically via Docker im-\nages, has become the standard practice among industry users.\nInterestingly, many users rely solely on the official Docker\nimages without going deep into LMCACHE ’s source code.",
+      "bbox": [
+        54.0,
+        74.39337158203125,
+        295.8634338378906,
+        168.05606079101562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b1",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Unexpected high cache hit rate in production systems: Our\ncustomers did not expect such a high prefix cache hit ratio,\nsuch as 50% hit rate for company G in their production envi-\nronments, until they deploy LMCACHE inside their systems.\nPreviously, people thought KV caches could only be reused\nfor fixed system prompts. However, modern applications in-\ncreasingly exhibit \"dynamically reusable contexts\", such as\nconversation histories in coding assistants, chat applications,\nand retrieval-augmented generation (RAG) pipelines. These\nemerging patterns have significantly increased overall cache\nhit ratios in real-world deployments.",
+      "bbox": [
+        54.0,
+        177.1153564453125,
+        295.8640441894531,
+        306.6440734863281
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b2",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Industry vs. academia users: LMCACHE was designed as a\nunified prototype framework in May 2024, where we can put\nour research works into it to gain more impact. However, we\nfound that at that time, industry wants a highly efficient KV\ncache offloading solution as the size of KV cache and concur-\nrent users keep growing. Then, our attention has been moved\ntowards improving the performance, stability, and compatibil-\nity. Since most companies are less concerned with customiz-\ning attention algorithms, we deprioritized designing flexible\nAPIs for integrating specialized attention mechanisms, such\nas selective token dropping. This makes LMCACHE less pop-\nular in academia, since the academia users often focuses on\nmodifying attention mechanisms for their research prototypes.\nAs next step, LMCACHE is going to design more flexible\nAPIs such that it is easy to use by both industry and academia.",
+      "bbox": [
+        53.64099884033203,
+        315.703369140625,
+        295.8674621582031,
+        493.0278625488281
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b3",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "Flexibility vs.\nperformance\nfor programming\nlan-\nguage: Python has always been the de facto language in\nML. However, the current industry focus is gradually shift-\ning towards higher efficiency instead of broad compatibility.\nSpecifically, many companies are rewriting ML libraries in\nhigh-performance languages such as Rust or C++, or carefully\noptimizing Python-based systems to hide its runtime overhead\nwhile preserving flexibility. Although some alternatives have\nbeen writing their ML libraries in Rust, we continue to use\nPython with carefully designed optimizations. This approach\nallows us to evolve faster, with more community contributions,\nand still maintain performance on par with alternatives.",
+      "bbox": [
+        53.64099884033203,
+        501.95843505859375,
+        295.8675231933594,
+        643.5950317382812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b4",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "LMCACHE now a community effort: One key reason LM-\nCACHE rapidly evolved from a research prototype to a widely\nadopted industry framework is the active involvement of com-\nmunity contributors. About a year ago, LMCACHE supported\nonly local CPU, local disk, and Redis backends integrated\nwith vLLM on NVIDIA GPUs. Today, it supports eight more",
+      "bbox": [
+        53.64099884033203,
+        652.6427612304688,
+        295.7776184082031,
+        722.3877563476562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b5",
+      "page": 16,
+      "section": [
+        "9 Real-World Lessons and Experience"
+      ],
+      "kind": "text",
+      "text": "storage backends (NFS, WEKA, GPU-Direct Storage, Moon-\ncake Store, NIXL, S3, InfiniStore, and Valkey) across four\nprocessor types (NVIDIA, AMD, Ascend, and TPU), and two\ninference engines (vLLM and SGLang). All of these contribu-\ntions were made by industry partners who actively upstreamed\ntheir code to stay aligned with ongoing development and avoid\ndivergence from the latest LMCACHE updates.",
+      "bbox": [
+        317.8800048828125,
+        74.46436309814453,
+        559.65673828125,
+        156.10104370117188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b7",
+      "page": 16,
+      "section": [
+        "10 Conclusion and Outlook"
+      ],
+      "kind": "text",
+      "text": "This paper presented LMCACHE, the first open-source and\nmost widely adopted production-ready KV caching layer for\nenterprise-scale LLM inference. By treating KV cache as a\nfirst-class data structure rather than an internal byproduct of\ninference, LMCACHE transforms LLM engines from isolated\ntoken processors into a distributed ecosystem of compute\nand storage. Evaluation across diverse workloads and models\ndemonstrates that LMCACHE consistently delivers significant\nthroughput improvement and latency reduction compared to\nboth open-source baselines and commercial inference APIs.\nBeyond performance, LMCACHE has already seen rapid adop-\ntion in production environments, where enterprises leverage\nits CPU offloading, hierarchical storage, and PD disaggre-\ngation capabilities to keep low latency and reduce cost in\ntrillion-token–scale deployments. Real-world deployments\nhave also revealed new opportunities, such as KV cache reuse\nin recommendation systems and lossy compression in open-\nended chatbots, underscoring the versatility of LMCACHE\nacross application domains.\nLooking ahead, LMCACHE points to a broader shift: AI-\nnative data such as KV caches will increasingly serve as\nthe substrate for scaling LLM inference and agentic work-\nloads. By establishing KV cache as a standardized storage\nand communication medium, LMCACHE lays the foundation\nfor future systems that treat inference not as isolated sessions\nbut as a persistent, cache-aware computation fabric. We hope\nthat the design, optimizations, and deployment lessons pre-\nsented in this paper will inform the next generation of LLM\ninfrastructure, where AI-native data, such as KV caches, is\nnot merely an optimization but a core primitive for efficient,\nreliable, and scalable inference.\nThe source code of LMCACHE is at: https://github.c\nom/LMCache/LMCache.",
+      "bbox": [
+        317.5710144042969,
+        197.96829223632812,
+        559.7438354492188,
+        590.571044921875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b9",
+      "page": 16,
+      "section": [
+        "11 Acknowledgement"
+      ],
+      "kind": "text",
+      "text": "We would like to thank the LMCACHE community for their\ninvaluable support and contributions, including Baolong Mao\nand Chunxiao Zheng for managing remote connectors, Martin\nHickey for GitHub Infrastructure, Huaizheng Zhang, Siddhant\nRay, Zhuohan Gu and Hanchen Li for writing and maintaining\ndocumentation, Qizheng Zhang and Hussain Mohammad for\ninsightful feedback. We also thank GMI cloud for providing\nus GPU clusters to run the experiments.",
+      "bbox": [
+        317.4119873046875,
+        621.1415405273438,
+        558.1737670898438,
+        714.8240356445312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    }
+  ]
+}
