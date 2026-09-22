@@ -9,6 +9,7 @@ load_dotenv()
 ROOT = Path(__file__).parent
 OUTPUT_DIR = ROOT / "outputs"
 CACHE_DIR = OUTPUT_DIR / "cache"
+CHECKPOINT_DB = OUTPUT_DIR / "checkpoints.sqlite"  # 영속 체크포인터. 재시도 소진 후 같은 thread_id로 재개하는 데 사용
 
 # 평가 대상 (입력 config로 주입: 기술 선정은 사람이 수행)
 DOMAIN = "GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스"

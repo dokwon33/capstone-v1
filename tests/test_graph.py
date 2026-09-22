@@ -72,3 +72,37 @@ def test_retry_limit_records_failure_without_report(monkeypatch, tmp_path):
 def test_path_map_covers_routable_nodes():
     assert set(PATH_MAP) == {"market_eval", "stakeholder_eval", "domain_eval",
                              "synthesis", "report_writer", "record_failure"}
+
+
+def test_sqlite_checkpointer_resumes_after_crash_without_rerunning_success(monkeypatch, tmp_path):
+    """설계서 5장 예외 격리: 병렬 브랜치 하나가 실패해도 다른 브랜치 결과는 체크포인터가
+    보존하고, 같은 thread_id로 재개하면 실패한 노드만 다시 실행된다."""
+    db = tmp_path / "checkpoints.sqlite"
+    run_cfg = {"recursion_limit": config.RECURSION_LIMIT, "configurable": {"thread_id": "resume-test"}}
+
+    real_market_eval = builder.market_eval
+    calls = {"market_eval": 0}
+
+    def boom(state):
+        calls["market_eval"] += 1
+        raise RuntimeError("simulated crash")
+
+    monkeypatch.setattr(builder, "market_eval", boom)
+    with builder.sqlite_checkpointer(db) as checkpointer:
+        graph = builder.build_graph(checkpointer)
+        with pytest.raises(RuntimeError):
+            graph.invoke(INITIAL, run_cfg)
+        snapshot = graph.get_state(run_cfg)
+        assert snapshot.next == ("market_eval",)
+        assert "domain_result" in snapshot.values
+        assert "stakeholder_result" in snapshot.values
+        assert "market_result" not in snapshot.values
+
+    monkeypatch.setattr(builder, "market_eval", real_market_eval)
+    with builder.sqlite_checkpointer(db) as checkpointer:
+        graph = builder.build_graph(checkpointer)
+        result = graph.invoke(None, run_cfg)  # 새 입력 없이 재개
+
+    assert calls["market_eval"] == 1  # 실패한 노드만 재실행됨 (재개 시 1회)
+    assert "final_report" in result
+    assert "market_result" in result

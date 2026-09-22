@@ -80,7 +80,7 @@ judge ─ 통과 → report_writer → final_check → final_report
 ├── config.py                  # A  상한·운영 파라미터, 모델 설정 (계약)
 ├── graph/
 │   ├── state.py               # A  메인 State, 공통 타입, merge_by_id (계약)
-│   ├── builder.py             # A  그래프 조립, retry_policy, MemorySaver
+│   ├── builder.py             # A  그래프 조립, retry_policy, 영속 체크포인터(SQLite)
 │   └── routing.py             # A  route_after_judge (path_map 명시)
 ├── common/                    # A  ids.py(Evidence ID), issues.py(IssueType 8종) (계약)
 ├── agents/
@@ -141,8 +141,8 @@ pytest tests/
 
 - **계약 파일 동결**: `graph/state.py`, `config.py`, `common/ids.py`, `common/issues.py`, `prompts/common.py`, `fixtures/*.json`은 트랙 A만 수정한다. 변경 시 팀 채널에 사유를 올리고 영향 트랙 확인 후 fixture를 함께 갱신한다.
 - **Single Writer**: 노드는 자기 출력 키만 담은 dict를 반환한다. `evidence`만 `merge_by_id` reducer를 쓴다.
-- **QueryLog는 LLM이 쓰지 않는다**: 검색 래퍼·RAG 호출부가 호출마다 자동 기록한다.
-- **오류 처리**: 검색 실패는 래퍼에서 처리(재시도 2회, `status=failed`)하고, LLM 오류는 `retry_policy`가 처리한다.
+- **QueryLog는 LLM이 쓰지 않는다**: 웹 검색은 `tools/search.py`가, RAG 검색은 `rag/subgraph.py`의 호출 함수가 호출마다 자동 기록한다.
+- **오류 처리**: 검색 실패는 래퍼에서 처리(재시도 2회, `status=failed`)하고, LLM 오류는 `retry_policy`가 처리한다. 병렬 평가 브랜치가 재시도 소진까지 실패하면 `app.py`가 실행을 중단한다. 체크포인트는 SQLite(`config.CHECKPOINT_DB`)에 영속 저장되므로, 같은 `--thread-id`로 다시 실행하면 실패 지점부터 재개하고 이미 성공한 노드는 다시 실행하지 않는다.
 - **브랜치·커밋**: `track/<a-f>-<짧은설명>`, 커밋 메시지는 `[트랙] 요약`. `main`은 항상 `python app.py`가 START부터 END까지 돌아가는 상태를 유지하며, 병합은 A가 한다.
 - **테스트**: fixture로 각 노드를 독립 개발·pytest한다. 설계서 Rubric 검증 13건과 실행 시나리오 7종을 `tests/`에 옮긴다.
 
@@ -152,7 +152,7 @@ pytest tests/
 
 | 트랙 | 담당 | 범위 | 파일 |
 | --- | --- | --- | --- |
-| A. 골격·통합 | 이도권 | builder, routing(path_map), app.py, record_failure, retry_policy, MemorySaver, 모든 노드의 stub | `graph/*`, `common/*`, `nodes/record_failure.py`, `app.py` |
+| A. 골격·통합 | 이도권 | builder, routing(path_map), app.py, record_failure, retry_policy, 영속 체크포인터(SQLite)·재개, 모든 노드의 stub | `graph/*`, `common/*`, `nodes/record_failure.py`, `app.py` |
 | B. RAG | 김보석 | PDF 파싱, 구조 기반 청킹(E5 512토큰 검사), 임베딩·벡터스토어, RAG 서브그래프, Golden QA와 Hit@5/MRR@5 측정 | `rag/*` |
 | C. 검색 래퍼 + tech_research | 김선주 | Tavily 래퍼(QueryLog 자동 기록, 재시도 2회, 캐시, `<document>` 감싸기), tech_research(TRL, note 고정 삽입) | `tools/search.py`, `agents/tech_research.py` |
 | D. 웹 평가 2종 + 공통 모듈 | 김주은 | market_eval, stakeholder_eval, 평가 공통 base(보완검색·재작성 모드 전환, queries 누적, closed 제외 처리) | `agents/market_eval.py`, `agents/stakeholder_eval.py`, `agents/_eval_base.py` |
