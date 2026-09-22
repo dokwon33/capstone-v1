@@ -186,7 +186,7 @@ python app.py --thread-id demo
 
 `--thread-id`를 생략하면 새로운 ID가 생성된다. 같은 ID로 다시 실행하면 `outputs/checkpoints.sqlite`의 checkpoint에서 재개한다. 성공 시 `outputs/final_report.md`, `outputs/final_check_log.json`, `outputs/run_meta.json`이 생성되며, 검증 실패 시 `outputs/validation_failure.json`이 기록된다.
 
-## Tests
+### Tests
 
 ```bash
 python -m pytest -q
