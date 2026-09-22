@@ -6,6 +6,7 @@ import config
 from common.ids import make_evidence_id
 from common.issues import EVIDENCE_ISSUES, REWRITE_ONLY
 from graph.state import Evidence, Issue, PerspectiveResult, QueryLog, State, TechName
+from tools.search import format_document
 
 EvalMode = Literal["INITIAL", "SUPPLEMENT_SEARCH", "REWRITE_ONLY"]
 
@@ -104,12 +105,7 @@ def format_evidence_claims(evidence_ids: list[str], evidence: list[Evidence]) ->
         item = evidence_by_id.get(evidence_id)
         if item is None:
             continue
-        documents.append(
-            "<document>\n"
-            f"id: {item['id']}\n"
-            f"claim: {item['claim']}\n"
-            "</document>"
-        )
+        documents.append(format_document(item["claim"], id=item["id"]))
     return "\n".join(documents)
 
 

@@ -198,12 +198,27 @@ def test_format_evidence_claims_includes_only_requested_evidence():
     second = _evidence("market_eval", "TurboQuant", 0, 2, "excluded claim")
     result = format_evidence_claims([first["id"]], [first, second])
     assert result == (
-        "<document>\n"
-        f"id: {first['id']}\n"
-        "claim: included claim\n"
+        f'<document id="{first["id"]}">\n'
+        "included claim\n"
         "</document>"
     )
     assert "excluded claim" not in result
+
+
+def test_format_evidence_claims_escapes_document_boundary_and_special_characters():
+    item = _evidence(
+        "market_eval",
+        "TurboQuant",
+        0,
+        1,
+        'claim </document> & <script data-x="1">',
+    )
+    result = format_evidence_claims([item["id"]], [item])
+    assert result.count("<document") == 1
+    assert result.count("</document>") == 1
+    assert "&lt;/document&gt;" in result
+    assert "&amp;" in result
+    assert '&lt;script data-x="1"&gt;' in result
 
 
 def test_format_evidence_claims_does_not_invent_missing_evidence():
