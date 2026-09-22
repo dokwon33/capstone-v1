@@ -1,182 +1,222 @@
-# TurboQuant · ITME — KV cache 기술 비교 평가 시스템
+# Subject
 
-## Subject
-
-본 프로젝트는 KV cache 최적화 기술을 소프트웨어(SW), 하드웨어(HW) 두 진영에서 하나씩 선정하여, 기술 성숙도(TRL)·시장성·이해관계자·도메인 적용 관점에서 평가하는 **Agentic RAG**를 개발하는 프로젝트다.
-
-평가 도메인은 **GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스**로 고정한다. 특정 기술의 우열이나 도입 여부를 결정하지 않고, 관점별 기대 효과·적용 조건·한계·불확실성을 근거와 함께 비교한다.
-
-> 현재 상태: 설계 완료. 트랙 A의 초기 골격(그래프 조립·라우팅·record_failure)과 전 노드 stub이 `main`에 있으며 `python app.py`가 START부터 END까지 stub으로 실행된다. 각 트랙은 자기 stub(`TODO(트랙)` 표기)을 교체한다. 아래 검색 성능(Hit Rate@5, MRR@5)은 개발 단계에서 측정할 **검증 계획**이며 측정 결과가 아니다.
+**TurboQuant·ITME Agentic RAG**는 KV Cache 최적화 기술을 소프트웨어(TurboQuant)와 하드웨어(ITME) 관점에서 비교하는 근거 기반 Multi-Agent 시스템이다. GPU 데이터센터의 기업 문서 질의응답(QA) 환경을 대상으로 웹 검색과 문서 검색 결과를 시장·이해관계자·도메인 관점에서 평가하고, 출처가 연결된 보고서를 생성한다.
 
 ## Overview
 
-- Objective : 하나의 도메인에서 두 기술(TurboQuant / ITME)을 동일한 기준으로 복수 관점에서 비교 평가
-- Method : LangGraph 기반 Multi-Agent(관점별 병렬 평가) + Agentic RAG(검색 → 관련성 판정 → 질의 재작성)
-- Tools : 공용 RAG 서브그래프(논문 PDF), Tavily 웹 검색 래퍼(호출 자동 기록·캐시), Pydantic 구조화 출력
+- **Objective** : TurboQuant와 ITME를 복수 관점에서 근거 기반으로 비교·평가
+- **Method** : LangGraph 기반 Multi-Agent 워크플로와 Agentic RAG
+- **Domain** : GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스
+- **Tools** : LangGraph, OpenAI Chat Completions, Tavily, PyMuPDF, SQLite, NumPy, Pydantic
 
 ## Selected Technologies
 
-기술 선정은 사람이 수행해 입력 config에 기록한다(기술 선정 전용 에이전트 없음).
+- **SW: TurboQuant** — 낮은 비트 저장 표현과 양자화 오차 제어를 통해 LLM 추론 시 KV Cache 저장량을 줄이는 소프트웨어 기술이다.
+- **HW: ITME** — CXL 기반의 분리형 하이브리드 메모리 계층을 이용해 KV Cache의 보관과 이동을 확장하는 하드웨어 기술이다.
 
-- SW : **TurboQuant** ([arXiv 2504.19874](https://arxiv.org/abs/2504.19874v1)) — 낮은 비트의 저장 표현과 양자화 오차 제어로 KV의 저장량을 줄이는 접근
-- HW : **ITME** ([arXiv 2606.12556](https://arxiv.org/abs/2606.12556v2)) — CXL 기반 분리형 하이브리드 메모리 계층으로 KV의 보관·이동 계층을 확장하는 접근
-
-"짐을 압축해서 넣을 것인가(SW), 보관 공간을 넓힐 것인가(HW)"라는 같은 KV cache 문제를 서로 다른 층위에서 다루는 비교 쌍이다.
+두 기술은 동일한 KV Cache 병목을 서로 다른 계층에서 다룬다. 저장소의 문서 매니페스트와 평가 프롬프트는 이 차이를 GPU 데이터센터 기업 문서 QA라는 공통 도메인에서 비교하도록 구성되어 있으며, 특정 기술의 우위를 전제하지 않는다.
 
 ## Features
 
-- PDF 자료 기반 정보 추출: 논문 6건(총 123쪽)을 Section/Subsection 구조 기반으로 청킹해 검색, 페이지·청크 위치(`locator`)로 출처 추적
-- 웹 조사: 시장 규모·채택 현황, 이해관계자 반응, TRL 판단용 상용화·제품화 근거
-- 관점별 병렬 평가 후 일치·상충 사항 종합(`synthesis.conflicts`)
-- Judge 검증 루프: 근거 수·출처 다양성·독립 근거·부정 관점 조사·근거 충실도·중립 표현 검사, 부분 재조사(`MAX_RETRY = 2`)
-- 최종 보고서 수치를 근거 `claim`과 결정론적으로 대조하는 `final_check`
-- 확증편향 방지 전략
-  - 기술 대칭 구조: 두 기술에 같은 질문·쿼리 템플릿·State 구조 적용
-  - 긍정·부정·중립 쿼리를 고정 배분하고, 검색 도구 래퍼가 실행 내역(`queries`)을 자동 기록해 `judge`가 부정 쿼리 실제 실행 여부를 검증
-  - 제안자·공급자 자가보고(`self_reported`)와 독립 근거 구분, 동일 발표의 재인용은 `origin_key`로 묶어 1건으로 집계
-  - 근거 범위 구분: `scope = direct / category`. CXL 범주 근거만으로 ITME 자체의 성능·채택·TRL을 확정하지 않음
-  - Generator와 Judge에 서로 다른 모델 사용
-  - 자료 미발견은 "검토한 공개 자료에서 확인하지 못했다"로 기록하며 부정 평가로 바꾸지 않음. TRL은 "공개 정보 기반 추정"을 명시
+- **웹 조사와 출처 기록**
+  - Tavily 검색 결과를 정규화하고 재시도하며, 선택적으로 로컬 캐시를 사용한다.
+  - 모든 검색 호출은 성공·실패 여부를 포함한 `QueryLog`로 기록된다.
+  - 검색 문서는 안전하게 escape한 `<document>` 블록으로 모델에 전달된다.
+
+- **문서 수집·검색 파이프라인**
+  - PyMuPDF로 PDF의 본문·표·그림 정보를 추출하고 구조 검토 데이터를 반영한다.
+  - 문서 구조를 고려해 chunk를 만들고 multilingual E5 임베딩을 생성한다.
+  - SQLite 기반 dense store에서 metadata pre-filter 후 NumPy cosine similarity로 Top-K를 검색한다.
+  - RAG subgraph는 검색 결과를 평가하고, 근거가 부족하면 질의를 재작성해 제한된 횟수만큼 다시 검색한다.
+
+- **Multi-Agent 평가**
+  - 기술 조사 후 Market, Stakeholder, Domain 평가를 병렬로 실행한다.
+  - Synthesis가 세 관점의 합의점·충돌·기술별 결론을 종합한다.
+  - Judge는 코드 기반 최소 근거 규칙과 LLM 기반 groundedness·neutrality 검사를 수행하고, 필요한 노드로 재시도를 라우팅한다.
+  - Report Writer와 Final Check가 보고서를 구성하고 인용·수치·중립성·TRL 표기를 점검한다.
+
+- **근거 추적과 보수적 서술**
+  - LLM은 URL을 생성하지 않고 `result_index`로 검색 결과를 선택한다. 코드는 이를 실제 `source_key`와 `Evidence`로 연결한다.
+  - Evidence ID, 출처 유형, stance, scope, self-reported 여부, 조사 round를 상태에 보존한다.
+  - 검색 실패와 검색 성공 후 무결과를 구분하며, 근거가 부족하면 임의의 사실 대신 uncertainty를 남긴다.
+
+- **확증 편향 완화**
+  - 두 기술에 동일한 query template을 적용한다.
+  - Market 평가는 기술별로 positive 2회, negative 2회, neutral 2회 등 최대 6회의 초기 검색을 수행한다.
+  - Stakeholder 평가는 competitor, adopter/developer, investor/industry 각 그룹에 positive·negative·neutral 의도를 적용해 기술별 최대 9회 검색한다.
+  - Validation issue가 주어지면 평가 Agent가 기술별 상한 안에서 보완 검색 또는 근거 범위에 맞춘 rewrite를 수행한다.
+
+- **실행 복구**
+  - LLM 노드에 LangGraph `RetryPolicy`를 적용한다.
+  - SQLite checkpoint와 `thread_id`로 동일 실행을 실패 지점부터 재개할 수 있다.
 
 ## Tech Stack
 
-- Framework : LangGraph
-- LLM/Generator : TBD (`config.py`에서 지정)
-- LLM/Judge : TBD (Generator와 다른 모델, `config.py`에서 지정)
-- Retrieval : TBD (VectorDB 선정 후 기재) — Metadata Filter + Dense Search, `TOP_K=5`, 지표 Hit Rate@5 · MRR@5 (측정 예정)
-- Embedding : `intfloat/multilingual-e5-base` (768차원, 입력 512 tokens, MIT, 로컬 실행). 대안: `multilingual-e5-large`, `distiluse-base-multilingual-cased-v2`
-- Web Search : Tavily
+- **Agent Framework** : LangGraph, LangChain Core
+- **Generator LLM** : `langchain-openai`의 `ChatOpenAI` (`GENERATOR_MODEL` 환경 변수로 지정)
+- **Judge LLM** : `langchain-openai`의 `ChatOpenAI` (`JUDGE_MODEL` 환경 변수로 지정, temperature 0)
+- **Web Search** : Tavily Search API
+- **Embedding** : `intfloat/multilingual-e5-base`, 768 dimensions, 최대 512 tokens
+- **Vector Store** : 프로젝트 내 SQLite `DenseStore`와 NumPy exact cosine search
+- **PDF Parsing** : PyMuPDF
+- **Schema / Validation** : Pydantic
+- **Checkpoint** : LangGraph SQLite checkpointer
+- **Testing** : pytest
+- **Retrieval Evaluation** : Hit Rate@5와 MRR@5 평가 코드 제공
+
+구체적인 Generator/Judge 모델 ID는 저장소에 고정되어 있지 않으며 실행 환경에서 주입한다. Embedding revision과 실행 조건은 [`data/manifest.json`](data/manifest.json)에 고정되어 있다.
 
 ## Agents
 
-| agent_id | 역할 | RAG |
-| --- | --- | --- |
-| `tech_research` | 기술 개요·적용 범위·한계·실험 조건 추출, TRL 추정 | O |
-| `market_eval` | 시장 규모, 상용화·채택 현황, 생태계 조사 | X (웹) |
-| `stakeholder_eval` | 경쟁 진영, 도입 기업·개발자, 투자 업계 반응 조사 | X (웹) |
-| `domain_eval` | 기업 문서 질의응답 서비스(장문맥·멀티턴) 적합성 평가 | O |
-| `synthesis` | 관점 간 일치·상충 정리 (신규 근거 생성 없음) | X |
-| `report_writer` | 보고서 초안 작성 | X |
+- **Tech Research Agent (`tech_research`)**
+  - TurboQuant와 ITME의 기술 원리, 특성, 한계 및 TRL 관련 근거를 RAG와 웹 검색으로 조사한다.
 
-규칙 기반 노드: `judge`(검증·재조사 대상 결정), `final_check`(1회 보정 검수), `record_failure`(상한 후 차단 이슈 잔존 시 실패 기록 저장). 분기는 `route_after_judge` 라우팅 함수가 담당한다.
+- **Market Evaluation Agent (`market_eval`)**
+  - 시장 수요, 성장성, 상용화, 생태계와 경제성을 positive·negative·neutral 관점으로 평가한다.
+
+- **Stakeholder Evaluation Agent (`stakeholder_eval`)**
+  - 경쟁 진영, 도입 기업·개발자, 투자·산업 관계자 관점의 이해관계와 반응을 조사한다.
+
+- **Domain Evaluation Agent (`domain_eval`)**
+  - GPU 데이터센터 기업 문서 QA 환경에서 성능, 운영성, 비용, 보안·규제 측면의 적용성을 평가한다.
+
+- **Synthesis Agent (`synthesis`)**
+  - 세 평가 관점의 결과를 비교해 합의점, 충돌, 기술별 종합 결론과 uncertainty를 작성한다.
+
+- **Judge (`judge`)**
+  - 출처 수·다양성·독립성, negative 검색, TRL 등 규칙 기반 조건과 LLM 기반 groundedness·neutrality를 검증하고 재시도 대상을 결정한다.
+
+- **Report Writer (`report_writer`)**
+  - 검증된 평가와 Evidence를 바탕으로 요약, 비교 결과, 제약 및 참고문헌을 포함한 보고서를 생성한다.
+
+- **Final Check (`final_check`)**
+  - 보고서의 섹션 순서, 인용, 수치 근거, 중립 표현, TRL 표기를 한 차례 점검·보정하고 실제 인용된 출처로 참고문헌을 재구성한다.
+
+- **Record Failure (`record_failure`)**
+  - 허용된 재시도 후에도 검증을 통과하지 못한 실행의 issue와 상태를 파일로 기록한다.
 
 ## Architecture
 
-```
-tech_research → [market_eval ∥ stakeholder_eval ∥ domain_eval] → synthesis → judge
-judge ─ 통과 → report_writer → final_check → final_report
-      ─ 재조사 → 해당 평가 에이전트(≤ MAX_RETRY) → synthesis → judge
-      ─ 상한 후 차단 이슈 잔존 → record_failure
+현재 [`graph/builder.py`](graph/builder.py)의 노드와 조건부 라우팅은 다음과 같다.
+
+```mermaid
+flowchart TD
+    START([START]) --> TR[Tech Research]
+
+    TR --> MK[Market Evaluation]
+    TR --> SH[Stakeholder Evaluation]
+    TR --> DM[Domain Evaluation]
+
+    MK --> SY[Synthesis]
+    SH --> SY
+    DM --> SY
+
+    SY --> JD[Judge]
+    JD -->|passed| RW[Report Writer]
+    JD -->|retry: market| MK
+    JD -->|retry: stakeholder| SH
+    JD -->|retry: domain| DM
+    JD -->|retry: synthesis| SY
+    JD -->|retry exhausted / no target| RF[Record Failure]
+
+    RW --> FC[Final Check]
+    FC --> END([END])
+    RF --> END
 ```
 
-그래프 이미지: (구현 후 `graph.get_graph().draw_mermaid_png()` 결과 첨부 예정)
+`app.py`는 이 graph를 SQLite checkpointer와 함께 compile한다. 동일한 `thread_id`를 다시 사용하면 저장된 checkpoint를 읽어 완료되지 않은 실행을 이어간다.
 
 ## Directory Structure
 
-트랙 표기(A~F)는 [개발 트랙](#development-tracks)의 1차 책임자를 뜻한다.
-
+```text
+.
+├── agents/              # 조사·평가·종합·보고서 Agent
+├── common/              # Evidence ID와 validation issue 공통 규칙
+├── data/                # 문서 manifest와 구조 검토 데이터
+├── fixtures/            # 상태 전이·평가용 fixture
+├── graph/               # State, graph builder, routing
+├── nodes/               # Judge, final check, failure 기록
+├── outputs/             # checkpoint, cache, 실행 결과
+├── prompts/             # Agent/Node별 prompt
+├── rag/                 # PDF ingestion, embedding, retrieval, RAG subgraph, 평가
+├── tests/               # 단위·통합 테스트
+├── tools/               # Tavily 웹 검색 wrapper
+├── app.py               # 애플리케이션 entry point
+├── config.py            # 모델·검색·재시도 설정
+└── requirements.txt
 ```
-├── app.py                     # A  실행 스크립트
-├── config.py                  # A  상한·운영 파라미터, 모델 설정 (계약)
-├── graph/
-│   ├── state.py               # A  메인 State, 공통 타입, merge_by_id (계약)
-│   ├── builder.py             # A  그래프 조립, retry_policy, 영속 체크포인터(SQLite)
-│   └── routing.py             # A  route_after_judge (path_map 명시)
-├── common/                    # A  ids.py(Evidence ID), issues.py(IssueType 8종) (계약)
-├── agents/
-│   ├── _eval_base.py          # D  평가 에이전트 공통 로직
-│   ├── tech_research.py       # C
-│   ├── market_eval.py         # D
-│   ├── stakeholder_eval.py    # D
-│   ├── domain_eval.py         # E
-│   ├── synthesis.py           # E
-│   └── report_writer.py       # E
-├── nodes/
-│   ├── judge.py               # F
-│   ├── final_check.py         # F
-│   └── record_failure.py      # A
-├── rag/                       # B  ingest.py, subgraph.py, eval.py
-├── tools/search.py            # C  Tavily 래퍼 (QueryLog 자동 기록, 캐시)
-├── prompts/                   # 각 에이전트 담당자 (common.py는 A)
-├── fixtures/                  # A 관리, 전원 추가 가능. 노드별 입력용 가짜 State
-├── tests/                     # 단계별 pytest
-├── data/papers/               # Doc Pool 원문 논문 6건. git 제외
-├── outputs/                   # 실행 결과, cache/. git 제외
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
-## Data Sources
-
-`data/papers/`는 git에 올리지 않는다. 아래 논문 PDF를 내려받아 `data/papers/`에 둔다(총 123쪽, 확인일 2026-09-21). 원문 판본·문서 ID·임베딩 모델 revision·청크 설정은 `config.py` 또는 `data/manifest.json`에 고정하며, 바뀌면 색인을 다시 만든다.
-
-| 문서 | 쪽 | URL |
-| --- | ---: | --- |
-| TurboQuant | 25 | https://arxiv.org/pdf/2504.19874 |
-| ITME | 13 | https://arxiv.org/pdf/2606.12556 |
-| PagedAttention / vLLM | 16 | https://arxiv.org/pdf/2309.06180 |
-| LMCache | 19 | https://arxiv.org/pdf/2510.09665 |
-| Mooncake | 23 | https://arxiv.org/pdf/2407.00079 |
-| System-Aware KV Cache Optimization Survey | 27 | https://aclanthology.org/2026.findings-acl.1916.pdf |
 
 ## Usage
 
-```bash
-# 환경 설정 (requirements.txt, .env.example 작성 후)
-pip install -r requirements.txt
-cp .env.example .env   # API 키 입력. 키는 .env에만 둔다
+### 설치
 
-python app.py
-pytest tests/
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-결과는 `outputs/`에 저장되며 `thread_id`, 실행일, config 값이 함께 기록된다. 정상 종료 시 최종 보고서, 상한 후 차단 이슈가 남으면 보고서 없이 `outputs/validation_failure.json`만 생성된다.
+로컬 E5 모델을 사용해 RAG 색인을 생성·조회하려면 별도의 runtime 의존성도 설치한다.
 
-개발 중에는 `USE_CACHE=True`가 기본이다. 최악의 경우 한 번 실행에 논리 웹 검색 84회, RAG 검색 42회가 나가므로, 캐시를 끈 전체 실행은 팀에 알리고 돌린다.
+```bash
+python -m pip install -r rag/requirements-runtime.txt
+```
 
-## Development Rules
+### 환경 설정
 
-상세 규칙은 [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md)를 따른다. 설계서와 충돌하면 설계서가 우선한다.
+```bash
+cp .env.example .env
+```
 
-- **계약 파일 동결**: `graph/state.py`, `config.py`, `common/ids.py`, `common/issues.py`, `prompts/common.py`, `fixtures/*.json`은 트랙 A만 수정한다. 변경 시 팀 채널에 사유를 올리고 영향 트랙 확인 후 fixture를 함께 갱신한다.
-- **Single Writer**: 노드는 자기 출력 키만 담은 dict를 반환한다. `evidence`만 `merge_by_id` reducer를 쓴다.
-- **QueryLog는 LLM이 쓰지 않는다**: 웹 검색은 `tools/search.py`가, RAG 검색은 `rag/subgraph.py`의 호출 함수가 호출마다 자동 기록한다.
-- **오류 처리**: 검색 실패는 래퍼에서 처리(재시도 2회, `status=failed`)하고, LLM 오류는 `retry_policy`가 처리한다. 병렬 평가 브랜치가 재시도 소진까지 실패하면 `app.py`가 실행을 중단한다. 체크포인트는 SQLite(`config.CHECKPOINT_DB`)에 영속 저장되므로, 같은 `--thread-id`로 다시 실행하면 실패 지점부터 재개하고 이미 성공한 노드는 다시 실행하지 않는다.
-- **브랜치·커밋**: `track/<a-f>-<짧은설명>`, 커밋 메시지는 `[트랙] 요약`. `main`은 항상 `python app.py`가 START부터 END까지 돌아가는 상태를 유지하며, 병합은 A가 한다.
-- **테스트**: fixture로 각 노드를 독립 개발·pytest한다. 설계서 Rubric 검증 13건과 실행 시나리오 7종을 `tests/`에 옮긴다.
+`.env`에 아래 값을 설정한다. 실제 secret은 저장소에 커밋하지 않는다.
 
-<a id="development-tracks"></a>
+- `OPENAI_API_KEY` : Generator/Judge LLM 호출
+- `TAVILY_API_KEY` : 웹 검색
+- `GENERATOR_MODEL` : 조사·평가·종합·보고서 생성 모델 ID
+- `JUDGE_MODEL` : Judge와 Final Check 모델 ID
+- `USE_CACHE` : 웹 검색 캐시 사용 여부, 기본값 `true`
 
-## Development Tracks
+### 실행
 
-| 트랙 | 담당 | 범위 | 파일 |
-| --- | --- | --- | --- |
-| A. 골격·통합 | 이도권 | builder, routing(path_map), app.py, record_failure, retry_policy, 영속 체크포인터(SQLite)·재개, 모든 노드의 stub | `graph/*`, `common/*`, `nodes/record_failure.py`, `app.py` |
-| B. RAG | 김보석 | PDF 파싱, 구조 기반 청킹(E5 512토큰 검사), 임베딩·벡터스토어, RAG 서브그래프, Golden QA와 Hit@5/MRR@5 측정 | `rag/*` |
-| C. 검색 래퍼 + tech_research | 김선주 | Tavily 래퍼(QueryLog 자동 기록, 재시도 2회, 캐시, `<document>` 감싸기), tech_research(TRL, note 고정 삽입) | `tools/search.py`, `agents/tech_research.py` |
-| D. 웹 평가 2종 + 공통 모듈 | 김주은 | market_eval, stakeholder_eval, 평가 공통 base(보완검색·재작성 모드 전환, queries 누적, closed 제외 처리) | `agents/market_eval.py`, `agents/stakeholder_eval.py`, `agents/_eval_base.py` |
-| E. domain_eval + synthesis + report_writer | 장인우 | State를 읽고 글을 생성하는 노드들 | `agents/domain_eval.py`, `agents/synthesis.py`, `agents/report_writer.py` |
-| F. judge + final_check | 조영우 | check_rubric 규칙 검사, LLM Judge(근거 충실도·중립 표현), 조기 종료, select_targets, final_check 수치 결정론 대조 | `nodes/judge.py`, `nodes/final_check.py` |
+```bash
+python app.py --thread-id demo
+```
 
-의존성과 시작 순서:
+`--thread-id`를 생략하면 새로운 ID가 생성된다. 같은 ID로 다시 실행하면 `outputs/checkpoints.sqlite`의 checkpoint에서 재개한다. 성공 시 `outputs/final_report.md`, `outputs/final_check_log.json`, `outputs/run_meta.json`이 생성되며, 검증 실패 시 `outputs/validation_failure.json`이 기록된다.
 
-- A: 의존 없음. 1일차에 stub으로 START부터 END까지 돌아가게 만든다.
-- B: 의존 없음. 다른 트랙이 기다리는 핵심 경로이므로 색인(ingestion)부터 시작한다.
-- C: 래퍼는 독립 개발. RAG는 B의 인터페이스를 mock으로 대체한다.
-- D: C의 래퍼 인터페이스에 의존한다.
-- E: D의 base와 B의 RAG에 의존한다. synthesis와 report_writer는 fixture만으로 개발할 수 있다.
-- F: 스키마만 있으면 되므로 가장 먼저 시작할 수 있고, 로직이 가장 복잡하다.
+## Tests
 
-통합은 그래프 흐름 순서(tech_research → 평가 3종 → synthesis → judge → report_writer → final_check)로 stub을 하나씩 교체하며, 교체할 때마다 전체 파이프라인을 실행한다.
+```bash
+python -m pytest -q
+```
+
+최신 `main` 커밋에서 외부 API key를 비운 오프라인 실행 결과는 **319 passed, 2 skipped, 2 failed**이다. 실패 2건은 Judge 구현 이후에도 빈 근거 상태가 최종 보고서까지 도달한다고 가정하는 `tests/test_graph.py`의 기존 통합 테스트 기대값과 현재 validation routing의 차이에서 발생한다.
+
+Retrieval 평가는 Hit Rate@5와 MRR@5를 계산하도록 구현되어 있으나, 현재 golden QA의 사람 검수 라벨과 확정 성능 결과는 저장소에 포함되어 있지 않다.
+
+## Notes
+
+- 현재 `main`에는 PDF parsing, chunking, embedding, SQLite indexing/retrieval, RAG subgraph와 `ProjectRagAdapter` 구현이 있다.
+- 다만 `app.py`는 아직 `ProjectRagAdapter`를 생성해 `run_rag`에 등록하지 않는다. 등록되지 않은 상태의 `run_rag`는 명시적인 insufficient 응답을 반환한다.
+- 문서 manifest와 구조 검토 JSON은 포함되어 있지만 원본 PDF, 로컬 E5 모델, 생성된 RAG index는 현재 checkout에 포함되어 있지 않다. 따라서 별도 ingestion과 runtime 연결 없이 애플리케이션에서 실제 문서 검색은 수행되지 않는다.
+- Generator/Judge의 구체적인 모델 ID와 retrieval 성능 수치는 실행 환경 또는 확정 평가 결과가 필요하므로 문서에 임의로 고정하지 않는다.
 
 ## Contributors
 
-판교 6반
+- **이도권**
+  - LangGraph state·builder·routing, 공통 계약, retry/checkpoint와 `thread_id` 재개, 애플리케이션 entry point 및 실패 기록 통합
 
-- 이도권 : 트랙 A — 골격·통합 (graph, routing, app, record_failure)
-- 김보석 : 트랙 B — RAG (PDF 파싱·청킹, 벡터스토어, RAG 서브그래프, 검색 평가)
-- 김선주 : 트랙 C — 검색 래퍼(Tavily), tech_research
-- 김주은 : 트랙 D — market_eval, stakeholder_eval, 평가 공통 모듈
-- 장인우 : 트랙 E — domain_eval, synthesis, report_writer
-- 조영우 : 트랙 F — judge, final_check
+- **김보석**
+  - PDF parsing·구조 기반 chunking, multilingual E5 embedding, SQLite dense store, retrieval/RAG subgraph와 retrieval 평가 코드
+
+- **김선주**
+  - Tavily 웹 검색 wrapper, Tech Research Agent, QueryLog, 검색 재시도·캐시·URL 정규화·document wrapping
+
+- **김주은**
+  - Market/Stakeholder Evaluation Agent, 평가 공통 로직, 보완 검색·rewrite·closed 처리, Evidence/source 연결과 관련 테스트
+
+- **장인우**
+  - Domain Evaluation Agent, Synthesis Agent, Report Writer와 관련 prompt·테스트
+
+- **조영우**
+  - Judge의 규칙·LLM 검증 및 재시도 판정, Final Check의 인용·수치·중립성 검증과 관련 테스트
