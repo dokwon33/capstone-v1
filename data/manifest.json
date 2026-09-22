@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "purpose": "production",
+  "embedding": {
+    "model_name": "intfloat/multilingual-e5-base",
+    "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+    "dimension": 768,
+    "max_input_tokens": 512,
+    "local_path": null,
+    "device": "cpu",
+    "batch_size": 8
+  },
+  "chunking": {
+    "logical_tokens": 400,
+    "embedding_tokens": 400,
+    "overlap_tokens": 60
+  },
+  "documents": [
+    {
+      "doc_id": "turboquant",
+      "path": "papers/turboquant.pdf",
+      "version": "2504.19874v1",
+      "sha256": "431eb13926e10491f5fbd0bebd0813c51bd6c1e884426a1500c5db640b2997ab",
+      "pages": 25,
+      "title": "TurboQuant",
+      "publication_date": "2025-04-29",
+      "ref": "https://arxiv.org/abs/2504.19874v1",
+      "scope_by_tech": {
+        "TurboQuant": "direct"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "itme",
+      "path": "papers/itme.pdf",
+      "version": "2606.12556v2",
+      "sha256": "c8f29ee52bfaef00bd2b26bf2e71e49eda394d6e85b7fc9975fa5fd9a24a94d7",
+      "pages": 13,
+      "title": "ITME",
+      "publication_date": "2026-06-17",
+      "ref": "https://arxiv.org/abs/2606.12556v2",
+      "scope_by_tech": {
+        "ITME": "direct"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "pagedattention",
+      "path": "papers/pagedattention.pdf",
+      "version": "2309.06180v4",
+      "sha256": "55b3b324d779a67c59dac2519445e3b07c14e6ff5c656fadb47a3d7b5997469e",
+      "pages": 16,
+      "title": "PagedAttention / vLLM",
+      "publication_date": "2023-09-12",
+      "ref": "https://arxiv.org/abs/2309.06180",
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "lmcache",
+      "path": "papers/lmcache.pdf",
+      "version": "2510.09665v2",
+      "sha256": "a1b6a90258c7e9091f24603ca4cff85f9f47410be10f5de89b7f902a2d3f6417",
+      "pages": 19,
+      "title": "LMCache",
+      "publication_date": "2025-10-08",
+      "ref": "https://arxiv.org/abs/2510.09665",
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "mooncake",
+      "path": "papers/mooncake.pdf",
+      "version": "2407.00079v4",
+      "sha256": "af8db47ba2ccbbd7ca3f46de6176292010192afb0ffe5c51da2db56e1006f27a",
+      "pages": 23,
+      "title": "Mooncake",
+      "publication_date": "2024-06-24",
+      "ref": "https://arxiv.org/abs/2407.00079",
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "kv_survey",
+      "path": "papers/kv_survey.pdf",
+      "version": "2026.findings-acl.1916",
+      "sha256": "e2285c3886bb33a76f17463d2fe79e1c21dbda21507171092e08f77f53b2bb2b",
+      "pages": 27,
+      "title": "System-Aware KV Cache Optimization Survey",
+      "publication_date": "2026-06-09",
+      "ref": "https://aclanthology.org/2026.findings-acl.1916.pdf",
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    }
+  ]
+}
