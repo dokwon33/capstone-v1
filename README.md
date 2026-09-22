@@ -196,13 +196,6 @@ python -m pytest -q
 
 Retrieval 평가는 Hit Rate@5와 MRR@5를 계산하도록 구현되어 있으나, 현재 golden QA의 사람 검수 라벨과 확정 성능 결과는 저장소에 포함되어 있지 않다.
 
-## Notes
-
-- 현재 `main`에는 PDF parsing, chunking, embedding, SQLite indexing/retrieval, RAG subgraph와 `ProjectRagAdapter` 구현이 있다.
-- 다만 `app.py`는 아직 `ProjectRagAdapter`를 생성해 `run_rag`에 등록하지 않는다. 등록되지 않은 상태의 `run_rag`는 명시적인 insufficient 응답을 반환한다.
-- 문서 manifest와 구조 검토 JSON은 포함되어 있지만 원본 PDF, 로컬 E5 모델, 생성된 RAG index는 현재 checkout에 포함되어 있지 않다. 따라서 별도 ingestion과 runtime 연결 없이 애플리케이션에서 실제 문서 검색은 수행되지 않는다.
-- Generator/Judge의 구체적인 모델 ID와 retrieval 성능 수치는 실행 환경 또는 확정 평가 결과가 필요하므로 문서에 임의로 고정하지 않는다.
-
 ## Contributors
 
 - **이도권**
