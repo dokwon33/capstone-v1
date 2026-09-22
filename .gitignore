@@ -1,5 +1,7 @@
 # Secrets
 .env
+.env.*
+!.env.example
 
 # Data (출처는 README Data Sources 참고)
 data/papers/
@@ -13,11 +15,17 @@ outputs/
 # Python
 __pycache__/
 *.py[cod]
+.python-version
 .venv/
 venv/
 .pytest_cache/
 .ipynb_checkpoints/
 
-# OS / IDE
+# 환경 스캐폴딩 (uv 등 로컬 패키지 관리 산출물, 팀 표준 확정 전까지 미추적)
+pyproject.toml
+uv.lock
+
+# OS / Editor
 .DS_Store
+.vscode/
 .idea/
