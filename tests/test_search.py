@@ -111,3 +111,37 @@ def test_cache_disabled(monkeypatch):
     _search()
     assert len(client.calls) == 2
     assert not (config.CACHE_DIR / "web").exists()
+
+
+def test_bad_urls_and_items_are_skipped_without_raising(monkeypatch):
+    bad = {"results": [{"url": "http://[broken/x", "content": "x"}, "not-a-dict", {"title": "no url"},
+                       {"url": "https://ok.example/a", "title": None, "content": None}]}
+    _use(monkeypatch, FakeClient([bad]))
+    resp = _search()
+    assert resp["log"]["status"] == "ok" and resp["log"]["n_results"] == 1
+    assert resp["results"][0]["title"] == "" and resp["results"][0]["content"] == ""
+
+
+def test_client_creation_failure_is_recorded_as_failed(monkeypatch):
+    monkeypatch.setattr(search, "_get_client", lambda: None)
+    assert _search()["log"]["status"] == "failed"
+
+
+def test_topic_and_domains_passed_and_part_of_cache_key(monkeypatch):
+    client = _use(monkeypatch, FakeClient([OK, OK, OK]))
+    _search()
+    _search(topic="news")
+    _search(topic="news", exclude_domains=["b.org"])
+    assert len(client.calls) == 3  # 옵션이 다르면 캐시를 공유하지 않는다
+    assert client.calls[1]["topic"] == "news"
+    assert client.calls[2]["exclude_domains"] == ["b.org"]
+    assert "include_domains" not in client.calls[0]
+
+
+def test_corrupted_cache_is_ignored(monkeypatch):
+    client = _use(monkeypatch, FakeClient([OK, OK]))
+    _search()
+    for f in (config.CACHE_DIR / "web").iterdir():
+        f.write_text('{"response": {"no_results": 1}}')
+    assert _search()["log"]["status"] == "ok" and len(client.calls) == 2
+    assert not list((config.CACHE_DIR / "web").glob("*.tmp"))
