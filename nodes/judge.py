@@ -30,6 +30,7 @@ RESULT_KEY = {"market_eval": "market_result", "stakeholder_eval": "stakeholder_r
 PERSPECTIVE = {"market_eval": "market", "stakeholder_eval": "stakeholder", "domain_eval": "domain"}
 RETRY_TARGETS = {"market_eval", "stakeholder_eval", "domain_eval", "synthesis"}
 _ABBR_TO_AGENT = {v: k for k, v in AGENT_ABBR.items()}
+REPORTABLE_AFTER_RETRY = {"self_reported_only"}
 
 MIN_ORIGINS = 3
 MIN_SOURCE_TYPES = 2
@@ -197,7 +198,8 @@ def _negative_query_issue(agent: str, tech: str, queries: list[dict]) -> dict | 
 def check_groundedness_and_neutrality(state: dict, llm) -> list[dict]:
     """근거 충실도(unsupported_claim)와 중립 표현(superiority_wording)을 LLM으로 검사한다.
 
-    closed 여부와 무관하게 항상 검사한다 (설계서 4장: 이 예외로 unsupported_claim을 면제하지 않는다).
+    closed인 관점이 참조 근거 없이 남긴 summary는 공개 정보 부재 기록으로만 다루고 검사하지 않는다.
+    그 외 summary는 closed 여부와 무관하게 검사한다.
     llm이 None이면 실제로 검사가 필요한 첫 순간에만 get_judge_llm()으로 만든다. 참조할 요약·
     합의·상충이 전혀 없는 state(예: 완전히 빈 stub 파이프라인)에서는 JUDGE_MODEL이 없어도
     이 함수가 예외를 던지지 않는다.
@@ -210,6 +212,10 @@ def check_groundedness_and_neutrality(state: dict, llm) -> list[dict]:
         return box[0]
 
     issues = []
+    closed_keys = {
+        (item["agent"], item["tech"])
+        for item in (state.get("validation") or {}).get("closed", [])
+    }
     for agent in EVAL_AGENTS:
         for tech in config.TECHS:
             res = (state.get(RESULT_KEY[agent]) or {}).get(tech) or {}
@@ -217,6 +223,8 @@ def check_groundedness_and_neutrality(state: dict, llm) -> list[dict]:
             if not summary:
                 continue
             findings = resolve_findings(state, agent, tech)
+            if (agent, tech) in closed_keys and not findings:
+                continue
             g = check_groundedness(get_llm(), summary, findings, tech, PERSPECTIVE[agent])
             if g.supported == "no":
                 issues.append(_issue(agent, tech, "unsupported_claim", g.detail or f"뒷받침되지 않는 문장: {g.unsupported_span}"))
@@ -375,6 +383,10 @@ def build_judge(llm=None):
         targets = select_targets(blocking, closed)
 
         if not blocking:
+            passed, retry_targets, next_round = True, [], round_
+        elif round_ >= config.MAX_RETRY and all(
+            issue["type"] in REPORTABLE_AFTER_RETRY for issue in blocking
+        ):
             passed, retry_targets, next_round = True, [], round_
         elif targets and round_ < config.MAX_RETRY:
             passed, retry_targets, next_round = False, targets, round_ + 1

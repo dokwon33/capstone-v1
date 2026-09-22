@@ -1,4 +1,5 @@
 import copy
+from dataclasses import dataclass
 
 import config
 from agents.domain_eval import DomainResultOut, ExtractedItem, ExtractOut, build_domain_eval, retry_templates
@@ -68,6 +69,70 @@ def test_rag_insufficient_is_recorded_without_extra_web_search():
     out = build_domain_eval(_llm(), rag, search)(_initial_state())
     assert len(search.calls) == config.WEB_SEARCH_LIMIT["domain_eval"] * 2
     assert "confidence=low" in out["domain_result"]["ITME"]["uncertainty"]
+
+
+def test_project_rag_adapter_queries_and_ids_are_preserved():
+    @dataclass(frozen=True)
+    class Call:
+        result: dict
+        queries: list[dict]
+        status: str = "sufficient"
+
+    class Adapter:
+        def __init__(self):
+            self.counts = {tech: 0 for tech in config.TECHS}
+
+        def call(self, tech, aspect, round_):
+            self.counts[tech] += 1
+            seq = self.counts[tech]
+            code = {"TurboQuant": "TQ", "ITME": "IT"}[tech]
+            evidence_id = f"DM-{code}-r{round_}-{seq:02d}"
+            return Call(
+                {
+                    "evidence": [
+                        {
+                            "id": evidence_id,
+                            "round": round_,
+                            "source_key": tech.lower(),
+                            "locator": f"p{seq}#c01",
+                            "origin_key": tech.lower(),
+                            "claim": f"{tech} {aspect}",
+                            "tech": tech,
+                            "perspective": "domain",
+                            "scope": "direct",
+                            "source_type": "paper",
+                            "stance": "neutral",
+                            "self_reported": True,
+                            "date": "2026-01-01",
+                            "ref": "paper",
+                        }
+                    ],
+                    "grade": "sufficient",
+                    "uncertainty": None,
+                    "confidence": None,
+                },
+                [
+                    {
+                        "round": round_,
+                        "tech": tech,
+                        "intent": "neutral",
+                        "query": f"{tech} {aspect}",
+                        "tool": "rag",
+                        "status": "ok",
+                        "n_results": 1,
+                    }
+                ],
+            )
+
+    out = build_domain_eval(_llm(), Adapter(), FakeSearch())(_initial_state())
+    tq = out["domain_result"]["TurboQuant"]
+    assert [q["tool"] for q in tq["queries"]].count("rag") == 2
+    assert [q["tool"] for q in tq["queries"]].count("web") == 6
+
+    tq_ids = [e["id"] for e in out["evidence"] if e["tech"] == "TurboQuant"]
+    assert tq_ids[:2] == ["DM-TQ-r0-01", "DM-TQ-r0-02"]
+    assert "DM-TQ-r0-03" in tq_ids
+    assert len(tq_ids) == len(set(tq_ids))
 
 
 def test_failed_search_is_noted_in_uncertainty():

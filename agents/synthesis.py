@@ -162,9 +162,24 @@ NO_EVIDENCE = {
     "per_tech": {tech: "검토한 공개 자료에서 종합할 근거를 확인하지 못했다." for tech in config.TECHS},
 }
 
+EMPTY_SYNTHESIS = {
+    "agreements": [],
+    "conflicts": [],
+    "per_tech": {tech: "" for tech in config.TECHS},
+}
+
 
 def build_synthesis(llm=None):
     def synthesis(state: dict) -> dict:
+        prior_synthesis_issues = [
+            issue
+            for issue in (state.get("validation") or {}).get("issues", [])
+            if issue.get("target") == "synthesis"
+        ]
+        if prior_synthesis_issues:
+            log.info("synthesis: 이전 judge 이슈가 남아 빈 종합으로 낮춤")
+            return {"synthesis": EMPTY_SYNTHESIS}
+
         context, allowed = _build_context(state)
         if not allowed:
             # 참조할 근거가 없으면 종합할 내용도 없다. 새 사실을 만들지 않도록 LLM을 부르지 않는다

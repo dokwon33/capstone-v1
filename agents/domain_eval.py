@@ -8,7 +8,7 @@
 - search_fn(query, *, tech, intent, round_) -> (results, QueryLog)  : 트랙 C, tools/search.web_search
   results: [{"url", "source_key", "title", "published_date"?, "document"}]. source_key는 래퍼가
   정규화한 URL, document는 <document>로 감싼 본문. 둘 다 그대로 쓰고 다시 계산하지 않는다.
-QueryLog는 검색 래퍼가 만든다. 이 에이전트는 받은 로그를 누적만 한다 (DEVELOPMENT_RULES 5절).
+QueryLog는 검색 래퍼와 RAG 어댑터가 만든다. 이 에이전트는 받은 로그를 누적만 한다 (DEVELOPMENT_RULES 5절).
 재조사 모드 판정(select_eval_mode 등)과 Evidence 순번(next_evidence_sequence)은
 트랙 D의 agents/_eval_base.py 공통 로직을 쓴다. 쿼리 템플릿 선택(retry_templates)은
 domain_eval 고유 로직이라 여기 남긴다.
@@ -53,6 +53,8 @@ RAG_UNCONFIGURED_NOTE = (
 
 # 같은 논문의 arXiv·alphaXiv 사본은 접근 경로가 달라도 하나의 근거 계통이다 (설계서 4장).
 _ARXIV_COPY = re.compile(r"(?:arxiv\.org/(?:abs|html|pdf)|alphaxiv\.org/(?:abs|overview))/(\d{4}\.\d{4,5})(?:v\d+)?")
+_DOMAIN_ID = re.compile(r"^DM-(TQ|IT)-r(\d+)-(\d{2,})$")
+_TECH_CODE = {"TurboQuant": "TQ", "ITME": "IT"}
 
 
 @lru_cache(maxsize=1)
@@ -116,23 +118,51 @@ def _next_ids(existing_evidence: list[dict], tech: str, round_: int):
         seq += 1
 
 
-def _run_rag(tech: str, round_: int, rag_fn, ids) -> tuple[list[dict], list[str]]:
-    """RAG 2개 aspect를 실행해 (evidence, 불확실성 메모)를 반환한다.
+def _valid_domain_id(evidence_id: str, tech: str, round_: int) -> bool:
+    if not isinstance(evidence_id, str):
+        return False
+    m = _DOMAIN_ID.fullmatch(evidence_id)
+    return bool(m and m[1] == _TECH_CODE[tech] and int(m[2]) == round_)
+
+
+def _call_rag(rag_fn, tech: str, aspect: str, round_: int) -> tuple[dict, list[dict], str | None]:
+    call = getattr(rag_fn, "call", None)
+    if callable(call):
+        envelope = call(tech, aspect, round_)
+        return envelope.result, list(envelope.queries), getattr(envelope, "status", None)
+    return rag_fn(tech=tech, aspect=aspect, round_=round_), [], None
+
+
+def _run_rag(tech: str, round_: int, rag_fn, ids) -> tuple[list[dict], list[dict], list[str]]:
+    """RAG 2개 aspect를 실행해 (evidence, queries, 불확실성 메모)를 반환한다.
 
     RAG 부족 판정이어도 웹 검색을 추가 호출하지 않는다 (설계서 3-3).
     """
-    evidence, notes = [], []
+    evidence, queries, notes = [], [], []
     for aspect in P.RAG_ASPECTS:
-        res = rag_fn(tech=tech, aspect=aspect, round_=round_)
+        res, rag_queries, status = _call_rag(rag_fn, tech, aspect, round_)
+        queries.extend(rag_queries)
         for ev in res["evidence"]:
-            # 여러 aspect의 순번이 겹치지 않도록 호출자가 다시 번호를 매긴다 (설계서 3-3)
-            evidence.append({**ev, "id": next(ids), "round": round_, "tech": tech, "perspective": "domain", "source_type": "paper"})
-        if res.get("uncertainty") == RAG_UNCONFIGURED:
+            evidence_id = ev.get("id", "")
+            if not _valid_domain_id(evidence_id, tech, round_):
+                evidence_id = next(ids)
+            evidence.append(
+                {
+                    **ev,
+                    "id": evidence_id,
+                    "round": round_,
+                    "tech": tech,
+                    "perspective": "domain",
+                    "source_type": "paper",
+                }
+            )
+        if status == "unconfigured" or res.get("uncertainty") == RAG_UNCONFIGURED:
             # 연결 실패를 "논문에 근거 없음"으로 바꾸지 않는다
             notes.append(RAG_UNCONFIGURED_NOTE.format(aspect=aspect))
         elif res["grade"] == "insufficient":
-            notes.append(f"Doc Pool 조사 항목 '{aspect}': 조회는 했으나 충분 기준 미달. {res.get('uncertainty') or '근거 부족'} (confidence=low)")
-    return evidence, notes
+            prefix = "검색 호출 실패" if status == "search_failed" else "조회는 했으나 충분 기준 미달"
+            notes.append(f"Doc Pool 조사 항목 '{aspect}': {prefix}. {res.get('uncertainty') or '근거 부족'} (confidence=low)")
+    return evidence, queries, notes
 
 
 def _run_web(tech: str, round_: int, templates: list[tuple[str, str]], search_fn) -> tuple[list[dict], list[dict], list[str]]:
@@ -312,11 +342,14 @@ def build_domain_eval(llm=None, rag_fn=None, search_fn=None):
             ids = _next_ids(existing_evidence + new_evidence, tech, round_)
             if mode == "initial":
                 if rag is None:
-                    from rag.subgraph import run_rag as rag
-                rag_ev, rag_notes = _run_rag(tech, round_, rag, ids)
+                    from rag.subgraph import get_run_rag_adapter, run_rag
+
+                    rag = get_run_rag_adapter() or run_rag
+                rag_ev, rag_queries, rag_notes = _run_rag(tech, round_, rag, ids)
+                ids = _next_ids(existing_evidence + new_evidence + rag_ev, tech, round_)
                 hits, queries, web_notes = _run_web(tech, round_, P.WEB_INITIAL, search)
                 fresh = rag_ev + _extract_web_evidence(state, tech, round_, hits, llm, ids)
-                pool, notes, revision, prev_queries = fresh, rag_notes + web_notes, "", []
+                pool, notes, revision, prev_queries = fresh, rag_notes + web_notes, "", rag_queries
             else:  # search: 재조사 보완 검색은 웹만 사용한다 (설계서 5장)
                 hits, queries, notes = _run_web(tech, round_, retry_templates(issues), search)
                 fresh = _extract_web_evidence(state, tech, round_, hits, llm, ids)

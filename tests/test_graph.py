@@ -25,7 +25,7 @@ def test_route_pass_retry_and_failure():
 
 
 def test_stub_pipeline_reaches_final_report():
-    result = builder.build_graph().invoke(INITIAL, RUN)
+    result = builder.build_graph(smoke=True).invoke(INITIAL, RUN)
     assert result["final_report"]
     assert result["validation"]["passed"] is True
 
@@ -44,9 +44,9 @@ def test_retry_then_pass_runs_synthesis_once_per_round(monkeypatch):
             return {"validation": v, "retry_count": 1}
         return {"validation": _validation(True)["validation"], "retry_count": 1}
 
-    monkeypatch.setattr(builder, "synthesis", fake_synthesis)
-    monkeypatch.setattr(builder, "judge", fake_judge)
-    result = builder.build_graph().invoke(INITIAL, RUN)
+    monkeypatch.setattr(builder, "smoke_synthesis", fake_synthesis)
+    monkeypatch.setattr(builder, "smoke_judge", fake_judge)
+    result = builder.build_graph(smoke=True).invoke(INITIAL, RUN)
     assert calls == {"synthesis": 2, "judge": 2}
     assert "final_report" in result
 
@@ -62,8 +62,8 @@ def test_retry_limit_records_failure_without_report(monkeypatch, tmp_path):
              "type": "unsupported_claim", "detail": "x"}], "retry_targets": [], "closed": []}
         return {"validation": v, "retry_count": config.MAX_RETRY}
 
-    monkeypatch.setattr(builder, "judge", failing_judge)
-    result = builder.build_graph().invoke(INITIAL, RUN)
+    monkeypatch.setattr(builder, "smoke_judge", failing_judge)
+    result = builder.build_graph(smoke=True).invoke(INITIAL, RUN)
     assert "final_report" not in result and "report" not in result
     assert (tmp_path / "validation_failure.json").exists()
     assert result["failure_record"]["retry_count"] == config.MAX_RETRY
@@ -80,16 +80,16 @@ def test_sqlite_checkpointer_resumes_after_crash_without_rerunning_success(monke
     db = tmp_path / "checkpoints.sqlite"
     run_cfg = {"recursion_limit": config.RECURSION_LIMIT, "configurable": {"thread_id": "resume-test"}}
 
-    real_market_eval = builder.market_eval
+    real_market_eval = builder.smoke_market_eval
     calls = {"market_eval": 0}
 
     def boom(state):
         calls["market_eval"] += 1
         raise RuntimeError("simulated crash")
 
-    monkeypatch.setattr(builder, "market_eval", boom)
+    monkeypatch.setattr(builder, "smoke_market_eval", boom)
     with builder.sqlite_checkpointer(db) as checkpointer:
-        graph = builder.build_graph(checkpointer)
+        graph = builder.build_graph(checkpointer, smoke=True)
         with pytest.raises(RuntimeError):
             graph.invoke(INITIAL, run_cfg)
         snapshot = graph.get_state(run_cfg)
@@ -98,9 +98,9 @@ def test_sqlite_checkpointer_resumes_after_crash_without_rerunning_success(monke
         assert "stakeholder_result" in snapshot.values
         assert "market_result" not in snapshot.values
 
-    monkeypatch.setattr(builder, "market_eval", real_market_eval)
+    monkeypatch.setattr(builder, "smoke_market_eval", real_market_eval)
     with builder.sqlite_checkpointer(db) as checkpointer:
-        graph = builder.build_graph(checkpointer)
+        graph = builder.build_graph(checkpointer, smoke=True)
         result = graph.invoke(None, run_cfg)  # 새 입력 없이 재개
 
     assert calls["market_eval"] == 1  # 실패한 노드만 재실행됨 (재개 시 1회)

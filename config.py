@@ -2,9 +2,13 @@
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:
+    def load_dotenv(*args, **kwargs):
+        return False
 
-load_dotenv()
+load_dotenv(override=True)
 
 ROOT = Path(__file__).parent
 OUTPUT_DIR = ROOT / "outputs"
@@ -37,6 +41,12 @@ TOP_K = 5
 EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
 EMBEDDING_REVISION = None  # TODO(B): 색인 시 revision 고정
 E5_MAX_TOKENS = 512
+RAG_ENABLED = os.getenv("RAG_ENABLED", "true").lower() == "true"
+RAG_MANIFEST_PATH = ROOT / "data" / "manifest.json"
+RAG_INDEX_PATH = Path(os.getenv("RAG_INDEX_PATH", OUTPUT_DIR / "rag" / "index-400-reviewed.sqlite"))
+RAG_BINDING_PATH = ROOT / "rag" / "project_bindings.json"
+RAG_AUDIT_DIR = OUTPUT_DIR / "rag"
+RAG_CACHE_PATH = CACHE_DIR / "rag-embeddings.sqlite"
 
 # 웹 검색 상한 (기술 1개 기준, 초기 라운드)
 WEB_SEARCH_LIMIT = {

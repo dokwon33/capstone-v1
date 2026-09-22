@@ -127,11 +127,14 @@ judge ─ 통과 → report_writer → final_check → final_report
 pip install -r requirements.txt
 cp .env.example .env   # API 키 입력. 키는 .env에만 둔다
 
-python app.py
+python app.py --smoke-fixture --thread-id smoke-local  # API 키·RAG 색인 없이 통합 배관 확인
+python app.py                                         # 실제 근거 기반 실행
 pytest tests/
 ```
 
-결과는 `outputs/`에 저장되며 `thread_id`, 실행일, config 값이 함께 기록된다. 정상 종료 시 최종 보고서, 상한 후 차단 이슈가 남으면 보고서 없이 `outputs/validation_failure.json`만 생성된다.
+Smoke fixture 실행은 실제 근거 보고서가 아니다. LangGraph 라우팅, 체크포인트, 산출물 저장, final_report 생성 배관을 오프라인으로 확인하기 위한 모드이며 결과는 `outputs/smoke/`에 저장된다.
+
+실제 실행은 `data/manifest.json` 기준 RAG 색인(`outputs/rag/index-400-reviewed.sqlite`)과 웹 검색 키(`TAVILY_API_KEY`)가 필요하다. 근거가 부족하면 보고서를 만들지 않고 `outputs/validation_failure.json`을 남긴다. 정상 종료 시 최종 보고서, 상한 후 차단 이슈가 남으면 보고서 없이 실패 기록만 생성된다.
 
 개발 중에는 `USE_CACHE=True`가 기본이다. 최악의 경우 한 번 실행에 논리 웹 검색 84회, RAG 검색 42회가 나가므로, 캐시를 끈 전체 실행은 팀에 알리고 돌린다.
 
