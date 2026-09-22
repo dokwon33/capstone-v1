@@ -1,0 +1,20 @@
+{
+  "selected_techs": {
+    "TurboQuant": {"camp": "SW", "doc_ids": ["turboquant"], "reason": "가상 fixture"},
+    "ITME": {"camp": "HW", "doc_ids": ["itme"], "reason": "가상 fixture"}
+  },
+  "domain": "GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스",
+  "retry_count": 0,
+  "tech_profiles": {
+    "TurboQuant": {"overview": "가상 개요", "scope": "가상 범위", "limitations": ["가상 한계"], "evidence_ids": ["TR-TQ-r0-01"]},
+    "ITME": {"overview": "가상 개요", "scope": "가상 범위", "limitations": ["가상 한계"], "evidence_ids": ["TR-IT-r0-01"]}
+  },
+  "trl": {
+    "TurboQuant": {"level": null, "range": null, "target": "가상", "rationale": "가상", "environment": "가상", "unverified": [], "evidence_ids": ["TR-TQ-r0-01"], "confidence": "low", "queries": [], "note": "공개 정보 기반 추정"},
+    "ITME": {"level": null, "range": null, "target": "가상", "rationale": "가상", "environment": "가상", "unverified": [], "evidence_ids": ["TR-IT-r0-01"], "confidence": "low", "queries": [], "note": "공개 정보 기반 추정"}
+  },
+  "evidence": [
+    {"id": "TR-TQ-r0-01", "round": 0, "source_key": "turboquant", "locator": "p1#c01", "origin_key": "turboquant", "claim": "가상 주장 (실제 논문 결과 아님)", "tech": "TurboQuant", "perspective": "TRL", "scope": "direct", "source_type": "paper", "stance": "neutral", "self_reported": true, "date": "2025-04-28", "ref": "가상 fixture"},
+    {"id": "TR-IT-r0-01", "round": 0, "source_key": "itme", "locator": "p1#c01", "origin_key": "itme", "claim": "가상 주장 (실제 논문 결과 아님)", "tech": "ITME", "perspective": "TRL", "scope": "direct", "source_type": "paper", "stance": "neutral", "self_reported": true, "date": "2026-06-01", "ref": "가상 fixture"}
+  ]
+}

@@ -1,0 +1,6 @@
+langgraph>=1.2
+langchain-core>=1.6
+langchain-openai>=1.6
+pydantic>=2.13
+python-dotenv
+pytest>=9.0

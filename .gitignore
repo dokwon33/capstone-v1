@@ -1,0 +1,23 @@
+# Secrets
+.env
+
+# Data (출처는 README Data Sources 참고)
+data/papers/
+data/raw/
+data/processed/
+data/vectorstore/
+
+# Outputs / cache
+outputs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+.idea/
