@@ -13,7 +13,10 @@ QueryLog는 검색 래퍼가 만든다. 이 에이전트는 받은 로그를 누
 트랙 D의 agents/_eval_base.py 공통 로직을 쓴다. 쿼리 템플릿 선택(retry_templates)은
 domain_eval 고유 로직이라 여기 남긴다.
 """
+import json
 import logging
+import re
+from functools import lru_cache
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -39,6 +42,35 @@ log = logging.getLogger(__name__)
 
 AGENT = "domain_eval"
 NO_EVIDENCE = "검토한 공개 자료에서 도메인 적용 판단에 쓸 근거를 확인하지 못했다."
+
+# rag/subgraph.run_rag가 어댑터 미등록일 때 돌려주는 uncertainty 문자열 (B의 반환값 그대로).
+# 반환 구조가 "검색 후 근거 부족"과 같아서 이 문자열로만 구분할 수 있다
+RAG_UNCONFIGURED = "RAG runtime is not configured"
+RAG_UNCONFIGURED_NOTE = (
+    "논문 RAG 미연결(어댑터 미등록)로 조사 항목 '{aspect}'의 원문 근거를 조회하지 못했다. "
+    "논문에 해당 근거가 없다는 뜻이 아니다. 이 항목은 원문 확인 전 예비 평가다."
+)
+
+# 같은 논문의 arXiv·alphaXiv 사본은 접근 경로가 달라도 하나의 근거 계통이다 (설계서 4장).
+_ARXIV_COPY = re.compile(r"(?:arxiv\.org/(?:abs|html|pdf)|alphaxiv\.org/(?:abs|overview))/(\d{4}\.\d{4,5})(?:v\d+)?")
+
+
+@lru_cache(maxsize=1)
+def _manifest_arxiv_ids() -> dict[str, str]:
+    """data/manifest.json의 판본 번호(예: 2606.12556v2) → 문서 ID(예: itme). RAG 근거의 origin_key와 맞춘다."""
+    try:
+        docs = json.loads((config.ROOT / "data" / "manifest.json").read_text(encoding="utf-8"))["documents"]
+    except (OSError, ValueError, KeyError):
+        return {}
+    return {d["version"].split("v")[0]: d["doc_id"] for d in docs if re.fullmatch(r"\d{4}\.\d{4,5}v\d+", d.get("version", ""))}
+
+
+def paper_origin_key(source_key: str) -> str | None:
+    """웹 결과가 arXiv 논문 사본이면 논문 단위 origin_key를 돌려준다. 판본 차이는 source_key에 남는다."""
+    m = _ARXIV_COPY.search(source_key)
+    if not m:
+        return None
+    return _manifest_arxiv_ids().get(m.group(1), f"arxiv:{m.group(1)}")
 
 
 class ExtractedItem(BaseModel):
@@ -95,8 +127,11 @@ def _run_rag(tech: str, round_: int, rag_fn, ids) -> tuple[list[dict], list[str]
         for ev in res["evidence"]:
             # 여러 aspect의 순번이 겹치지 않도록 호출자가 다시 번호를 매긴다 (설계서 3-3)
             evidence.append({**ev, "id": next(ids), "round": round_, "tech": tech, "perspective": "domain", "source_type": "paper"})
-        if res["grade"] == "insufficient":
-            notes.append(f"Doc Pool 조사 항목 '{aspect}': {res.get('uncertainty') or '근거 부족'} (confidence=low)")
+        if res.get("uncertainty") == RAG_UNCONFIGURED:
+            # 연결 실패를 "논문에 근거 없음"으로 바꾸지 않는다
+            notes.append(RAG_UNCONFIGURED_NOTE.format(aspect=aspect))
+        elif res["grade"] == "insufficient":
+            notes.append(f"Doc Pool 조사 항목 '{aspect}': 조회는 했으나 충분 기준 미달. {res.get('uncertainty') or '근거 부족'} (confidence=low)")
     return evidence, notes
 
 
@@ -142,7 +177,8 @@ def _extract_web_evidence(state: dict, tech: str, round_: int, results: list[dic
                 "round": round_,
                 "source_key": source_key,
                 "locator": None,
-                "origin_key": normalize_url(item.origin_url) if item.origin_url else source_key,
+                "origin_key": paper_origin_key(source_key)
+                or (normalize_url(item.origin_url) if item.origin_url else source_key),
                 "claim": item.claim,
                 "tech": tech,
                 "perspective": "domain",
