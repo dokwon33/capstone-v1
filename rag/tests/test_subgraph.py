@@ -10,6 +10,7 @@ from rag.subgraph import (
     configure_run_rag,
     deduplicate_claims,
     deduplicate_hits,
+    get_run_rag_adapter,
     run_rag,
 )
 
@@ -139,16 +140,18 @@ def test_invented_quote_not_evidence():
     nodes, _, _, _ = make_nodes(
         [[hit(1)]], ScriptedLLM(quote="This claim is not in the document.")
     )
-    with pytest.raises(StructuredOutputError, match="verbatim"):
-        run_nodes(nodes)
+    result, _ = run_nodes(nodes)
+    assert result.result["evidence"] == []
+    assert result.result["grade"] == "insufficient"
 
 
 def test_scope_cannot_be_upgraded_by_llm():
     nodes, _, _, _ = make_nodes(
         [[hit(1, scope="category")]], ScriptedLLM(claim_scope="direct")
     )
-    with pytest.raises(StructuredOutputError, match="upgraded"):
-        run_nodes(nodes)
+    result, _ = run_nodes(nodes)
+    assert result.result["evidence"] == []
+    assert result.result["grade"] == "insufficient"
 
 
 def test_direct_other_system_quote_downgrade_prevents_sufficient():
@@ -163,8 +166,9 @@ def test_direct_other_system_quote_downgrade_prevents_sufficient():
 )
 def test_rewrite_cannot_change_technology_or_inject_tags(terms):
     nodes, _, _, _ = make_nodes([[]], ScriptedLLM(rewrite_terms=terms))
-    with pytest.raises(StructuredOutputError):
-        run_nodes(nodes)
+    result, _ = run_nodes(nodes)
+    assert result.result["evidence"] == []
+    assert result.result["grade"] == "insufficient"
 
 
 def test_input_request_immutable():
@@ -273,6 +277,7 @@ def test_project_adapter_preserves_public_run_rag_signature_and_query_logs():
     )
     configure_run_rag(adapter)
     try:
+        assert get_run_rag_adapter() is adapter
         result = run_rag("TurboQuant", "한계", 2)
     finally:
         clear_run_rag()
@@ -286,6 +291,7 @@ def test_project_adapter_preserves_public_run_rag_signature_and_query_logs():
     )
     assert allocator_.run_id == thread_id_ == "fixture-run"
     assert adapter.calls()[0].queries[0]["tool"] == "rag"
+    assert adapter.calls()[0].status == "unknown"
 
 
 def test_unconfigured_public_run_rag_preserves_main_development_contract(caplog):

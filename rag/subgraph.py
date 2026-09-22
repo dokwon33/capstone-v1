@@ -328,7 +328,7 @@ class RagNodes(RetrievalNodes):
         return {"relevant": relevant}
 
     def extract(self, state: RagState) -> dict:
-        claims = []
+        claims, dropped = [], []
         for hit in state["relevant"]:
             raw = self.llm.claim(state["request"], hit)
             try:
@@ -336,14 +336,32 @@ class RagNodes(RetrievalNodes):
             except ValueError as exc:
                 raise StructuredOutputError(str(exc)) from exc
             if draft.quote not in hit.chunk.text:
-                raise StructuredOutputError(
-                    "quote is not a contiguous verbatim span of the retrieved chunk"
+                dropped.append(
+                    {
+                        "chunk_id": hit.chunk.chunk_id,
+                        "reason": "quote is not a contiguous verbatim span of the retrieved chunk",
+                    }
                 )
+                continue
             if hit.scope == "category" and draft.scope == "direct":
-                raise StructuredOutputError(
-                    "category evidence cannot be upgraded to direct"
+                dropped.append(
+                    {
+                        "chunk_id": hit.chunk.chunk_id,
+                        "reason": "category evidence cannot be upgraded to direct",
+                    }
                 )
+                continue
             claims.append((hit, draft))
+        if dropped:
+            self.audit(
+                {
+                    "event": "rag_claim_dropped",
+                    "thread_id": state["thread_id"],
+                    "agent_id": state["request"].agent_id,
+                    "aspect": state["request"].aspect,
+                    "dropped": dropped,
+                }
+            )
         current = deduplicate_claims(claims)
         acquired = deduplicate_claims([*state["acquired_claims"], *current])
         # Earlier rounds may retain evidence, but NEVER contribute to sufficient.
@@ -376,14 +394,28 @@ class RagNodes(RetrievalNodes):
             or any(c in t for c in "<>\n\r")
             for t in result.terms
         ):
-            raise StructuredOutputError(
-                "invalid rewrite terms or changed target technology"
+            self.audit(
+                {
+                    "event": "rag_rewrite_dropped",
+                    "thread_id": state["thread_id"],
+                    "agent_id": state["request"].agent_id,
+                    "aspect": state["request"].aspect,
+                    "reason": "invalid rewrite terms or changed target technology",
+                }
             )
+            return {"rewrite_count": self.policy.max_rewrite}
         query = make_query(state["request"], [t.strip() for t in result.terms])
         if query == state["query"] or self.counter.input(query, "query") > 512:
-            raise StructuredOutputError(
-                "rewrite is unchanged or exceeds E5 input limit"
+            self.audit(
+                {
+                    "event": "rag_rewrite_dropped",
+                    "thread_id": state["thread_id"],
+                    "agent_id": state["request"].agent_id,
+                    "aspect": state["request"].aspect,
+                    "reason": "rewrite is unchanged or exceeds E5 input limit",
+                }
             )
+            return {"rewrite_count": self.policy.max_rewrite}
         # round, filters, tech and aspect are deliberately NOT written here.
         return {"query": query, "rewrite_count": attempt}
 
@@ -430,6 +462,7 @@ class RagCall:
     result: dict
     queries: list[dict]
     traces: list[dict]
+    status: str = "unknown"
 
 
 def materialize_result(state: RagState, allocator: EvidenceAllocator) -> RagCall:
@@ -491,8 +524,15 @@ def materialize_result(state: RagState, allocator: EvidenceAllocator) -> RagCall
             "confidence": "low" if uncertain else None,
         },
     )
+    failed = sum(q["status"] == "failed" for q in state["queries"])
+    status = state["grade"]
+    if state["grade"] == "insufficient" and state["queries"] and failed == len(state["queries"]):
+        status = "search_failed"
     return RagCall(
-        result, copy.deepcopy(state["queries"]), copy.deepcopy(state["traces"])
+        result,
+        copy.deepcopy(state["queries"]),
+        copy.deepcopy(state["traces"]),
+        status,
     )
 
 
@@ -625,6 +665,12 @@ def configure_run_rag(adapter: ProjectRagAdapter) -> None:
     global _default_adapter
     with _default_adapter_lock:
         _default_adapter = adapter
+
+
+def get_run_rag_adapter() -> ProjectRagAdapter | None:
+    """Return the configured adapter so callers can use RagCall queries/status."""
+    with _default_adapter_lock:
+        return _default_adapter
 
 
 def clear_run_rag() -> None:

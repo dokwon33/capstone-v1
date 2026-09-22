@@ -50,6 +50,7 @@ CATEGORY_LABEL = {
     "ITME": "CXL 하이브리드 메모리 범주 수준의 근거",
     "TurboQuant": "KV cache 압축·양자화 기술군 범주 수준의 근거",
 }
+REPORTABLE_LIMITATIONS = NON_BLOCKING | {"self_reported_only"}
 
 
 def _cell(text) -> str:
@@ -296,7 +297,7 @@ def _sec6_limitations(state: dict) -> str:
     parts = ["# 6. 한계점"]
 
     parts.append("## 6.1 TRL 근거 공백·검수 보정")
-    gaps = [i for i in v.get("issues", []) if i["type"] in NON_BLOCKING]
+    gaps = [i for i in v.get("issues", []) if i["type"] in REPORTABLE_LIMITATIONS]
     if gaps:
         parts.append("\n".join(f"- [{i['type']}] {i.get('tech') or '전체'}: {i['detail']}" for i in gaps))
     else:

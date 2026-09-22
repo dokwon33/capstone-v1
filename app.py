@@ -14,6 +14,33 @@ import config
 from graph.builder import build_graph, sqlite_checkpointer
 
 
+def configure_rag_runtime(thread_id: str) -> bool:
+    """Register the project RAG adapter for this run when the local index exists."""
+    if not config.RAG_ENABLED:
+        return False
+    if not config.RAG_INDEX_PATH.exists():
+        print(
+            f"RAG index not found, using development fallback: {config.RAG_INDEX_PATH}",
+            file=sys.stderr,
+        )
+        return False
+
+    from rag.bootstrap import build_project_adapter
+    from rag.subgraph import configure_run_rag
+
+    config.RAG_AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    adapter, _, _ = build_project_adapter(
+        manifest_path=config.RAG_MANIFEST_PATH,
+        index_path=config.RAG_INDEX_PATH,
+        binding_path=config.RAG_BINDING_PATH,
+        audit_path=config.RAG_AUDIT_DIR / f"{thread_id}.jsonl",
+        thread_id=thread_id,
+        cache_path=config.RAG_CACHE_PATH,
+    )
+    configure_run_rag(adapter)
+    return True
+
+
 def _initial_state() -> dict:
     return {
         "selected_techs": config.SELECTED_TECHS,
@@ -26,16 +53,28 @@ def _initial_state() -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--thread-id", default=f"run-{uuid4().hex[:8]}")
+    parser.add_argument(
+        "--smoke-fixture",
+        action="store_true",
+        help="run the deterministic offline integration graph; not a real evidence report",
+    )
     args = parser.parse_args()
 
     run_config = {
         "recursion_limit": config.RECURSION_LIMIT,
         "configurable": {"thread_id": args.thread_id},
     }
-    config.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir = config.OUTPUT_DIR / "smoke" if args.smoke_fixture else config.OUTPUT_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
+    rag_configured = False if args.smoke_fixture else configure_rag_runtime(args.thread_id)
+    checkpoint_db = (
+        output_dir / "checkpoints.sqlite"
+        if args.smoke_fixture
+        else config.CHECKPOINT_DB
+    )
 
-    with sqlite_checkpointer(config.CHECKPOINT_DB) as checkpointer:
-        graph = build_graph(checkpointer)
+    with sqlite_checkpointer(checkpoint_db) as checkpointer:
+        graph = build_graph(checkpointer, smoke=args.smoke_fixture)
 
         # 이 thread_id에 미완료 체크포인트가 있으면(이전 실행이 재시도 소진으로 중단된 경우)
         # 새 입력을 얹지 않고 이어서 진행한다. 없으면 처음부터 시작한다.
@@ -62,16 +101,19 @@ def main() -> None:
         "generator_model": config.GENERATOR_MODEL,
         "judge_model": config.JUDGE_MODEL,
         "use_cache": config.USE_CACHE,
+        "rag_configured": rag_configured,
+        "rag_index_path": str(config.RAG_INDEX_PATH),
+        "smoke_fixture": args.smoke_fixture,
     }
-    (config.OUTPUT_DIR / "run_meta.json").write_text(
+    (output_dir / "run_meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     if "final_report" in result:
-        (config.OUTPUT_DIR / "final_report.md").write_text(result["final_report"], encoding="utf-8")
-        (config.OUTPUT_DIR / "final_check_log.json").write_text(
+        (output_dir / "final_report.md").write_text(result["final_report"], encoding="utf-8")
+        (output_dir / "final_check_log.json").write_text(
             json.dumps(result["final_check_log"], ensure_ascii=False, indent=2), encoding="utf-8"
         )
-        print(f"final_report saved: {config.OUTPUT_DIR / 'final_report.md'}")
+        print(f"final_report saved: {output_dir / 'final_report.md'}")
     else:
         print(f"validation failed: {result['failure_record']['path']}")
 
