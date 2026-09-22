@@ -114,6 +114,7 @@ flowchart TD
     DM --> SY
 
     SY --> JD[Judge]
+
     JD -->|passed| RW[Report Writer]
     JD -->|retry: market| MK
     JD -->|retry: stakeholder| SH
