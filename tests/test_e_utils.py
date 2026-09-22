@@ -39,3 +39,30 @@ def test_get_generator_reads_model_name_from_config(monkeypatch):
     monkeypatch.setattr(config, "GENERATOR_MODEL", "gpt-4.1-mini")
     llm = get_generator()
     assert llm.model == "gpt-4.1-mini"
+
+
+# ---------------------------------------------------------------- 인용 표기 정리
+# 실제 실행에서 LLM이 (DM-TQ-r0-01)처럼 소괄호로 인용한 사례가 있었다.
+# final_check는 [ID] 형식으로 수치를 대조하므로 코드에서 형식을 맞춘다.
+from agents._e_utils import normalize_cites, strip_unknown_cites  # noqa: E402
+
+
+def test_paren_cite_becomes_bracket():
+    assert normalize_cites("압축률이 보고됐다 (DM-TQ-r0-01).") == "압축률이 보고됐다 [DM-TQ-r0-01]."
+    assert normalize_cites("(DM-TQ-r0-01, DM-TQ-r0-02)") == "[DM-TQ-r0-01, DM-TQ-r0-02]"
+
+
+def test_adjacent_brackets_and_semicolons_merge_into_one():
+    assert normalize_cites("지연 감소 [DM-IT-r0-01][DM-IT-r0-02]") == "지연 감소 [DM-IT-r0-01, DM-IT-r0-02]"
+    assert normalize_cites("[DM-IT-r0-01] [DM-IT-r0-02; DM-IT-r0-01]") == "[DM-IT-r0-01, DM-IT-r0-02]"
+
+
+def test_plain_parentheses_are_left_alone():
+    text = "조건 A(128K 토큰)에서 측정했다 (단, 자가보고)."
+    assert normalize_cites(text) == text
+
+
+def test_strip_handles_paren_and_removes_unknown():
+    out, removed = strip_unknown_cites("수치 (DM-TQ-r0-01, DM-TQ-r9-99) 확인.", {"DM-TQ-r0-01"})
+    assert out == "수치 [DM-TQ-r0-01] 확인."
+    assert removed == ["DM-TQ-r9-99"]

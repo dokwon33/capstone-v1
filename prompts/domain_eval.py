@@ -4,9 +4,13 @@
 """
 
 # 검색어에 넣는 기술명. ITME는 약어만으로는 다른 뜻과 겹쳐 기술 설명어를 붙인다.
+# 정식 명칭(Inference Tiered Memory Expansion with Disaggregated CXL-Hybrid Memories)을 넣으면
+# 검색어가 길어져 결과 0건이 나오거나 CXL과 무관한 tiered memory 자료가 늘어서 짧은 이름을 쓴다
+# (2026-09-22 실측: 짧은 이름 CXL 관련 15/20건, 정식 명칭 3/23건. ITME 직접 자료는 둘 다 논문 2건뿐)
 QUERY_NAME = {"TurboQuant": "TurboQuant", "ITME": "ITME CXL hybrid memory"}
 # 범주 수준 보완 검색어 (ITME 자료 부족 시 CXL 하이브리드 메모리 범주로 확장, 설계서 2장)
-CATEGORY_NAME = {"TurboQuant": "KV cache quantization", "ITME": "CXL hybrid memory"}
+# ITME는 CXL 기반 shared/disaggregated memory·tiered KV placement까지 넓힌다
+CATEGORY_NAME = {"TurboQuant": "KV cache quantization", "ITME": "CXL memory LLM inference KV cache"}
 
 # RAG 조사 항목 (설계서 3-3, 5장 '조사 항목(aspect) 고정').
 # 질의 문장은 RAG 서브그래프가 기술 대칭 템플릿으로 만든다
@@ -18,8 +22,10 @@ WEB_INITIAL = [
     ("positive", "{name} LLM serving throughput GPU datacenter deployment"),
     ("negative", "{name} KV cache limitations overhead accuracy degradation"),
     ("negative", "{name} deployment challenges integration cost LLM serving"),
-    ("neutral", "{name} benchmark long document question answering evaluation"),
-    ("neutral", "{name} vLLM integration LLM inference serving framework"),
+    # 중립 2개는 두 기술의 실제 실험 환경을 둘 다 반영하되, 대칭을 지키려고 두 기술에 같이 쓴다
+    # (TurboQuant: LongBench·Needle-In-A-Haystack / ITME: vLLM v0.17.0·ShareGPT)
+    ("neutral", "{name} LongBench KV cache long-context evaluation"),
+    ("neutral", "{name} vLLM ShareGPT multi-turn KV cache serving"),
 ]
 
 # 재조사 보완 검색: 이슈 유형별 템플릿 (설계서 3-2 '재조사 동작 방식')
@@ -83,7 +89,8 @@ RESULT_SYSTEM = """\
 {tech_focus}
 
 [작성 규칙]
-- summary는 위 항목 중 근거가 있는 항목만 쓴다. 문장 끝마다 근거 id를 [DM-TQ-r0-01] 형식으로 붙인다.
+- summary와 uncertainty는 한국어로 쓴다. 근거가 영어여도 한국어로 옮기되, 기술명·모델명·지표명(TTFT 등)·수치·단위는 원문 그대로 둔다.
+- summary는 위 항목 중 근거가 있는 항목만 쓴다. 문장 끝마다 근거 id를 붙인다. 인용은 반드시 대괄호로 쓴다: [DM-TQ-r0-01] 또는 여러 개면 한 괄호에 [DM-TQ-r0-01, DM-TQ-r0-02]. 소괄호 (DM-TQ-r0-01)나 [A][B]처럼 나눠 쓰지 않는다.
 - 아래 근거 목록의 claim 범위를 벗어나지 않는다. 기술·적용 범위·실험 조건·불확실성을 확대하거나 바꾸지 않는다.
 - 공개 근거로 확인한 내용과 실제 서비스에서 추가 검증해야 할 항목을 구분한다.
 - 첫 토큰 시간, 토큰 생성 지연, 전체 응답 시간, 처리량을 혼용하지 않는다. 품질 허용치나 지연 목표값을 만들지 않는다.
@@ -95,8 +102,8 @@ RESULT_SYSTEM = """\
 """
 
 TECH_FOCUS = {
-    "TurboQuant": "[기술별 확인 내용] 양자화 설정별 품질 변화 / KV 데이터 외 메타데이터·잔여 데이터·추가 버퍼 / 변환·복원 과정의 추가 작업 / 모델·연산 구현·서빙 프레임워크 지원 / 추가 연산·통합·운영 관리 비용",
-    "ITME": "[기술별 확인 내용] 메모리 관리 과정의 처리 정확성과 품질 검증 조건 / GPU 메모리와 외부 메모리의 역할·사용량 / 데이터 이동과 메모리 계층 접근의 영향 / 장치·연결 구성·운영 소프트웨어 요구 조건 / 장치 도입·통합·운영 관리 비용",
+    "TurboQuant": "[기술별 확인 내용] 2.5/3.5-bit 품질 변화·압축률 / outlier-channel mixed precision / residual 보정(QJL sign vector·residual norm) 및 추가 저장 오버헤드 / 변환·복원 과정의 추가 작업 / 모델·연산 구현·서빙 프레임워크 지원 / 추가 연산·통합·운영 관리 비용",
+    "ITME": "[기술별 확인 내용] FPGA 프로토타입·CMM 실물 평가 구성(CMM은 성능 잠재력 확인용 대표 플랫폼으로, 완성된 양산형 ITME 장비 실증과 구분) / GPU–host staging–CXL-hybrid memory 역할·용량 / RDMA·prefetch 데이터 이동과 병목 / 메모리 관리 과정의 처리 정확성과 품질 검증 조건 / 장치·연결 구성·운영 소프트웨어 요구 조건 / 장치 도입·통합·운영 관리 비용",
 }
 
 CATEGORY_LABEL = {

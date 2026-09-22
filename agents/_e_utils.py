@@ -19,7 +19,11 @@ ID_PATTERN = re.compile(r"\b(TR|MK|SH|DM)-(TQ|IT)-r(\d+)-(\d{2,})\b")
 # 보고서 본문의 근거 인용 표기: [DM-TQ-r0-02] 또는 [DM-TQ-r0-02, MK-IT-r1-01]
 # 형식만 비슷한 잘못된 id(예: ZZ-TQ-r0-01)도 잡아서 지울 수 있게 넓게 매칭한다.
 _ID_LIKE = r"[A-Z]{2,}-[A-Z]{2,}-r\d+-\d+"
-CITE_PATTERN = re.compile(rf"\[((?:{_ID_LIKE})(?:\s*,\s*{_ID_LIKE})*)\]")
+_ID_LIST = rf"(?:{_ID_LIKE})(?:\s*[,;]\s*{_ID_LIKE})*"
+# LLM이 (DM-TQ-r0-01)처럼 소괄호로 쓴 인용. 대괄호로 바꿔 final_check가 찾을 수 있게 한다
+_PAREN_CITE = re.compile(rf"\(\s*({_ID_LIST})\s*\)")
+# 붙어 있는 인용 묶음 [A][B], [A] [B, C]를 한 덩어리로 잡는다
+CITE_RUN = re.compile(rf"\[\s*{_ID_LIST}\s*\](?:\s*\[\s*{_ID_LIST}\s*\])*")
 
 
 # ---------------------------------------------------------------- LLM
@@ -73,16 +77,25 @@ def format_cite(ids) -> str:
     return f"[{', '.join(ids)}]" if ids else ""
 
 
+def normalize_cites(text: str) -> str:
+    """인용 표기를 [ID, ID] 한 가지 형식으로 맞춘다 (final_check와 합의한 형식).
+
+    (DM-TQ-r0-01) → [DM-TQ-r0-01], [A][B] → [A, B], 구분자 ; → ,
+    """
+    out = _PAREN_CITE.sub(lambda m: f"[{m.group(1)}]", text or "")
+    return CITE_RUN.sub(lambda m: format_cite(dict.fromkeys(re.findall(_ID_LIKE, m.group(0)))), out)
+
+
 def strip_unknown_cites(text: str, allowed: set[str]) -> tuple[str, list[str]]:
-    """인용 표기에서 허용되지 않은 id를 지운다. 전부 지워진 괄호는 없앤다."""
+    """인용 표기를 정리(normalize_cites)한 뒤 허용되지 않은 id를 지운다. 전부 지워진 괄호는 없앤다."""
     removed: list[str] = []
 
     def repl(m):
-        ids = [s.strip() for s in m.group(1).split(",")]
+        ids = list(dict.fromkeys(re.findall(_ID_LIKE, m.group(0))))
         removed.extend(i for i in ids if i not in allowed)
         return format_cite(i for i in ids if i in allowed)
 
-    out = CITE_PATTERN.sub(repl, text or "")
+    out = CITE_RUN.sub(repl, normalize_cites(text))
     out = re.sub(r"[ \t]+([.,)])", r"\1", out)
     return out, removed
 
