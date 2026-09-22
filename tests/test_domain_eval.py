@@ -168,3 +168,73 @@ def test_missing_web_search_is_recorded_not_raised(monkeypatch):
     res = out["domain_result"]["TurboQuant"]
     assert res["queries"] == []
     assert "웹 검색 래퍼" in res["uncertainty"]
+
+
+# ---------------------------------------------------------------- 논문 해석·근거 처리 규칙 (2026-09-22 검토 반영)
+import json  # noqa: E402
+
+from agents.domain_eval import RAG_UNCONFIGURED, paper_origin_key  # noqa: E402
+from prompts import domain_eval as P  # noqa: E402
+
+
+def test_fixed_keys_and_templates_are_kept():
+    # B는 RAG 조사 항목 문자열을 키로 쓴다. 이름·개수가 바뀌면 ContractError로 멈춘다
+    assert P.RAG_ASPECTS == ["실험 환경(문맥 길이·모델 규모)", "도메인 관련 한계"]
+    b_keys = json.loads((config.ROOT / "rag/prompts/query_templates.json").read_text(encoding="utf-8"))
+    assert set(P.RAG_ASPECTS) <= set(b_keys)
+    assert P.QUERY_NAME["ITME"] == "ITME CXL hybrid memory"
+    assert P.CATEGORY_NAME == {"TurboQuant": "KV cache quantization", "ITME": "CXL memory LLM inference KV cache"}
+    # 중립 검색어는 두 기술에 같은 템플릿을 쓴다 (기술명만 바뀜)
+    neutral = [t for intent, t in P.WEB_INITIAL if intent == "neutral"]
+    assert neutral == ["{name} LongBench KV cache long-context evaluation", "{name} vLLM ShareGPT multi-turn KV cache serving"]
+
+
+def test_rendered_prompts_carry_interpretation_rules():
+    def render(tech):
+        return P.RESULT_SYSTEM.format(domain="d", tech=tech, tech_focus=P.TECH_FOCUS[tech], category_label=P.CATEGORY_LABEL[tech])
+
+    tq, it = render("TurboQuant"), render("ITME")
+    # TurboQuant: 논문 보고값 유지 + 18쪽 예시의 산술 불일치 표시 + QJL 이중 계산 금지
+    assert "2.5/3.5-bit" in tq and "2.25" in tq and "산술 불일치" in tq and "2.25-bit로 바꾸지 않" in tq
+    assert "b−1" in tq and "다시 더하지 않" in tq and "residual vector 전체를 저장한다고 쓰지 않" in tq
+    # ITME: FPGA 기능 검증과 CMM 성능 잠재력 구분, 양산형 실증 확대 금지
+    assert "기능 검증" in it and "성능 잠재력" in it and "양산형" in it
+    # 두 기술 공통 근거 처리 규칙
+    for text in (tq, it):
+        assert "독립 연구 근거는 하나" in text and "현재 검색 범위" in text
+        assert "예비 평가" in text and "\"논문에 근거가 없다\"로 바꾸지 않" in text
+        assert "통합 실험을 보고하지 않았다" in text  # 논문 판본 범위로 한정한 표현
+    assert "vLLM" in P.EXTRACT_SYSTEM and "통합됐다고 추출하지 않" in P.EXTRACT_SYSTEM
+
+
+def test_arxiv_copies_of_one_paper_share_origin_key():
+    # arXiv·alphaXiv 사본과 논문 RAG(origin_key=문서 ID)가 하나의 근거 계통으로 집계되어야 한다
+    for url in ("https://arxiv.org/html/2606.12556v2", "https://alphaxiv.org/abs/2606.12556", "https://arxiv.org/pdf/2606.12556v1"):
+        assert paper_origin_key(url) == "itme"
+    assert paper_origin_key("https://arxiv.org/abs/2601.00001v3") == "arxiv:2601.00001"
+    assert paper_origin_key("https://blog.example.com/itme-review") is None
+
+    class PaperCopies(FakeSearch):
+        def __call__(self, query, *, tech, intent, round_):
+            hits, log = super().__call__(query, tech=tech, intent=intent, round_=round_)
+            urls = ["https://arxiv.org/html/2606.12556v2", "https://alphaxiv.org/abs/2606.12556"] if hits else []
+            return [{**h, "url": u, "source_key": u} for h, u in zip(hits, urls)], log
+
+    out = build_domain_eval(_llm(), FakeRag(), PaperCopies())(_initial_state())
+    web = [e for e in out["evidence"] if e["tech"] == "ITME" and e["source_key"].startswith("https://")]
+    assert web and {e["origin_key"] for e in web} == {"itme"}
+    assert len({e["source_key"] for e in web}) == 2  # 접근 경로·판본 차이는 source_key에 남는다
+
+
+def test_rag_unconfigured_is_not_reported_as_missing_paper_evidence():
+    class UnconfiguredRag(FakeRag):
+        def __call__(self, *, tech, aspect, round_):
+            super().__call__(tech=tech, aspect=aspect, round_=round_)
+            return {"evidence": [], "grade": "insufficient", "uncertainty": RAG_UNCONFIGURED, "confidence": "low"}
+
+    llm = _llm()
+    out = build_domain_eval(llm, UnconfiguredRag(), FakeSearch())(_initial_state())
+    unc = out["domain_result"]["ITME"]["uncertainty"]
+    assert "논문 RAG 미연결" in unc and "논문에 해당 근거가 없다는 뜻이 아니다" in unc and "예비 평가" in unc
+    assert "충분 기준 미달" not in unc  # 미연결을 "조회했으나 근거 부족"으로 섞지 않는다
+    assert "논문 RAG 미연결" in llm.prompts("DomainResultOut")[0]  # 요약 작성 LLM에도 전달된다
