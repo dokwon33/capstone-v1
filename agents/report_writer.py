@@ -303,6 +303,20 @@ def _sec6_limitations(state: dict) -> str:
     else:
         parts.append("기록된 비차단 이슈가 없다.")
 
+    # 마지막 재조사 라운드(retry_count == MAX_RETRY)에서도 남은 차단 이슈는 judge가 soft-fail로
+    # 통과시킨다(2026-09-22, nodes/judge.py). 숨기지 않고 여기 그대로 밝힌다: 이 이슈들은
+    # 재검수를 통과하지 못한 채 보고서에 반영됐을 수 있다는 뜻이다.
+    unresolved = [i for i in v.get("issues", []) if i["type"] not in REPORTABLE_LIMITATIONS]
+    if unresolved:
+        parts.append("## 6.1b 마지막 라운드까지 남은 검증 이슈")
+        parts.append(
+            "재조사 상한(MAX_RETRY)에 도달할 때까지 아래 이슈가 해소되지 않았다. "
+            "보고서는 출력했으나, 해당 기술·관점의 서술은 이 지적을 온전히 반영하지 못했을 수 있다."
+        )
+        parts.append(
+            "\n".join(f"- [{i['type']}] {i.get('tech') or '전체'} · {i.get('target') or '전체'}: {i['detail']}" for i in unresolved)
+        )
+
     parts.append("## 6.2 공개 정보 부재 판정 관점")
     closed = v.get("closed", [])
     if closed:
