@@ -1,5 +1,5 @@
-# Add to the team's approved isolated environment; these integrations require validation.
-# Not an assertion that this delivery environment installed or executed these packages.
+# Install in an isolated environment. Actual tested versions/results are recorded in
+# docs/ISSUE8_VERIFICATION.md; ranges below are not a cross-platform environment lock.
 -r requirements-core.txt
 langgraph>=1.0.10,<2
 langchain-core>=1,<2

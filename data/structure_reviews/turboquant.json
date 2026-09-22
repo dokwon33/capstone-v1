@@ -1,0 +1,4440 @@
+{
+  "document_sha256": "431eb13926e10491f5fbd0bebd0813c51bd6c1e884426a1500c5db640b2997ab",
+  "parser_version": "structure-v1",
+  "status": "approved",
+  "reviewer": "Codex (AI-assisted visual review)",
+  "reviewed_at": "2026-09-22T03:09:57.399282+00:00",
+  "review_notes": "AI-assisted structural review of original PDF text and rendered pages, not a human sign-off or independent verification of paper claims. The approved status describes these explicit structural corrections. Genuine captions are linked to labelled units and nearby explanations; no numerical values were inferred from chart pixels. Automatic table detections on plots/diagrams were replaced or excluded. Actual tables were transcribed from the text layer and checked against rendered cells; each row retains headers, units and model/configuration. All raw body blocks are preserved verbatim except Unicode NFC, soft-hyphen removal, outer whitespace and identified page-number suffixes. True numbered headings are preserved as section metadata; false heading/caption classifications are restored to ordinary text. Excluded raw block IDs and replacement mappings below make source coverage auditable. For TurboQuant, equation fragments and algorithm steps are grouped with their complete local definition/proof/paragraph; group text is the exact source text joined with newlines and bbox is the source union. Algorithm 2 is assigned to Section 3.2. Human review can be performed against the original PDFs; no human approval is claimed.",
+  "review_method": "AI-assisted visual PDF/text-layer comparison",
+  "resolved_issue_ids": [
+    "p16-b56",
+    "p16-table0",
+    "p16-table1",
+    "p16-table2",
+    "p16-table3",
+    "p16-table4",
+    "p16-table5",
+    "p16-table6",
+    "p16-table7",
+    "p17-b57",
+    "p17-table0",
+    "p17-table1",
+    "p17-table2",
+    "p17-table3",
+    "p17-table4",
+    "p17-table5",
+    "p17-table6",
+    "p17-table7",
+    "p17-table8",
+    "p18-b16",
+    "p18-table0",
+    "p18-table1",
+    "p19-b114",
+    "p20-b10",
+    "p20-b12",
+    "p21-b31",
+    "p21-table0",
+    "p21-table1",
+    "p21-table2"
+  ],
+  "source_issue_count": 29,
+  "source_front_matter": [
+    {
+      "id": "p1-b0",
+      "text": "TurboQuant: Online Vector Quantization with Near-optimal\nDistortion Rate",
+      "bbox": [
+        96.40599822998047,
+        108.12974548339844,
+        515.6868286132812,
+        147.2631072998047
+      ],
+      "size": 17.21540069580078,
+      "bold": false
+    },
+    {
+      "id": "p1-b1",
+      "text": "Amir Zandieh\nGoogle Research\nzandieh@google.com",
+      "bbox": [
+        107.88398742675781,
+        171.09559631347656,
+        218.70860290527344,
+        211.34628295898438
+      ],
+      "size": 11.9552001953125,
+      "bold": false
+    },
+    {
+      "id": "p1-b2",
+      "text": "Majid Daliri\nNew York University\ndaliri.majid@nyu.edu",
+      "bbox": [
+        247.5570068359375,
+        171.09559631347656,
+        370.6954345703125,
+        211.34628295898438
+      ],
+      "size": 11.9552001953125,
+      "bold": false
+    },
+    {
+      "id": "p1-b3",
+      "text": "Majid Hadian\nGoogle DeepMind\nmajidh@google.com",
+      "bbox": [
+        399.53302001953125,
+        171.09559631347656,
+        504.20068359375,
+        211.34628295898438
+      ],
+      "size": 11.9552001953125,
+      "bold": false
+    },
+    {
+      "id": "p1-b4",
+      "text": "Vahab Mirrokni\nGoogle Research\nmirrokni@google.com",
+      "bbox": [
+        247.55702209472656,
+        232.7395782470703,
+        364.5385437011719,
+        272.9902648925781
+      ],
+      "size": 11.9552001953125,
+      "bold": false
+    }
+  ],
+  "blocks": [
+    {
+      "block_id": "p1-b6",
+      "page": 1,
+      "section": [
+        "Abstract"
+      ],
+      "kind": "text",
+      "text": "Vector quantization, a problem rooted in Shannon’s source coding theory, aims to quantize\nhigh-dimensional Euclidean vectors while minimizing distortion in their geometric structure. We\npropose TurboQuant to address both mean-squared error (MSE) and inner product distor-\ntion, overcoming limitations of existing methods that fail to achieve optimal distortion rates.\nOur data-oblivious algorithms, suitable for online applications, achieve near-optimal distortion\nrates (within a small constant factor) across all bit-widths and dimensions.\nTurboQuant\nachieves this by randomly rotating input vectors, inducing a concentrated Beta distribution\non coordinates, and leveraging the near-independence property of distinct coordinates in high\ndimensions to simply apply optimal scalar quantizers per each coordinate. Recognizing that\nMSE-optimal quantizers introduce bias in inner product estimation, we propose a two-stage ap-\nproach: applying an MSE quantizer followed by a 1-bit Quantized JL (QJL) transform on the\nresidual, resulting in an unbiased inner product quantizer. We also provide a formal proof of\nthe information-theoretic lower bounds on best achievable distortion rate by any vector quan-\ntizer, demonstrating that TurboQuant closely matches these bounds, differing only by a small\nconstant (≈2.7) factor. Experimental results validate our theoretical findings, showing that\nfor KV cache quantization, we achieve absolute quality neutrality with 3.5 bits per channel and\nmarginal quality degradation with 2.5 bits per channel. Furthermore, in nearest neighbor search\ntasks, our method outperforms existing product quantization techniques in recall while reducing\nindexing time to virtually zero.",
+      "bbox": [
+        98.1390380859375,
+        327.7408752441406,
+        513.9581298828125,
+        552.896240234375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p1-b8",
+      "page": 1,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Vector quantization (VQ) in Euclidean space is crucial for efficiently handling high-dimensional\nvectors across a spectrum of computational domains, from training and deploying large-scale AI\nand deep learning models to powering vector databases for search/retrieval systems.\nThe core\nobjective is to compress high dimensional vectors by quantizing them–converting floating-point co-\nordinate values to low-bitwidth integers–while minimizing distortion, quantified by metrics such as",
+      "bbox": [
+        70.86605072021484,
+        615.2649536132812,
+        541.2007446289062,
+        680.3710327148438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b0",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "mean-squared error (MSE) or inner product errors. By preserving these properties, inner prod-\nuct queries can be answered rapidly, with minimal latency, and using reduced computational and\ncommunication resources.",
+      "bbox": [
+        70.86599731445312,
+        68.77522277832031,
+        541.2008666992188,
+        106.78234100341797
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b1",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "This problem’s roots trace back to Shannon’s seminal work on Source Coding theory [48, 49], which\nestablished that the least distortion achievable by block source codes, now known as vector quan-\ntizers, is defined by the Shannon distortion-rate function, determined by the statistical properties\nof the source and the chosen distortion measure, such as MSE. Today, VQ plays a critical role in\nfundamental computational domains, including AI, deep learning, and search systems.",
+      "bbox": [
+        70.86599731445312,
+        116.59626770019531,
+        541.2117919921875,
+        181.701416015625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b2",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "A key application of VQ is in the deployment of AI models, including large language models\n(LLMs) [5, 18, 7, 52]. As LLM capabilities depend heavily on their model size and context length [34],\nserving them requires substantial memory demands and increased inference latency. This latency\nis primarily attributed to communication bottlenecks between HBM and SRAM on accelerators, or\nacross distributed clusters. By compressing or quantizing model weights and activations, we can\neffectively mitigate these bottlenecks, resulting in significant reductions in inference costs. Inner\nproduct operations between activations and weights is at the core of deep learning models. Thus,\nmodel quantization schemes strive to compress weights and/or activation vectors while accurately\npreserving these inner products.",
+      "bbox": [
+        70.86599731445312,
+        191.5153350830078,
+        541.1898803710938,
+        310.8175048828125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b3",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Decoder based transformer models [54] present another compelling use case. These models must\nstore key/value (KV) embeddings from previously generated tokens in the KV cache, the size of\nwhich scales with both model size (number of layers and attention heads) and context length. This\nscaling is a significant bottleneck in terms of memory usage and computational speed, especially\nfor long context models. Therefore, reducing the KV cache size without compromising accuracy is\nessential. In this context, the preservation of the Euclidean structure of these embedding vectors–\ntheir inner products and distances–is crucial for maintaining model performance. VQ emerges as\nthe most suitable framework for addressing this challenge, offering a robust approach to compressing\nhigh-dimensional embeddings while preserving their essential geometric properties.",
+      "bbox": [
+        70.86599731445312,
+        320.6313781738281,
+        541.1790771484375,
+        439.9335632324219
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b4",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Additionally, nearest neighbor (NN) search in high-dimensional spaces with inner product or cosine\nsimilarity [1, 27] is a cornerstone of vector databases [4, 2, 3]. These databases are fundamental\nfor retrieval-augmented generation [23, 19] and information retrieval [35, 46]. VQ, a.k.a. product\nquantization (PQ), plays a critical role in these applications. It enables efficient compression of\ndatabase vectors, optimizes memory usage, and facilitates low-latency, accurate estimations of inner\nproducts with query vectors, thereby enabling fast and precise nearest neighbor searches.",
+      "bbox": [
+        70.86599731445312,
+        449.7464599609375,
+        541.2225952148438,
+        528.401611328125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b5",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "Existing VQ algorithms present a trade-off: either they lack accelerator (vectorization) compatibility\nand exhibit slow computation, making them unsuitable for real-time AI applications like KV cache\nquantization, or they suffer from suboptimal distortion bounds relative to bit-width. Our objective\nis to introduce an algorithm that addresses these limitations. Specifically, we design TurboQuant:\na lightweight, capable of online application (crucial for scenarios like KV cache quantization), and\nhighly accelerator-friendly—a critical attribute for modern AI workloads.",
+      "bbox": [
+        70.86599731445312,
+        538.2155151367188,
+        541.233642578125,
+        616.87060546875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p2-b6",
+      "page": 2,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "The core of TurboQuant is a two-stage process. First, we develop a vector quantizer with optimal\ndistortion rate in terms of mean-squared error (MSE). Subsequently, we apply a 1-bit quantizer to\nthe residual, resulting in an unbiased and low-distortion inner product quantizer. We demonstrate\nthat quantizers optimized for MSE do not produce unbiased estimators for inner products, and",
+      "bbox": [
+        70.86599731445312,
+        624.3001708984375,
+        541.22265625,
+        678.2395629882812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b0",
+      "page": 3,
+      "section": [
+        "1 Introduction"
+      ],
+      "kind": "text",
+      "text": "our two-stage solution effectively bridges this gap. Our MSE-optimal quantizer starts by randomly\nrotating d-dimensional input vectors. Observing the key fact that each coordinate in the rotated vec-\ntors follows a Beta distribution, we design optimal Lloyd-Max quantizer [42, 43] for each coordinate\nby solving a continuous k-means problem. This method gives optimal MSE distortion bound and\nminimizes the L2 norm of the residual. To obtain an unbiased and low-distortion quantizer for inner\nproducts, we compose our quantizer with the recently developed Quantized Johnson-Lindenstrauss\n(QJL) transform [62], which quantizes each coordinate of the residual vector to a single bit. Our\nalgorithm offers provably optimal distortion bounds for both MSE and inner products, achieving\nan exponential improvement over existing methods in terms of bit-width dependence.",
+      "bbox": [
+        70.86599731445312,
+        68.77522277832031,
+        541.2554321289062,
+        188.078369140625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b2",
+      "page": 3,
+      "section": [
+        "1 Introduction",
+        "1.1 Problem Definition"
+      ],
+      "kind": "text",
+      "text": "Formally, our goal is to design a quantization map, denoted as Q : Rd →{0, 1}B, that transforms\nd-dimensional vectors to a binary string of B bits.\nIf we set B = b · d for some b ≥0, this\nquantizer will have a bit-width of b, representing the average number of bits used to encode each real-\nvalued coordinate of Rd. Crucially, we require an inverse map, Q−1 : {0, 1}B →Rd that performs\ndequantization, approximately reconstructing original vectors from their quantized representations.\nOf course, this transformation is inherently lossy, as Q is not a bijection. So, our primary objective\nis to minimize distortion, with a specific focus on mean-squared error (MSE) and inner product\ndistortion.",
+      "bbox": [
+        70.86593627929688,
+        237.05850219726562,
+        541.2115478515625,
+        346.69940185546875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b3-group",
+      "page": 3,
+      "section": [
+        "1 Introduction",
+        "1.1 Problem Definition"
+      ],
+      "kind": "text",
+      "text": "We make no assumptions about the input vector dataset, considering the worst-case scenario. We\nlet the quantizer Q(·) to be randomized, leading to stochastic outputs. Considering randomized\nquantizers, it is more appropriate to define the expected distortion over the randomness of the\nquantizer’s output. Thus, we aim to design quantizers that for any desired bit-width b minimize\nthe following expected distortion measures for any (worst-case) vectors x, y ∈Rd:\n(MSE)\nDmse := E\nQ\nh\r\rx −Q−1 (Q(x))\n\r\r2\n2\ni\n(1)\n(inner-prod error)\nDprod := E\nQ\nh\f\f⟨y, x⟩−⟨y, Q−1 (Q(x))⟩\n\f\f2i\n.\n(2)",
+      "bbox": [
+        70.86593627929688,
+        356.51226806640625,
+        541.178955078125,
+        482.0049133300781
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b9-group",
+      "page": 3,
+      "section": [
+        "1 Introduction",
+        "1.1 Problem Definition"
+      ],
+      "kind": "text",
+      "text": "The expectations above are takes with respect to the randomness of the quantizer Q(·). Furthermore,\nfor inner-product quantizers, we require unbiasedness of the inner product estimator, a desirable\nproperty for numerous applications. More precisely, we require:\n(unbiased inner-prod)\nE\nQ\n\u0002\n⟨y, Q−1 (Q(x))⟩\n\u0003\n= ⟨y, x⟩.",
+      "bbox": [
+        70.8658447265625,
+        491.6813659667969,
+        541.20068359375,
+        559.888916015625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p3-b12-group",
+      "page": 3,
+      "section": [
+        "1 Introduction",
+        "1.1 Problem Definition"
+      ],
+      "kind": "text",
+      "text": "We aim to design computationally efficient quantizers Qmse and Qprod, that achieve optimal bounds\nfor the distortion measures defined above, for any given bit-width b. Additionally, we aim for Qprod\nto provide unbiased inner product estimates. In particular, assume that we are given n real-valued\nvectors x1, x2, . . . xn ∈Rd. We design the following primitives:\n• Quant: efficiently quantizes the dataset and computes Q(x1), Q(x2), . . . Q(xn).\n• DeQuant: given a quantized dataset, can efficiently reconstruct original vectors by computing\nQ−1 (Q(xi)) for any i ∈[n].",
+      "bbox": [
+        70.8658447265625,
+        576.1333618164062,
+        541.1729736328125,
+        698.7359008789062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b1",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "Beginnings of VQ.\nThe vector quantization theory started by Shannon’s seminal work [48, 49]\non achievable distortion-rate functions. In 1963, Zador [61] made significant advances by employing\nhigh-resolution methods to derive the limiting operational distortion-rate function for fixed-rate\nquantization at high rates that closely matches Shannon’s distortion-rate function. However, Zador\ndid not specifically consider implementable algorithms. Gersho’s influential paper [25], further ad-\nvanced the vector quantization by popularizing high-resolution theory, simplifying Zador’s results,\nintroducing lattice vector quantization, and proposing a key conjecture that shaped the field. De-\nspite these theoretical advancements, the practical applicability of vector quantization remained\nunclear in early years. The most straightforward encoding method, brute-force nearest neighbor\nsearch, was computationally expensive, hindering the adoption of VQ in practice.",
+      "bbox": [
+        70.86599731445312,
+        96.54322814941406,
+        541.2335815429688,
+        229.3944091796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b2",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "Online vs Offline Quantization.\nOnline (data-oblivious) quantization methods apply instantly\nwithout needing data-specific tuning or calibrations [16, 8, 41, 47, 28]. In contrast, offline (data-\ndependent) methods require heavy preprocessing and learning to adapt the quantization map to\nthe data, making them unsuitable for dynamic data scenarios [37]. For instance, methods such as\nthose presented in [20, 39, 57, 13] use second-order (Hessian) information to tune the quantization\nmap which requires heavy preprocessing and even in some cases post processing as well.",
+      "bbox": [
+        70.86600494384766,
+        254.47328186035156,
+        541.2117919921875,
+        333.12841796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b3",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "Online KV Cache Compression.\nSeveral approaches have been proposed to compress the KV\ncache. These include architectural modifications [50, 6, 15] which restructure the transformer to\nminimize the number of stored key-value pairs. Additionally, pruning or evicting redundant or less\ncritical tokens has emerged as another approach [11, 66, 40, 58, 64, 38, 29].",
+      "bbox": [
+        70.86601257324219,
+        358.206298828125,
+        541.22265625,
+        409.763427734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b4",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "A simple yet effective approach to reducing KV cache size is quantizing the KV cache. Several\nquantization techniques have been developed specifically for this purpose [60, 59, 17, 33, 65, 41, 30,\n36, 28]. Recently, a new quantization called QJL [62] introduced an efficient, data-oblivious 1-bit\nquantization approach based on sketching techniques, which provides unbiased estimates for inner\nproduct queries. This method does not require tuning or adaptation to the input data and we make\nuse of this technology in our quantizer optimized for inner product distortion.",
+      "bbox": [
+        70.86601257324219,
+        419.5762939453125,
+        541.2118530273438,
+        498.2314453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b5",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "Product Quantization (PQ).\nIn Near Neighbor (NN) search problem with Euclidean datasets,\nthe index size poses a significant memory bottleneck, often mitigated by quantization techniques,\ncommonly referred to as Product Quantization (PQ) in the NN literature. Many of these algo-\nrithms rely on constructing a quantization codebook using variations of k-means during the index-\ning phase [31, 9, 24, 56, 27]. Therefore, these methods are ill-suited for online settings due to their\nrequirement for extensive preprocessing.",
+      "bbox": [
+        70.86601257324219,
+        523.309326171875,
+        541.2118530273438,
+        601.9644165039062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p4-b6",
+      "page": 4,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "Recently, a grid-based PQ method was introduced in [22], eliminating the need for preprocessing.\nThis approach operates by projecting a uniform grid onto the unit sphere and conducting a search\nto identify the nearest projection to the data points. While the paper’s theoretical guarantees are\nsuboptimal, likely due to loose analysis—as practical performance surpasses theoretical bounds—the\ngrid projection and binary search algorithm is also computationally slow and particularly inefficient",
+      "bbox": [
+        70.86601257324219,
+        611.7783203125,
+        541.2227172851562,
+        676.8834228515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b0",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.2 Related Work"
+      ],
+      "kind": "text",
+      "text": "on accelerators like GPU because of their algorithm’s inherent lack of vectorization, which prevents\nparallel processing.",
+      "bbox": [
+        70.86599731445312,
+        68.77522277832031,
+        541.1680908203125,
+        93.23332977294922
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b2",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "MSE Optimzied TurboQuant.\nOur first VQ algorithm is designed to minimize MSE distortion\ndeinfed in Eq. (1).\nTo achieve this, we apply a random rotation to the input vectors, thereby\ninducing a Beta distribution on each coordinate, irrespective of the input vectors themselves. In high\ndimensions d, the distribution of each coordinate converges to a Gaussian distribution N(1, 1/d)\ndue to concentration of measure and the central limit theorem.\nFurthermore, any two distinct\ncoordinates become nearly uncorrelated and, more importantly, almost independent (a deeper result\nthat goes beyond just correlation). This near-independence is a crucial aspect that simplifies our\nquantization design. It allows us to quantize each coordinate using optimal scalar quantization,\ndisregarding interactions or correlations between different coordinates, while still achieving near-\noptimal distortion.",
+      "bbox": [
+        70.86599731445312,
+        146.19325256347656,
+        541.2118530273438,
+        279.04443359375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b3",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "We find optimal scalar quantizers for random variables with Beta distributions by solving a con-\ntinuous 1-dimensional k-means problem using the Max-Lloyd algorithm. We precompute and store\nthese optimal codebooks for a range of practically useful bit-widths, to enable efficient subsequent\ninvocations of our TurboQuant algorithm.",
+      "bbox": [
+        70.86602783203125,
+        288.8583068847656,
+        541.200927734375,
+        340.4144592285156
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b4-group",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "In Theorem 1 we prove that the b-bit MSE optimized TurboQuant Qmse : Rd →{0, 1}b·d achieves\nthe following distortion for any worst-case vector x ∈Rd with ∥x∥= 1:\n• Dmse(Qmse) := E\nh\r\rx −Q−1\nmse (Qmse(x))\n\r\r2\n2\ni\n≤\n√\n3π\n2\n· 1\n4b for any b ≥0.\n• For small bit-widths the above distortion upper bound can be further refined. Specifically, for\nb = 1, 2, 3, 4 we have Dmse(Qmse) ≈0.36, 0.117, 0.03, 0.009, respectively.",
+      "bbox": [
+        70.86602783203125,
+        346.26934814453125,
+        541.23388671875,
+        451.2447204589844
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b10",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Note that the unit norm assumption, ∥x∥2 = 1, is standard and not restrictive. For datasets that\ndo not satisfy this assumption we can compute and store the L2 norms in floating-point precision\nand rescale the dequantized points using these stored norms.",
+      "bbox": [
+        70.86605834960938,
+        460.4221496582031,
+        541.1719360351562,
+        498.4292907714844
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b11",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Inner Product TurboQuant.\nWe show that the MSE optimized quantizers are biased for inner\nproduct estimation and thus a different VQ scheme is needed to get an unbiased inner product\nquantizer. Our solution is a two stage algorithm that first applies the abovementioned Qmse with a\nbit-width one less than our target budget and then apply a QJL [62] on the residual error. This is\nproved to be unbiased and also has nearly optimal inner product error rate.",
+      "bbox": [
+        70.8660888671875,
+        523.22216796875,
+        541.22265625,
+        588.3282470703125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p5-b12-group",
+      "page": 5,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "In Theorem 2 we prove that the b-bit inner product optimized TurboQuant Qprod : Rd →{0, 1}b·d\nachieves the following distortion for any worst-case vectors x, y ∈Rd with ∥x∥= 1:\n• E\nhD\ny, Q−1\nprod\n\u0000\nQprod(x)\n\u0001Ei\n= ⟨y, x⟩\n• Dprod(Qprod) := E\n\u0014\f\f\f⟨y, x⟩−⟨y, Q−1\nprod\n\u0000\nQprod(x)\n\u0001\n⟩\n\f\f\f\n2\u0015\n≤\n√\n3π2·∥y∥2\n2\nd\n· 1\n4b for any b ≥0.",
+      "bbox": [
+        70.8660888671875,
+        594.2544555664062,
+        540.6387329101562,
+        694.1522827148438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b0-group",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "• For small bit-widths the above distortion upper bound can be further refined. Specifically, for\nb = 1, 2, 3, 4 we have Dprod(Qprod) ≈1.57\nd , 0.56\nd , 0.18\nd , 0.047\nd\n, respectively.",
+      "bbox": [
+        87.26100158691406,
+        68.57374572753906,
+        541.2338256835938,
+        101.32276916503906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b5-group",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Lower Bound.\nIn Theorem 3, we leverage Shannon’s lower bound and Yao’s minimax principle\nto prove that for any randomized quantization algorithm Q : Rd →{0, 1}b·d with bit-width b, there\nexist hard input instances x, y ∈Rd with ∥x∥= 1 such that the following lower bounds hold:\n• Dmse(Q) := E\nh\r\rx −Q−1 (Q(x))\n\r\r2\n2\ni\n≥1\n4b\n• Dprod(Q) = E\nh\f\f⟨y, x⟩−⟨y, Q−1 (Q(x))⟩\n\f\f2i\n≥∥y∥2\n2\nd\n· 1\n4b",
+      "bbox": [
+        70.86593627929688,
+        118.31214904785156,
+        541.1836547851562,
+        227.1096954345703
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b11-group",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "As demonstrated by our lower bounds, TurboQuant’s MSE distortion is provably within a factor\nof at most\n√\n3π\n2\n≈2.7 of the information-theoretical lower bound. Notably, for smaller bit-widths,\nthis factor significantly decreases. For instance, at a bit-width of b = 1 TurboQuant achieves a\ndistortion that is only a factor of approximately 1.45 away from the optimal which is also confirmed\nby our experimental results, indicating its efficiency in low-bit-width scenarios.",
+      "bbox": [
+        70.865966796875,
+        237.53089904785156,
+        541.2042846679688,
+        306.29931640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b13",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Experimental Results.\nIn Section 4.1, we empirically validate our theoretical distortion bounds,\ndemonstrating that TurboQuant’s observed distortions closely align with our predictions across\nvarious real-world datasets, approaching the established lower bounds.",
+      "bbox": [
+        70.865966796875,
+        331.377197265625,
+        541.1884155273438,
+        369.38433837890625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b14",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Furthermore, in Section 4.2 and Section 4.3, we showcase TurboQuant’s efficacy in online KV\ncache quantization. Specifically, we achieve perfect long-context retrieval in needle-in-a-haystack\ntasks and maintain high performance on other long-context downstream tasks, all while compressing\nthe KV cache by a factor exceeding 5×.",
+      "bbox": [
+        70.865966796875,
+        376.81494140625,
+        541.1680908203125,
+        438.84381103515625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b15",
+      "page": 6,
+      "section": [
+        "1 Introduction",
+        "1.3 Overview of Techniques and Contributions"
+      ],
+      "kind": "text",
+      "text": "Finally in Section 4.4 we apply TurboQuant to various high-dimensional near neighbor search\ntasks. TurboQuant consistently outperforms data-dependent product quantization (PQ), while\nreducing the indexing time to essentially zero.",
+      "bbox": [
+        70.865966796875,
+        438.1839904785156,
+        541.1970825195312,
+        478.57537841796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b17",
+      "page": 6,
+      "section": [
+        "2 Preliminaries"
+      ],
+      "kind": "text",
+      "text": "We use boldface lowercase letters, such as x and y, to denote vectors, and boldface uppercase\nletters, like M, to denote matrices. To denote a slice of a vector x between the coordinate indices i\nand j inclusive of the endpoints, we use the notation xi:j. For a matrix M, we write Mi,: to denote\nits i-th row vector, which we will simply refer to as Mi.",
+      "bbox": [
+        70.8658447265625,
+        540.7362670898438,
+        541.1428833007812,
+        593.2872314453125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b18",
+      "page": 6,
+      "section": [
+        "2 Preliminaries"
+      ],
+      "kind": "text",
+      "text": "We use the notation Sd−1 to denote the hypersphere in Rd of radius 1. For a random variable x\nwe denote its differential entropy as h(x). For random variables x and y, the mutual information\nbetween them is denoted as I(x; y) = h(x) −h(x|y).",
+      "bbox": [
+        70.86581420898438,
+        598.147216796875,
+        541.1599731445312,
+        648.2037963867188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p6-b19",
+      "page": 6,
+      "section": [
+        "2 Preliminaries"
+      ],
+      "kind": "text",
+      "text": "Given that TurboQuant employs random rotation to mitigate worst-case input scenarios, under-\nstanding the statistical properties of random points on a hypersphere is essential. The following\nlemma outlines one such property that we will need for analysis and design purposes:",
+      "bbox": [
+        70.86581420898438,
+        647.5439453125,
+        541.1896362304688,
+        687.934326171875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b0-group",
+      "page": 7,
+      "section": [
+        "2 Preliminaries"
+      ],
+      "kind": "text",
+      "text": "Lemma 1 (coordinate distribution of random point on hypersphere). For any positive integer d if\nx ∈Sd−1 is a random variable uniformly distributed over the unit hypersphere, then for any j ∈[d]\nthe coordinate xj follows the following (scaled/shifted) Beta distribution:\nxj ∼fX(x) :=\nΓ(d/2)\n√π · Γ((d −1)/2)\n\u0000\n1 −x2\u0001(d−3)/2 .\nIn high dimensions this beta distribtion converges to the normal distribution fX(·) →N(0, 1/d).",
+      "bbox": [
+        70.86593627929688,
+        68.77522277832031,
+        541.1412353515625,
+        173.6817169189453
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b4-group",
+      "page": 7,
+      "section": [
+        "2 Preliminaries"
+      ],
+      "kind": "text",
+      "text": "Proof. fX(x) equals the ratio of the area of a sphere with radius\n√\n1 −x2 in dimension d −1 to\nthe volume of a unit sphere in dimension d scaled down by 1/\n√\n1 −x2 (by Pythagorean theorem).\nTherefore,\nfX(x) =\n2π(d−1)/2\nΓ((d−1)/2) · (1 −x2)(d−2)/2\n2πd/2\nΓ(d/2)\n· 1/\np\n1 −x2 =\nΓ(d/2)\n√π · Γ((d −1)/2)\n\u0000\n1 −x2\u0001(d−3)/2 .",
+      "bbox": [
+        70.86599731445312,
+        175.05343627929688,
+        541.153076171875,
+        272.4827575683594
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b13",
+      "page": 7,
+      "section": [
+        "2 Preliminaries",
+        "2.1 Shannon Lower Bound on Distortion"
+      ],
+      "kind": "text",
+      "text": "The Shannon Lower Bound (SLB) is a powerful tool, derived from Shannon’s lossy source coding\ntheorem [49], that provides a universal lower bound on the optimal achievable distortion rate for\nany lossy compression scheme. Specifically, we use a version of SLB tailored for the mean-squared\nerror (MSE) distortion measure applied to general d-dimensional sources.",
+      "bbox": [
+        70.86599731445312,
+        343.9311828613281,
+        541.2119140625,
+        395.4873352050781
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b14-group",
+      "page": 7,
+      "section": [
+        "2 Preliminaries",
+        "2.1 Shannon Lower Bound on Distortion"
+      ],
+      "kind": "text",
+      "text": "Lemma 2 (SLB). Let x ∈Rd be a random vector with an arbitrary probability distribution pX\nand finite differential entropy h(x). Define the MSE distortion-rate function D(B) for total bit\ncomplexity B ≥0 as:\nD(pX, B) := inf\nn\nE\nh\n∥x −y∥2\n2\ni\n: I(x; y) ≤B\no\n,\nwhere the infimum is taken over all joint distributions of x and a reconstruction random vector\ny ∈Rd such that the mutual information I(x; y) is at most B and E\nh\n∥x −y∥2\n2\ni\nis the expected\nMSE distortion, calculated with respect to the joint distribution of x and y.\nThen, for any bit\ncomplexity B ≥0, the following Shannon Lower Bound holds:\nD(pX, B) ≥\nd\n2πe · 2(2/d)(h(x)−B).",
+      "bbox": [
+        70.86598205566406,
+        402.18121337890625,
+        541.153076171875,
+        569.7127075195312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b17",
+      "page": 7,
+      "section": [
+        "2 Preliminaries",
+        "2.1 Shannon Lower Bound on Distortion"
+      ],
+      "kind": "text",
+      "text": "This is a classic result proved using backward Gaussian test channel (for a proof see [14]). Our\nlower bound result uses a corollary of SLB that corresponds to the uniformly distributed random\npoints on the unit hyeprsphere. We present this in the following lemma:",
+      "bbox": [
+        70.86602783203125,
+        576.8801879882812,
+        541.2117919921875,
+        614.8883056640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p7-b18",
+      "page": 7,
+      "section": [
+        "2 Preliminaries",
+        "2.1 Shannon Lower Bound on Distortion"
+      ],
+      "kind": "text",
+      "text": "Lemma 3 (SLB for random point on hypersphere). Let x ∈Sd−1 be a random variable uniformly\ndistributed over the unit hypersphere and define the MSE distortion-rate function D(B) for total bit\ncomplexity B as per Lemma 2. Then, for any bit complexity B ≥0, the following distortion lower\nbound holds:\nD(B) ≥2−2B/d.",
+      "bbox": [
+        70.86602783203125,
+        621.5822143554688,
+        541.1640014648438,
+        698.7357177734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b0-group",
+      "page": 8,
+      "section": [
+        "2 Preliminaries",
+        "2.1 Shannon Lower Bound on Distortion"
+      ],
+      "kind": "text",
+      "text": "Proof. If we let Ad denote the area of the hypersphere Sd−1, the entropy of uniform distribution\nover hypersphere is h(x) = log2 Ad. Plugging this into the SLB from Lemma 2 we get D(B) ≥\nd\n2πe · Ad2/d · 2−2B/d. Using Stirling’s approximation formula for Gamma function we have Ad =\n2πd/2\nΓ(d/2) ≥\n\u0000 2πe\nd\n\u0001d/2 ·\nq\n2d\nπ · (1 −O(1/d)).\nBy substituting this into the inequality obtained from\nLemma 2 we get the desired lower bound.",
+      "bbox": [
+        70.86598205566406,
+        66.39192199707031,
+        541.202880859375,
+        140.18524169921875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b6",
+      "page": 8,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "As previously stated, we design two VQ algorithms: one optimized for minimizing MSE and the\nother for minimizing inner product error. We show that MSE-optimal quantizers do not necessarily\nprovide unbiased inner product estimates, particularly exhibiting significant bias at lower bit-widths.\nOur solution for inner product quantization is a two-stage algorithm. First, we apply the MSE-\noptimal quantizer using one less bit than the desired bit-width budget, thus minimizing the L2\nnorm of the residuals. Next we apply an unbiased and optimal single-bit quantizer to the residual.\nFor the single-bit inner product quantizer, we utilize the recently proposed Quantized Johnson-\nLindenstrauss (QJL) algorithm [62], which is an optimal inner product quantizer with a bit-width\nof one. Here, we present the QJL algorithm and its essential theoretical guarantees.",
+      "bbox": [
+        70.86599731445312,
+        193.43019104003906,
+        541.2333984375,
+        312.73333740234375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b7-group",
+      "page": 8,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "Definition 1 (QJL). For any positive integer d the QJL map Qqjl : Rd →{−1, +1}d is defined as:\nQqjl(x) := sign (S · x)\nfor any x ∈Rd,\nwhere S ∈Rd×d is a random matrix with i.i.d.\nentries sampled from the normal distribution\nN(0, 1) and the sign function is applied entry-wise to its vector input. The inverse/dequantization\nmap Q−1\nqjl : {−1, +1}d →Rd is defined as:\nQ−1\nqjl(z) :=\np\nπ/2\nd\n· S⊤· z\nfor any z ∈{−1, +1}d.",
+      "bbox": [
+        70.86595153808594,
+        320.3802185058594,
+        541.1786499023438,
+        453.8187255859375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b13-group",
+      "page": 8,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "In the next lemma we restate the results from [62] that show the QJL is unbiased and also has small\ninner product distortion:\nLemma 4 (performance guarantee: QJL). Let Qqjl and Q−1\nqjl be defined as per Definition 1. For\nany vector x ∈Sd−1 and any y ∈Rd we have the following:\n• Unbiased: E\nhD\ny, Q−1\nqjl\n\u0000\nQqjl(x)\n\u0001Ei\n= ⟨y, x⟩.\n• Variance Bound: Var\n\u0010D\ny, Q−1\nqjl\n\u0000\nQqjl(x)\n\u0001E\u0011\n≤π\n2d · ∥y∥2\n2",
+      "bbox": [
+        70.86599731445312,
+        469.6141662597656,
+        541.1463012695312,
+        604.959716796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p8-b18-group",
+      "page": 8,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "Proof. The unbiasedness immediately follows from Lemma 3.2 of [62]. To show the variance bound\nlet s1, s2, . . . sm denote the rows of the random matrix S in Definition 1. We have:\nD\ny, Q−1\nqjl\n\u0000\nQqjl(x)\n\u0001E\n= 1\nd\nX\ni∈[d]\np\nπ/2 · s⊤\ni y · sign(s⊤\ni x).",
+      "bbox": [
+        70.865966796875,
+        614.6082153320312,
+        541.1610107421875,
+        680.7072143554688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b0-group",
+      "page": 9,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "Since si’s are i.i.d. the above is indeed the average of d i.i.d. random samples defined as zi :=\np\nπ/2 · s⊤\ni y · sign(s⊤\ni x) for i ∈[d]. Let us now upper bound the variance of a single zi using\nFact 3.4 from [62]:\nVar (zi) = π/2 · Var\n\u0010\ns⊤\ni y · sign(s⊤\ni x)\n\u0011\n≤π/2 · E\nh\n(s⊤\ni y)2i\n= π/2 · ∥y∥2\n2 ,\n(3)",
+      "bbox": [
+        70.865966796875,
+        68.77522277832031,
+        541.1412353515625,
+        142.09974670410156
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b3-group",
+      "page": 9,
+      "section": [
+        "2 Preliminaries",
+        "2.2 QJL: 1-bit inner product quantization"
+      ],
+      "kind": "text",
+      "text": "where the last equality above follows because s⊤\ni y is a Gaussian random variable with mean zero\nand variance ∥y∥2\n2. Now the variance of the average of d i.i.d. random samples z1, z2, . . . zd is:\nVar\n\u0010D\ny, Q−1\nqjl\n\u0000\nQqjl(x)\n\u0001E\u0011\n= 1\nd2\nX\ni∈[d]\nVar(zi) ≤π\n2d · ∥y∥2\n2 .",
+      "bbox": [
+        70.86599731445312,
+        149.87564086914062,
+        541.1506958007812,
+        220.96070861816406
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b9",
+      "page": 9,
+      "section": [
+        "3 TurboQuant: High Performance Quantization"
+      ],
+      "kind": "text",
+      "text": "We developed two VQ algorithms, each tailored to a specific objective. The first algorithm is de-\nsigned to minimize the MSE between the original and reconstructed vectors after quantization. The\nsecond algorithm is optimized for unbiased inner product estimation, addressing the bias inherent\nin MSE-optimal quantizers. These algorithms are detailed in the following subsections.",
+      "bbox": [
+        70.86599731445312,
+        303.7471618652344,
+        541.2008056640625,
+        355.3042907714844
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b10",
+      "page": 9,
+      "section": [
+        "3 TurboQuant: High Performance Quantization"
+      ],
+      "kind": "text",
+      "text": "Furthermore, in Section 3.3, we establish information-theoretic lower bounds on the best achievable\ndistortion rates for any vector quantizer. This analysis demonstrates that TurboQuant achieve\nnear-optimality, differing from the lower bound by only a small constant factor across all bit-widths.",
+      "bbox": [
+        70.86599731445312,
+        365.1171875,
+        541.2008666992188,
+        403.12530517578125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b12",
+      "page": 9,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Let x ∈Sd−1 be a (worst-case) vector on the unit sphere in dimension d. We aim to quantize x\nto b bits per coordinate while minimizing the reconstruction MSE defined in Eq. (1). We start\nby randomizing this vector by multiplying it with a random rotation matrix Π ∈Rd×d. We can\ngenerate Π by applying QR decomposition on a random matrix with i.i.d Normal entries.",
+      "bbox": [
+        70.86599731445312,
+        452.41015625,
+        541.2057495117188,
+        507.9263000488281
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b13",
+      "page": 9,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "The resulting rotated vector, Π · x, is uniformly distributed on the unit sphere Sd−1. As shown\nin Lemma 1, each coordinate of Π · x follows a Beta distribution, which converges to a normal\ndistribution in high dimensions. Furthermore, in high dimensions, distinct coordinates of Π · x\nbecome nearly independent [55], allowing us to apply optimal scalar quantizers to each coordinate\nindependently. Therefore, by Lemma 1, our task reduces to designing a scalar quantizer for random\nvariables with the distribution fX(x) =\nΓ(d/2)\n√π·Γ((d−1)/2)\n\u0000\n1 −x2\u0001(d−3)/2 for x ∈[−1, 1].",
+      "bbox": [
+        70.865966796875,
+        515.3558959960938,
+        541.1898803710938,
+        606.147705078125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p9-b14",
+      "page": 9,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "The optimal scalar quantization problem, given a known probability distribution, can be framed\nas a continuous k-means problem in dimension one. Specifically, we aim to partition the interval\n[−1, 1] into 2b clusters/buckets. The optimal solution adheres to a Voronoi tessellation [42], mean-\ning interval boundaries are the midpoints between consecutive centroids, when arranged in sorted\norder. Therefore, with ci’s denoting the centroids in ascending order, we can formulate the scalar",
+      "bbox": [
+        70.86599731445312,
+        609.2771606445312,
+        541.2335815429688,
+        675.377197265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b0-group",
+      "page": 10,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Algorithm 1 TurboQuantmse: optimized for MSE\n1: input: dimension d and bit-width b\n// Global Parameters for Setting up TurboQuantmse\n2: Generate a random rotation matrix Π ∈Rd×d\n3: Construct codebook by finding centroids c1, c2, . . . c2b ∈[−1, 1] that minimize MSE cost in\nEq. (4)\n4: Procedure Quantmse(x)\n5: y ←Π · x\n6: idxj ←arg mink∈[2b] |yj −ck| for every j ∈[d]\n{idxj’s are b-bit integers}\n7: output: idx\n8: Procedure DeQuantmse(idx)\n9: ˜yj ←cidxj for every j ∈[d]\n10: ˜x ←Π⊤· ˜y\n11: output: ˜x",
+      "bbox": [
+        70.86599731445312,
+        65.79786682128906,
+        541.1453247070312,
+        285.54034423828125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b12-group",
+      "page": 10,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "quantization as the following k-means optimization problem:\nC(fX, b) :=\nmin\n−1≤c1≤c2≤...≤c2b≤1\n2b\nX\ni=1\nZ\nci+ci+1\n2\nci−1+ci\n2\n|x −ci|2 · fX(x) dx.\n(4)\nNote that C(fX, b) in Eq. (4) denotes the optimal MSE cost function for bit-width b, a quantity we\nwill bound to prove the upper bound on the end-to-end MSE of TurboQuant. The problem in\nEq. (4) can be solved using iterative numerical methods to achieve any desired precision. We solve\nEq. (4) for a range of practically relevant bit-widths b once, and store the results for future uses by\nthe quantizer.",
+      "bbox": [
+        70.86599731445312,
+        309.9441833496094,
+        541.156982421875,
+        438.3363037109375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b21-group",
+      "page": 10,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "For example, in moderately high dimensions d, where the distribution fX(x) closely approximates\na normal distribution, the optimal quantization centroids for bit-widths b = 1, 2 are\n\u001a\n±\n√\n2/π\n√\nd\n\u001b\nand\nn\n±0.453\n√\nd , ±1.51\n√\nd\no\n, respectively.",
+      "bbox": [
+        70.86599731445312,
+        448.149169921875,
+        541.1433715820312,
+        510.59576416015625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b29",
+      "page": 10,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Therefore the quantizer Qmse : Rd →{0, 1}b·d first computes Π · x and then computes and stores\nthe indices of the nearest centroids to each coordinate of this vector.\nThe dequantization map\nQ−1\nmse : {0, 1}b·d →Rd reconstructs the vector by retrieving the centroids corresponding to the stored\nindices and then rotating the result back to the original basis through multiplication with Π⊤. A\npseudocode for these procedures is given in Algorithm 1.",
+      "bbox": [
+        70.86593627929688,
+        512.3921508789062,
+        541.1680908203125,
+        581.457275390625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p10-b30-group",
+      "page": 10,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "We are now ready to prove our main theorem for TurboQuantmse.\nTheorem 1 (performance guarantee: TurboQuantmse). For any bit-width b ≥1 and any vector\nx ∈Sd−1, the procedure Quantmse(x) in Algorithm 1 outputs an index vector idx ∈[2b]d. When\nthis index vector is passed to the primitive DeQuantmse(idx), it produces a reconstructed vector\n˜x ∈Rd that satisfies the following distortion bounds:\n• MSE defined as Dmse := E˜x[∥x −˜x∥2\n2] is bounded by Dmse ≤\n√\n3π\n2\n· 1\n4b for any b ≥0.",
+      "bbox": [
+        70.86593627929688,
+        588.8869018554688,
+        541.1396484375,
+        700.3727416992188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b0",
+      "page": 11,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "• For small bit-widths, specifically b = 1, 2, 3, 4 the MSE exhibits finer-grained distortion values:\nDmse ≈0.36, 0.117, 0.03, 0.009, respectively.",
+      "bbox": [
+        87.26100158691406,
+        68.57374572753906,
+        541.1531372070312,
+        102.95979309082031
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b1-group",
+      "page": 11,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Proof. We start the proof by showing that Dmse = d · C(fX, b), where C(fX, b) is the optimal MSE\ncost for scalar quantizer defined in Eq. (4). Let ˜y be defined as per line 9 of Algorithm 1. Since Π\nis a rotation matrix we can write: ∥x −˜x∥2 = ∥Π · x −˜y∥2. Using the notation y = Π · x as per\nline 5 of Algorithm 1 and plugging this into the definition of Dmse we can write:\nDmse = E[∥y −˜y∥2\n2]\n=\nX\nj∈[d]\nE\n\u0002\n|yj −˜yj|2\u0003\n=\nX\nj∈[d]\nE\n\u0002\n|yj −cidxj|2\u0003\n= d · E\n\u0002\n|y1 −cidx1|2\u0003\n= d ·\nmin\n−1≤c1≤c2≤...≤c2b≤1\n2b\nX\ni=1\nZ\nci+ci+1\n2\nci−1+ci\n2\n|x −ci|2 · fX(x) dx\n= d · C(fX, b).\nThe third equality above follows from the definition of ˜y in line 9 of Algorithm 1 and the fourth line\nabove follows because all yj’s have identical distribution of yj ∼fX(·) as shown in Lemma 1. The\nlast two lines above follows because cidxj is chosen to be the nearest centroid to each coordinate yj\nin line 6.",
+      "bbox": [
+        70.865966796875,
+        112.01325988769531,
+        541.1884155273438,
+        392.9502868652344
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b17-group",
+      "page": 11,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Now we must bound the optimal k-means cost C(fX, b). For moderate values of d, fX →N(0, 1/d).\nBy numerically solving the optimization problem in Eq. (4) for values b = 1, 2, 3, 4 we get that\nC(fX, b) ≈0.36\nd , 0.117\nd , 0.03\nd , 0.009\nd , respectively. For larger bit-widths b > 4, we can apply the Panter-\nDite [44] high-resolution formula for the distortion of a fixed-rate scalar quantizer, yielding the\nfollowing bound:\nC(fX, b) ≤1\n12 ·\n\u0012Z\nfX(x)1/3 dx\n\u00133\n· 1\n4b =\n√\n3π\n2d · 1\n4b .\nThis completes the proof.",
+      "bbox": [
+        70.86599731445312,
+        402.76318359375,
+        541.2227172851562,
+        514.1983032226562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p11-b29-group",
+      "page": 11,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.1 MSE Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Entropy Encoding Codebook Pointers.\nTurboQuant’s efficiency can be further increased\nby applying entropy encoding to the indices that point to the closest codebook elements. Specifically,\nthe probability of each codeword index appearing in the quantized vectors can be computed as\npℓ:=\nR cℓ+cℓ+1\n2\ncℓ−1+cℓ\n2\nfX(x) dx. Optimally coding the indices, reduces the average bit-width to nearly the\nentropy of the distribution {pi}i∈[2b]. This lossless compression does not affect the distortion and\nprovides a bit-width reduction at no cost. The most significant reduction occurs for b = 4, where\nthe entropy of {pi}i∈[2b] is approximately 3.8. Detailed calculations for optimal prefix codes reveal\nthat the average bit-width can be reduced by 5%. However, given the limited gain, we have chosen\nnot to incorporate this technique into TurboQuant to maintain simplicity and speed.",
+      "bbox": [
+        70.86599731445312,
+        536.8928833007812,
+        541.18994140625,
+        670.3162841796875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b0-group",
+      "page": 12,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Algorithm 2 TurboQuantprod: optimized for inner product\n1: input: dimension d and bit-width b\n// Global Parameters for Setting up TurboQuantprod\n2: Instantiate a TurboQuantmse with bit-width b −1 as per Algorithm 1\n3: Generate a random projection matrix S ∈Rd×d with i.i.d. entries Si,j ∼N(0, 1)\n4: Procedure Quantprod(x)\n5: idx ←Quantmse(x)\n6: r ←x −DeQuantmse(idx)\n{residual vector}\n7: qjl ←sign (S · r)\n{QJL on residual vector}\n8: output: (idx, qjl, ∥r∥2)\n9: Procedure DeQuantprod(idx, qjl, γ)\n10: ˜xmse ←DeQuantmse(idx)\n11: ˜xqjl ←\n√\nπ/2\nd\n· γ · S⊤· qjl\n12: output: ˜xmse + ˜xqjl",
+      "bbox": [
+        70.86599731445312,
+        65.79786682128906,
+        537.4974975585938,
+        293.8492736816406
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b15-group",
+      "page": 12,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "For important applications like nearest neighbor search, having an unbiased inner product estimator\nis essential. However, TurboQuantmse presented in Section 3.1 does not provide unbiased inner\nproduct estimates with query vectors. To illustrate this, consider the case with a bit-width of b = 1.\nIn this scenario, the optimal codebooks that solve the optimization problem in Eq. (4), for sufficiently\nlarge d, are\nn\n±\nq\n2\nπd\no\n. This implies that the quantization map for TurboQuantmse is Qmse(x) =\nsign (Π · x) for any x ∈Rd, and the dequantization map is Q−1\nmse(z) =\nq\n2\nπd · Π⊤· z for any z ∈\n{−1, +1}d. Therefore, for large enough d, according to Lemma 4, we have E\n\u0002\n\ny, Q−1\nmse (Qmse(x))\n\u000b\u0003\n=\n2\nπ · ⟨y, x⟩, which has a multiplicative bias of 2/π. This bias diminishes with increasing bit-widths b,\nas we empirically demonstrate in Section 4.1.",
+      "bbox": [
+        70.865966796875,
+        347.1831970214844,
+        541.2227783203125,
+        481.7923278808594
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b21-group",
+      "page": 12,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "To address this bias, we propose a solution that combines TurboQuantmse with an instance of\nQJL [62]. Specifically, let Qmse be the quantization map corresponding to TurboQuantmse with a\nbit-width of b −1. For any x ∈Sd−1 the residual vector, defined as r := x −Q−1\nmse (Qmse(x)), has\na small L2 norm, i.e., on expectation E[∥r∥] =\np\nC(fX, b −1) (per Eq. (4)). We can then apply\nthe QJL quantization map Qqjl on this residual vector, resulting in an overall bit-width of b and\nproviding the following unbiased inner product estimator:\ny, Q−1\nmse (Qmse(x))\n\u000b\n+ ∥r∥2 ·\nD\ny, Q−1\nqjl\n\u0000\nQqjl(r)\n\u0001E\n.",
+      "bbox": [
+        70.86599731445312,
+        489.2219543457031,
+        541.170654296875,
+        607.0687255859375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p12-b24-group",
+      "page": 12,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "More formally, the quantization map Qprod : Sd−1 →[2b−1]d × {−1, 1}d × R is defined as:\nQprod(x) =\n\u0002\nQmse(x), Qqjl\n\u0000\nx −Q−1\nmse (Qmse(x))\n\u0001\n,\n\r\rx −Q−1\nmse (Qmse(x))\n\r\r\n2\n\u0003\n.\nA pseudocode for this procedure is given in Algorithm 2.\nWe prove the main result for TurboQuantprod in the following theorem.",
+      "bbox": [
+        70.865966796875,
+        608.3684692382812,
+        495.019775390625,
+        693.2662963867188
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b0-group",
+      "page": 13,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Theorem 2 (performance guarantee: TurboQuantprod). For any bit-width b ≥1 and any vector\nx ∈Sd−1, the procedure Quantprod(x) in Algorithm 2 outputs an index vector idx ∈[2b−1]d\nalong with a sign vector qjl ∈{−1, 1}d and a positive number γ ≥0. When these vectors and\nthe scalar value are passed to the primitive DeQuantprod(idx, qjl, γ), it produces a reconstructed\nvector ˜x ∈Rd that for any vector y ∈Rd satisfies the following properties:\n• Expected inner-product E˜x [⟨y, ˜x⟩] = ⟨y, x⟩\n• Inner-product distortion defined as Dprod := E˜x\nh\n|⟨y, x⟩−⟨y, ˜x⟩|2i\nis bounded by Dprod ≤\n√\n3π2·∥y∥2\n2\nd\n· 1\n4b for any b ≥0.\n• For small bit-widths, specifically b = 1, 2, 3, 4, Dprod exhibits finer-grained distortion values:\nDprod ≈1.57\nd , 0.56\nd , 0.18\nd , 0.047\nd\n, respectively.",
+      "bbox": [
+        70.86599731445312,
+        66.39192199707031,
+        541.1576538085938,
+        259.9157409667969
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b11-group",
+      "page": 13,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Proof. First we compute the conditional expectation of the inner product estimate ⟨y, ˜x⟩condi-\ntioned on ˜xmse as follows:\nE [⟨y, ˜x⟩|˜xmse] = E\n˜xqjl\n\u0002\n⟨y, ˜xmse + ˜xqjl⟩|˜xmse\n\u0003\n= ⟨y, ˜xmse⟩+ E\n˜xqjl\n\u0002\n⟨y, ˜xqjl⟩|˜xmse\n\u0003\n= ⟨y, ˜xmse⟩+ ⟨y, r⟩\n= ⟨y, x⟩,\nwhere the first equality follows from the definition of ˜x in line 12 of the algorithm.\nThe third\nequality above follows from Lemma 4 and last line follows from definition of the residual vector\nr = x −˜xmse in line 6. Now we can computed the unconditional expectation using the law of total\nexpectation: E˜x [⟨y, ˜x⟩] = E˜xmse [E [⟨y, ˜x⟩|˜xmse]] = E[⟨y, x⟩] = ⟨y, x⟩, which proves the first claim of\nthe theorem.",
+      "bbox": [
+        70.865966796875,
+        268.818115234375,
+        541.18994140625,
+        463.5572204589844
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p13-b19-group",
+      "page": 13,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "We apply the same conditioning on ˜xmse, when computing the distortion, and then compute the\nresulting conditional distortion:\nE\nh\n|⟨y, x⟩−⟨y, ˜x⟩|2\f\f\f ˜xmse\ni\n= E\n˜xqjl\nh\f\f⟨y, x⟩−⟨y, ˜xmse + ˜xqjl⟩\n\f\f2\f\f\f ˜xmse\ni\n= E\n˜xqjl\nh\f\f⟨y, r⟩−⟨y, ˜xqjl⟩\n\f\f2\f\f\f ˜xmse\ni\n= Var\n\u0000\n⟨y, ˜xqjl⟩\n\f\f ˜xmse\n\u0001\n≤π\n2d · ∥r∥2\n2 ∥y∥2\n2 ,\nwhere the second equality above follows from the definitions of r and ˜xmse in lines 6 and 10 of\nAlgorithm 2. The third line above follows because E[⟨y, ˜xqjl⟩] = ⟨y, r⟩, by Lemma 4. The last line\nfollows from the variance bound of QJL estimator shown in Lemma 4 and using the fact that ˜xqjl\nin line 11 is re-scaled by γ = ∥r∥.",
+      "bbox": [
+        70.8658447265625,
+        473.2191162109375,
+        541.1749877929688,
+        673.7677001953125
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b0-group",
+      "page": 14,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.2 Inner-product Optimal TurboQuant"
+      ],
+      "kind": "text",
+      "text": "Now by law of total expectation along with the fact that r = x −˜xmse we can bound the inner\nproduct distortion as follows:\nDprod = E\n˜xmse\nh\nE\nh\n|⟨y, x⟩−⟨y, ˜x⟩|2\f\f\f ˜xmse\nii\n≤π\n2d · ∥y∥2\n2 · E[∥x −˜xmse∥2\n2]\n= π\n2d · ∥y∥2\n2 · Dmse.\nThe theorem follows by invoking the MSE bounds from Theorem 1 with bit-width b −1.",
+      "bbox": [
+        70.865966796875,
+        68.62324523925781,
+        541.1589965820312,
+        204.95777893066406
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b9",
+      "page": 14,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.3 Lower Bounds"
+      ],
+      "kind": "text",
+      "text": "We show that TurboQuant achieves an optimal distortion rate, up to a small constant factor,\nfor any bit-width by proving lower bounds on the best achievable distortion for any compression\nalgorithm. Our lower bound proof leverages Yao’s minimax principle. This principle allows us to\nrelate the lower bound for randomized algorithms with worst-case deterministic input vectors to the\nlower bound for deterministic algorithms with randomized input vectors. Subsequently, we derive\na lower bound on the achievable distortion rate for the latter using Shannon’s lower bound (SLB)\npresented in Section 2.1. Formally, we prove the following theorem.",
+      "bbox": [
+        70.86599731445312,
+        247.72889709472656,
+        541.2337646484375,
+        342.31732177734375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b10-group",
+      "page": 14,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.3 Lower Bounds"
+      ],
+      "kind": "text",
+      "text": "Theorem 3 (lower bound on best achievable compression distortion). For any randomized quanti-\nzation algorithm Q : Sd−1 →{0, 1}b·d with bit-width b and any reconstruction map Q−1 : {0, 1}b·d →\nRd, there exist a hard input instance x ∈Sd−1 such that:\nDmse(Q) := E\nh\r\rx −Q−1 (Q(x))\n\r\r2\n2\ni\n≥1\n4b .\nFurthermore, there exists a y ∈Sd−1 such that:\nDprod(Q) = E\nh\f\f⟨y, x⟩−⟨y, Q−1 (Q(x))⟩\n\f\f2i\n≥1\nd · 1\n4b",
+      "bbox": [
+        70.86590576171875,
+        353.9232177734375,
+        541.1514892578125,
+        493.4117431640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p14-b18-group",
+      "page": 14,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.3 Lower Bounds"
+      ],
+      "kind": "text",
+      "text": "Proof. By Yao’s minimax principle the expected MSE of the optimal randomized compression al-\ngorithm for worst-case inputs (Dmse) is equal to the expected MSE of the optimal deterministic\ncompression algorithm when applied to inputs drawn from a maximally difficult randomized distri-\nbution. By definition, the MSE of the latter scenario is lower-bounded by the best achievable MSE\nfor inputs uniformly distributed on the unit hypersphere.\nThe best achievable MSE for a compression algorithm with bit-width b, operating on uniformly\ndistributed inputs from the sphere Sd−1, is lower bounded in Lemma 3. Therefore, by invoking\nLemma 3 we conclude that Dmse ≥1\n4b .",
+      "bbox": [
+        70.86595153808594,
+        499.128173828125,
+        541.22265625,
+        621.7807006835938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b0-group",
+      "page": 15,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.3 Lower Bounds"
+      ],
+      "kind": "text",
+      "text": "Furthermore, from Dmse ≥1\n4b and using the definition of Dmse we conclude that:\nDmse =\nd\nX\nj=1\nE\n\u0014\f\f\fxj −\n\u0002\nQ−1 (Q(x))\n\u0003\nj\n2\u0015\n=\nd\nX\nj=1\nE\nh\f\f⟨ej, x⟩−⟨ej, Q−1 (Q(x))⟩\n\f\f2i\n≥1\n4b .\nBy pigeonhole principle there exist an index j ∈[d] such that E\nh\f\f⟨ej, x⟩−⟨ej, Q−1 (Q(x))⟩\n\f\f2i\n≥\n1\nd · 1\n4b , which completes the proof.",
+      "bbox": [
+        70.86599731445312,
+        66.77716064453125,
+        541.13623046875,
+        250.5357208251953
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b16",
+      "page": 15,
+      "section": [
+        "3 TurboQuant: High Performance Quantization",
+        "3.3 Lower Bounds"
+      ],
+      "kind": "text",
+      "text": "We note that a comparable lower bound for the worst-case distortion in vector quantization can\nbe derived using “sphere packing” arguments (indeed, with larger constants as this is a harder\nproblem) [26]. However, Theorem 3 offers a more robust and relevant lower bound for our analysis.\nThis is because it establishes a lower bound on the expected distortion, rather than the worst-case\nerror, and aligns seamlessly with our upper bounds presented in Theorem 1 and Theorem 2.",
+      "bbox": [
+        70.86599731445312,
+        257.3671875,
+        541.1791381835938,
+        322.47332763671875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b18",
+      "page": 15,
+      "section": [
+        "4 Experiments"
+      ],
+      "kind": "text",
+      "text": "All experiments are performed using a single NVIDIA A100 GPU. The experimental section is\ndivided into two parts: one to empirically validate the theoretical results, and another to evaluate\nthe performance of our methods on downstream tasks, specifically KV cache quantization and\nnearest neighbor vector search.",
+      "bbox": [
+        70.86599731445312,
+        384.5422058105469,
+        541.2008056640625,
+        436.0993347167969
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b20",
+      "page": 15,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "In this section, we verify the theoretical results established in previous sections. We conduct our\nexperiments using the DBpedia Entities dataset, which has been encoded into a 1536-dimensional\nspace using OpenAI3 embeddings. To perform our experiments, we randomly sample 100,000 data\npoints from the dataset, denoted as training set, which serves as our primary dataset. Additionally,\nwe extract 1,000 distinct entries, denoted as query set, to be used as query points.",
+      "bbox": [
+        70.86599731445312,
+        489.2522277832031,
+        541.2007446289062,
+        554.3573608398438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b21",
+      "page": 15,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "We evaluate two quantization methods: TurboQuantprod and TurboQuantmse. The method\nTurboQuantmse is designed to be optimzed for estimating the mean squared error (MSE) between\nthe quantized and original vectors. In contrast, TurboQuantprod is unbiased for estimating the\ninner product between the quantized and original vectors.",
+      "bbox": [
+        70.86599731445312,
+        561.7879028320312,
+        541.1619262695312,
+        615.7273559570312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p15-b22",
+      "page": 15,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "Both methods are applied to the task of inner product estimation by quantizing training set and\nanalyzing the distortion in inner product calculations across different bit widths. As shown in Fig. 1,\nincreasing the bit width reduces variance in both methods. However, when used for inner product\nestimation, TurboQuantmse introduces bias. This bias diminishes as the bit width increases and\neventually converges to zero.",
+      "bbox": [
+        70.86599731445312,
+        625.5411987304688,
+        541.2117309570312,
+        690.6463623046875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b56",
+      "page": 16,
+      "section": [
+        "4.1 Empirical Validation"
+      ],
+      "kind": "figure",
+      "text": "Figure 1: Error distribution of TurboQuantprod and TurboQuantmse for Inner Product Estima-\ntion.",
+      "bbox": [
+        70.86599731445312,
+        349.25689697265625,
+        541.154052734375,
+        376.0982971191406
+      ],
+      "context": "Figure 1. Inner-product estimation error distributions for TurboQuant_prod and TurboQuant_mse. Panels use bit widths 1, 2, 3, 4; horizontal axis: inner product distortion; vertical axis: frequency (10^7). Explanation: page 16, first paragraph after caption. No histogram-bin values inferred.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p16-b57",
+      "page": 16,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "The experimental results, illustrated in Fig. 1, confirm that TurboQuantprod remains unbiased\nfor inner product estimation across all bit widths, while TurboQuantmse gradually improves with\nincreasing bit width.",
+      "bbox": [
+        70.86599731445312,
+        409.2698974609375,
+        541.1531372070312,
+        449.6603088378906
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b58",
+      "page": 16,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "As observed in Fig. 2, when quantizing to 2 bits, the variance remains constant regardless of the\ninner product of the original vector in the TurboQuantprod approach. However, the same plot\nindicates that the bias in the TurboQuantmse approach is dependent on the average inner product.\nAs the average inner product increases, the bias also increases.",
+      "bbox": [
+        70.86605834960938,
+        459.47320556640625,
+        541.1796264648438,
+        511.03033447265625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b59",
+      "page": 16,
+      "section": [
+        "4 Experiments",
+        "4.1 Empirical Validation"
+      ],
+      "kind": "text",
+      "text": "Along with the histograms, we also plot Section 4.1 the average inner product error and MSE\nbetween the original and quantized vectors across different bit ratios. These plots are drawn along-\nside the upper and lower bounds established in our theoretical analysis. Our observations confirm\nthat the results align with the theoretical predictions. Specifically, for inner product estimation,\nthe TurboQuantprod approach performs better at lower bit ratios. However, as the bit count\nincreases, TurboQuantmse reduces bias and ultimately achieves superior performance in inner\nproduct estimation.",
+      "bbox": [
+        70.86607360839844,
+        520.8432006835938,
+        541.211669921875,
+        613.0473022460938
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p16-b61",
+      "page": 16,
+      "section": [
+        "4 Experiments",
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "text",
+      "text": "The “Needle-In-A-Haystack Test”” [32] is a benchmark designed to evaluate a model’s ability to\nretrieve specific information embedded within a long document. The test involves placing a unique",
+      "bbox": [
+        70.86607360839844,
+        666.1881713867188,
+        541.1900024414062,
+        690.6463012695312
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p17-b57",
+      "page": 17,
+      "section": [
+        "4.1 Empirical Validation"
+      ],
+      "kind": "figure",
+      "text": "Figure 2: The variance of Inner-product error remains constant for TurboQuantprod, while in\nTurboQuantmse increases with the average inner product. Bit-width is b = 2.",
+      "bbox": [
+        70.86599731445312,
+        349.25689697265625,
+        541.1436157226562,
+        378.7182922363281
+      ],
+      "context": "Figure 2. Inner-product estimation at bit width b=2. Average inner products: 0.01, 0.06, 0.10, 0.17. Horizontal axis: inner product distortion; vertical axis: frequency (10^6). TurboQuant_prod and TurboQuant_mse comparison; explanation on page 16. No histogram-bin values inferred.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p17-b58",
+      "page": 17,
+      "section": [
+        "4 Experiments",
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "text",
+      "text": "sentence (the ”needle”) at an arbitrary location within a much larger text (the ”haystack”) and\nassessing whether the model can successfully extract it.",
+      "bbox": [
+        70.86599731445312,
+        412.09417724609375,
+        541.1900024414062,
+        436.55230712890625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p17-b59",
+      "page": 17,
+      "section": [
+        "4 Experiments",
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "text",
+      "text": "Following the experimental setup of Fu et al. [21], we conduct evaluations using the Llama-3.1-\n8B-Instruct model. To analyze performance across different input sequence lengths, we vary the\ndocument size from 4k to 104k tokens. The primary metric used for evaluation is the recall score,\nwhich measures how accurately the model retrieves the hidden sentence.",
+      "bbox": [
+        70.86599731445312,
+        446.36517333984375,
+        541.14453125,
+        497.92230224609375
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p17-b60",
+      "page": 17,
+      "section": [
+        "4 Experiments",
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "text",
+      "text": "For comparison, we benchmark our approach against several state-of-the-art memory-efficient meth-\nods, including PolarQuant [28], SnapKV [38], PyramidKV [12], and KIVI [41]. Each method is\ntested under a memory compression ratio of 0.25, meaning that only 25% of the full KV cache is\nutilized.",
+      "bbox": [
+        70.86605834960938,
+        507.73516845703125,
+        541.244384765625,
+        559.2922973632812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p17-b61",
+      "page": 17,
+      "section": [
+        "4 Experiments",
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "text",
+      "text": "The results, illustrated in Fig. 4, reveal that quantization methods with theoretical guarantees, such\nas PolarQuant and TurboQuant, outperform token-level compression techniques like SnapKV\nand PyramidKV, as well as scalar quantization approaches like KIVI, which lack formal theoretical\nguarantees.\nNotably, TurboQuant achieves identical performance to the full-precision model,\neven at 4× compression, making it a robust solution for long-context processing.",
+      "bbox": [
+        70.86605834960938,
+        569.1051635742188,
+        541.1900024414062,
+        642.3007202148438
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p18-b16",
+      "page": 18,
+      "section": [
+        "4.1 Empirical Validation"
+      ],
+      "kind": "figure",
+      "text": "Figure 3: Comparison of inner-product error and MSE against theoretical bounds across different\nbit ratios.",
+      "bbox": [
+        70.86599731445312,
+        288.3531799316406,
+        541.2117309570312,
+        312.8122863769531
+      ],
+      "context": "Figure 3. Inner-product error D_prod and mean-squared error D_mse versus bit width b (1 through 5), compared with theoretical lower and upper bounds. Vertical axes are logarithmic. See page 16 explanation and Section 3 bounds. No curve values inferred.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p18-b18",
+      "page": 18,
+      "section": [
+        "4 Experiments",
+        "4.3 End-to-end Generation on LongBench"
+      ],
+      "kind": "text",
+      "text": "We experiment with various KV cache compression algorithms on the LongBench dataset [10], which\nencompasses a broad range of long-text scenarios, including single- and multi-document question-\nanswering, summarization, few-shot learning, synthetic tasks, and code completion. To ensure a\nbalanced evaluation across different context lengths, we employ LongBench-E, a subset designed\nwith a more uniform length distribution. This enables a fair assessment of each model’s performance\nacross varying context sizes, making it a more reliable benchmark for evaluating compression tech-\nniques.",
+      "bbox": [
+        70.86599731445312,
+        376.57415771484375,
+        541.1680297851562,
+        468.779296875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p18-b19",
+      "page": 18,
+      "section": [
+        "4 Experiments",
+        "4.3 End-to-end Generation on LongBench"
+      ],
+      "kind": "text",
+      "text": "We compare TurboQuant against the leading baseline methods introduced in Section 4.2, us-\ning both Llama-3.1-8B-Instruct and Ministral-7B-Instruct. Unlike existing approaches such as\nKIVI and PolarQuant, which leave generated tokens unquantized, our method applies quantiza-\ntion even during the streaming generation process.",
+      "bbox": [
+        70.86599731445312,
+        476.2088928222656,
+        541.1805419921875,
+        530.1483154296875
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p18-b20",
+      "page": 18,
+      "section": [
+        "4 Experiments",
+        "4.3 End-to-end Generation on LongBench"
+      ],
+      "kind": "text",
+      "text": "As shown in Table 1, our approach outperforms other methods for both Llama-3.1-8B-Instruct and\nMinistral-7B-Instruct, achieving significantly higher average scores. We evaluate our method\nusing 2.5-bit and 3.5-bit quantization during text generation. These non-integer bit precisions\nresult from our strategy of splitting channels into outlier and non-outlier sets, and applying two\nindependent instances of TurboQuant to each, allocating higher bit precision to outliers. This\noutlier treatment strategy is consistent with prior work [63, 51] . For example, in our 2.5-bit setup,\n32 outlier channels are quantized at 3 bits, while the remaining 96 channels use 2 bits, leading to\nan effective bit precision of (32 × 3 + 96 × 2)/128 = 2.5. For 3.5-bit quantization, a different ratio of\noutliers and regular channels leads to a higher effective bit precision. Despite using fewer bits than\ncompeting techniques, TurboQuant maintains performance comparable to unquantized models.\nRemarkably, we achieve this while compressing quantized vectors by at least a factor of 4.5×.",
+      "bbox": [
+        70.86593627929688,
+        539.9622192382812,
+        541.2225341796875,
+        694.4526977539062
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-b114",
+      "page": 19,
+      "section": [
+        "4.2 Needle-In-A-Haystack"
+      ],
+      "kind": "figure",
+      "text": "Figure 4: Evaluation of Llama-3.1-8B-Instruct on the “Needle-In-A-Haystack” test, where a\nmodel must retrieve a hidden sentence from long-context sequences. While some methods struggle\nwith recall, TurboQuant, despite being more than 4× quantized, achieves the same exact perfor-\nmance as the uncompressed baseline.",
+      "bbox": [
+        70.86599731445312,
+        328.86517333984375,
+        541.12646484375,
+        380.42230224609375
+      ],
+      "context": "Figure 4. Llama-3.1-8B-Instruct Needle-In-A-Haystack recall test. Axes: token limit (4k to 104k) and depth percent; colour scale: recall score. Methods: SnapKV, PyramidKV, KIVI, PolarQuant, full precision, TurboQuant. Page 17 specifies a 0.25 memory compression ratio. No heatmap-cell values inferred.",
+      "rows": [],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p19-b116-group",
+      "page": 19,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "In this section, we establish the strength of our proposed method, even in the context of near-\nneighbor search. We conduct our experiments using the DBpedia [53] Entities dataset, which has\nbeen encoded into 1536-dimensional1 and 3072-dimensional 2 spaces using OpenAI3 embeddings.\nAdditionally, we evaluate performance on a lower-dimensional dataset, utilizing the standard GloVe\n[45] embeddings. To construct our experimental setup, we randomly sample 100,000 data points\nfrom the dataset, denoted as training set, which serves as our primary training and evaluation set.\nFurthermore, we extract 1,000 distinct entries, denoted as query set, to be used as query points for\ndatasets that do not explicitly provide a query set. For the GloVe dataset, we use a pre-existing\nquery set consisting of 10,000 points.\n1https://huggingface.co/datasets/Qdrant/dbpedia-entities-openai3-text-embedding-3-large-1536-1M\n2https://huggingface.co/datasets/Qdrant/dbpedia-entities-openai3-text-embedding-3-large-3072-1M",
+      "bbox": [
+        70.86599731445312,
+        431.70318603515625,
+        541.2008056640625,
+        690.2218627929688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-b117",
+      "page": 19,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "We compare our method, TurboQuant, against two baseline quantization approaches: Product\nQuantization (PQ) and RabitQ [22]. To ensure a fair comparison, we quantize the dataset training\nset using all three methods and evaluate their performance based on recall ratio at top-k, denoted\nas 1@k. Specifically, this metric assesses how often the true top inner product result is captured\nwithin the top-k approximated results returned by each algorithm.",
+      "bbox": [
+        70.86599731445312,
+        558.4359741210938,
+        541.2116088867188,
+        625.92431640625
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p19-b118",
+      "page": 19,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "Product Quantization (PQ) relies on the k-means algorithm to construct codebooks, which\nrequire separate storage. As the number of bits increases, the size of the codebook grows exponen-",
+      "bbox": [
+        70.86601257324219,
+        635.7382202148438,
+        541.1458740234375,
+        660.1963500976562
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-reviewed-table1",
+      "page": 20,
+      "section": [
+        "4.3 End-to-end Generation on LongBench"
+      ],
+      "kind": "table",
+      "text": "Model=Llama-3.1-8B-Instruct | Method=Full Cache | KV Size=16 | SingleQA=45.29 | MultiQA=45.16 | Summarization=26.55 | Few shot=68.38 | Synthetic=59.54 | Code=46.28 | Average=50.06\nModel=Llama-3.1-8B-Instruct | Method=KIVI | KV Size=3 | SingleQA=43.38 | MultiQA=37.99 | Summarization=27.16 | Few shot=68.38 | Synthetic=59.50 | Code=44.68 | Average=48.50\nModel=Llama-3.1-8B-Instruct | Method=KIVI | KV Size=5 | SingleQA=45.04 | MultiQA=45.70 | Summarization=26.47 | Few shot=68.57 | Synthetic=59.55 | Code=46.41 | Average=50.16\nModel=Llama-3.1-8B-Instruct | Method=PolarQuant | KV Size=3.9 | SingleQA=45.18 | MultiQA=44.48 | Summarization=26.23 | Few shot=68.25 | Synthetic=60.07 | Code=45.24 | Average=49.78\nModel=Llama-3.1-8B-Instruct | Method=TurboQuant (ours) | KV Size=2.5 | SingleQA=44.16 | MultiQA=44.96 | Summarization=24.80 | Few shot=68.01 | Synthetic=59.65 | Code=45.76 | Average=49.44\nModel=Llama-3.1-8B-Instruct | Method=TurboQuant (ours) | KV Size=3.5 | SingleQA=45.01 | MultiQA=45.31 | Summarization=26.00 | Few shot=68.63 | Synthetic=59.95 | Code=46.17 | Average=50.06\nModel=Ministral-7B-Instruct | Method=Full Cache | KV Size=16 | SingleQA=47.53 | MultiQA=49.06 | Summarization=26.09 | Few shot=66.83 | Synthetic=53.50 | Code=47.90 | Average=49.89\nModel=Ministral-7B-Instruct | Method=TurboQuant (ours) | KV Size=2.5 | SingleQA=48.38 | MultiQA=49.22 | Summarization=24.91 | Few shot=66.69 | Synthetic=53.17 | Code=46.83 | Average=49.62",
+      "bbox": [
+        70.86599731445312,
+        69.09371948242188,
+        550.8109741210938,
+        257.07135009765625
+      ],
+      "context": "Table 1. LongBench-V1 results of KV cache compression methods. Model group labels are retained per row, including Ministral-7B-Instruct. Columns: Method, KV Size (as printed), SingleQA, MultiQA, Summarization, Few shot, Synthetic, Code, Average. Section 4.3 describes the LongBench-E evaluation and quantization during generation.",
+      "rows": [
+        "Model=Llama-3.1-8B-Instruct | Method=Full Cache | KV Size=16 | SingleQA=45.29 | MultiQA=45.16 | Summarization=26.55 | Few shot=68.38 | Synthetic=59.54 | Code=46.28 | Average=50.06",
+        "Model=Llama-3.1-8B-Instruct | Method=KIVI | KV Size=3 | SingleQA=43.38 | MultiQA=37.99 | Summarization=27.16 | Few shot=68.38 | Synthetic=59.50 | Code=44.68 | Average=48.50",
+        "Model=Llama-3.1-8B-Instruct | Method=KIVI | KV Size=5 | SingleQA=45.04 | MultiQA=45.70 | Summarization=26.47 | Few shot=68.57 | Synthetic=59.55 | Code=46.41 | Average=50.16",
+        "Model=Llama-3.1-8B-Instruct | Method=PolarQuant | KV Size=3.9 | SingleQA=45.18 | MultiQA=44.48 | Summarization=26.23 | Few shot=68.25 | Synthetic=60.07 | Code=45.24 | Average=49.78",
+        "Model=Llama-3.1-8B-Instruct | Method=TurboQuant (ours) | KV Size=2.5 | SingleQA=44.16 | MultiQA=44.96 | Summarization=24.80 | Few shot=68.01 | Synthetic=59.65 | Code=45.76 | Average=49.44",
+        "Model=Llama-3.1-8B-Instruct | Method=TurboQuant (ours) | KV Size=3.5 | SingleQA=45.01 | MultiQA=45.31 | Summarization=26.00 | Few shot=68.63 | Synthetic=59.95 | Code=46.17 | Average=50.06",
+        "Model=Ministral-7B-Instruct | Method=Full Cache | KV Size=16 | SingleQA=47.53 | MultiQA=49.06 | Summarization=26.09 | Few shot=66.83 | Synthetic=53.50 | Code=47.90 | Average=49.89",
+        "Model=Ministral-7B-Instruct | Method=TurboQuant (ours) | KV Size=2.5 | SingleQA=48.38 | MultiQA=49.22 | Summarization=24.91 | Few shot=66.69 | Synthetic=53.17 | Code=46.83 | Average=49.62"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p20-reviewed-table2",
+      "page": 20,
+      "section": [
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "table",
+      "text": "Approach=Product Quantization | d=200: 37.04 seconds | d=1536: 239.75 seconds | d=3072: 494.42 seconds\nApproach=RabitQ | d=200: 597.25 seconds | d=1536: 2267.59 seconds | d=3072: 3957.19 seconds\nApproach=TurboQuant | d=200: 0.0007 seconds | d=1536: 0.0013 seconds | d=3072: 0.0021 seconds",
+      "bbox": [
+        70.86599731445312,
+        273.1711730957031,
+        541.1680908203125,
+        361.0753173828125
+      ],
+      "context": "Table 2. Quantization time in seconds, using 4-bit quantization, across dimensions d=200, d=1536 and d=3072. Section 4.4 describes the near-neighbour-search implementations and datasets. Times are transcription of table cells, not graph estimates.",
+      "rows": [
+        "Approach=Product Quantization | d=200: 37.04 seconds | d=1536: 239.75 seconds | d=3072: 494.42 seconds",
+        "Approach=RabitQ | d=200: 597.25 seconds | d=1536: 2267.59 seconds | d=3072: 3957.19 seconds",
+        "Approach=TurboQuant | d=200: 0.0007 seconds | d=1536: 0.0013 seconds | d=3072: 0.0021 seconds"
+      ],
+      "context_reviewed": true
+    },
+    {
+      "block_id": "p20-b13",
+      "page": 20,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "tially, leading to additional storage overhead. In our experiments, we carefully tuned the parameters\nto match the bit allocation of other methods. The most efficient implementation, designed for rapid\nquerying, employs AVX2 In-Register Lookup Tables (LUTs). Specifically, it uses LUT16 with (l\n= 16) codewords. However, we observed substantial quality degradation at this configuration. To\nachieve a balance between speed and accuracy, we opted for a version of PQ that uses LUT256,\nwhich contains 256 codewords. For 2-bit quantization, it groups 4 coordinates per lookup, while for\n4-bit quantization, it groups 2 coordinates per lookup. Notably, since we use the same dataset for\nboth training and evaluation, PQ benefits from an inherent advantage in this setup.",
+      "bbox": [
+        70.86599731445312,
+        385.1152038574219,
+        541.2117309570312,
+        490.8693542480469
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-b14",
+      "page": 20,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "RabitQ. Unlike PQ, RabitQ lacks a fully vectorized implementation, making it impossible to\nleverage GPU acceleration.\nAs a result, it runs significantly slower on CPU. Additionally, the\nmethod incurs extra computational overheads that we do not explicitly account for in the bit ratio\ncomparisons. While RabitQ claims a certain bit ratio, in practice, it utilizes more bits than reported\ndue to these inefficiencies.",
+      "bbox": [
+        70.86599731445312,
+        500.6822509765625,
+        541.2117919921875,
+        565.7883911132812
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p20-b15",
+      "page": 20,
+      "section": [
+        "4 Experiments",
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "text",
+      "text": "Despite the advantages granted to the baseline methods, TurboQuant consistently outperforms\nboth Product Quantization and RabitQ in terms of recall ratio across all experiments. This demon-\nstrates the robustness and efficiency of our approach, making it a compelling alternative for high-\ndimensional quantization-based search tasks.",
+      "bbox": [
+        70.865966796875,
+        573.2179565429688,
+        541.1900024414062,
+        627.1583862304688
+      ],
+      "context": "",
+      "rows": [],
+      "context_reviewed": false
+    },
+    {
+      "block_id": "p21-b31",
+      "page": 21,
+      "section": [
+        "4.4 Near Neighbour Search Experiments"
+      ],
+      "kind": "figure",
+      "text": "Figure 5: Recall comparison on different datasets with different embedding dimensions.",
+      "bbox": [
+        97.3030014038086,
+        226.4121856689453,
+        514.728759765625,
+        237.3212890625
+      ],
+      "context": "Figure 5. Recall@1@k versus top-k for GloVe (d=200) and OpenAI3 (d=1536, 3072). Legends compare TurboQuant, PQ and RabitQ at 2 and 4 bits. Dataset and query construction are stated on page 19. No curve values inferred.",
+      "rows": [],
+      "context_reviewed": true
+    }
+  ],
+  "audit": {
+    "original_block_count": 598,
+    "original_blocking_issues": 29,
+    "removed_automatic_table_ids": [
+      "p16-table0",
+      "p16-table1",
+      "p16-table2",
+      "p16-table3",
+      "p16-table4",
+      "p16-table5",
+      "p16-table6",
+      "p16-table7",
+      "p17-table0",
+      "p17-table1",
+      "p17-table2",
+      "p17-table3",
+      "p17-table4",
+      "p17-table5",
+      "p17-table6",
+      "p17-table7",
+      "p17-table8",
+      "p18-table0",
+      "p18-table1",
+      "p21-table0",
+      "p21-table1",
+      "p21-table2"
+    ],
+    "restored_raw_block_ids": [
+      "p10-b0",
+      "p10-b1",
+      "p10-b10",
+      "p10-b11",
+      "p10-b4",
+      "p10-b5",
+      "p10-b7",
+      "p10-b8",
+      "p10-b9",
+      "p12-b0",
+      "p12-b1",
+      "p12-b10",
+      "p12-b13",
+      "p12-b4",
+      "p12-b5",
+      "p12-b8",
+      "p12-b9",
+      "p13-b16",
+      "p13-b17",
+      "p13-b2",
+      "p14-b14"
+    ],
+    "removed_footer_suffix_block_ids": [],
+    "table_source_blocks": {
+      "p20-reviewed-table1": [
+        "p20-b0",
+        "p20-b1",
+        "p20-b10",
+        "p20-b2",
+        "p20-b3",
+        "p20-b4",
+        "p20-b5",
+        "p20-b6",
+        "p20-b7",
+        "p20-b8",
+        "p20-b9"
+      ],
+      "p20-reviewed-table2": [
+        "p20-b11",
+        "p20-b12"
+      ]
+    },
+    "text_source_blocks": {
+      "p3-b3-group": [
+        "p3-b3",
+        "p3-b4",
+        "p3-b5",
+        "p3-b6",
+        "p3-b7",
+        "p3-b8"
+      ],
+      "p3-b9-group": [
+        "p3-b9",
+        "p3-b10",
+        "p3-b11"
+      ],
+      "p3-b12-group": [
+        "p3-b12",
+        "p3-b13",
+        "p3-b14"
+      ],
+      "p5-b4-group": [
+        "p5-b4",
+        "p5-b5",
+        "p5-b6",
+        "p5-b7",
+        "p5-b8",
+        "p5-b9"
+      ],
+      "p5-b12-group": [
+        "p5-b12",
+        "p5-b13",
+        "p5-b14",
+        "p5-b15",
+        "p5-b16",
+        "p5-b17",
+        "p5-b18",
+        "p5-b19"
+      ],
+      "p6-b0-group": [
+        "p6-b0",
+        "p6-b1",
+        "p6-b2",
+        "p6-b3",
+        "p6-b4"
+      ],
+      "p6-b5-group": [
+        "p6-b5",
+        "p6-b6",
+        "p6-b7",
+        "p6-b8",
+        "p6-b9",
+        "p6-b10"
+      ],
+      "p6-b11-group": [
+        "p6-b11",
+        "p6-b12"
+      ],
+      "p7-b0-group": [
+        "p7-b0",
+        "p7-b1",
+        "p7-b2",
+        "p7-b3"
+      ],
+      "p7-b4-group": [
+        "p7-b4",
+        "p7-b5",
+        "p7-b6",
+        "p7-b7",
+        "p7-b8",
+        "p7-b9",
+        "p7-b10",
+        "p7-b11"
+      ],
+      "p7-b14-group": [
+        "p7-b14",
+        "p7-b15",
+        "p7-b16"
+      ],
+      "p8-b0-group": [
+        "p8-b0",
+        "p8-b1",
+        "p8-b2",
+        "p8-b3",
+        "p8-b4"
+      ],
+      "p8-b7-group": [
+        "p8-b7",
+        "p8-b8",
+        "p8-b9",
+        "p8-b10",
+        "p8-b11",
+        "p8-b12"
+      ],
+      "p8-b13-group": [
+        "p8-b13",
+        "p8-b14",
+        "p8-b15",
+        "p8-b16",
+        "p8-b17"
+      ],
+      "p8-b18-group": [
+        "p8-b18",
+        "p8-b19",
+        "p8-b20",
+        "p8-b21",
+        "p8-b22",
+        "p8-b23",
+        "p8-b24"
+      ],
+      "p9-b0-group": [
+        "p9-b0",
+        "p9-b1",
+        "p9-b2"
+      ],
+      "p9-b3-group": [
+        "p9-b3",
+        "p9-b4",
+        "p9-b5",
+        "p9-b6",
+        "p9-b7"
+      ],
+      "p10-b0-group": [
+        "p10-b0",
+        "p10-b1",
+        "p10-b2",
+        "p10-b3",
+        "p10-b4",
+        "p10-b5",
+        "p10-b6",
+        "p10-b7",
+        "p10-b8",
+        "p10-b9",
+        "p10-b10",
+        "p10-b11"
+      ],
+      "p10-b12-group": [
+        "p10-b12",
+        "p10-b13",
+        "p10-b14",
+        "p10-b15",
+        "p10-b16",
+        "p10-b17",
+        "p10-b18",
+        "p10-b19",
+        "p10-b20"
+      ],
+      "p10-b21-group": [
+        "p10-b21",
+        "p10-b22",
+        "p10-b23",
+        "p10-b24",
+        "p10-b25",
+        "p10-b26",
+        "p10-b27",
+        "p10-b28"
+      ],
+      "p10-b30-group": [
+        "p10-b30",
+        "p10-b31",
+        "p10-b32",
+        "p10-b33",
+        "p10-b34"
+      ],
+      "p11-b1-group": [
+        "p11-b1",
+        "p11-b2",
+        "p11-b3",
+        "p11-b4",
+        "p11-b5",
+        "p11-b6",
+        "p11-b7",
+        "p11-b8",
+        "p11-b9",
+        "p11-b10",
+        "p11-b11",
+        "p11-b12",
+        "p11-b13",
+        "p11-b14",
+        "p11-b15",
+        "p11-b16"
+      ],
+      "p11-b17-group": [
+        "p11-b17",
+        "p11-b18",
+        "p11-b19",
+        "p11-b20",
+        "p11-b21",
+        "p11-b22",
+        "p11-b23",
+        "p11-b24",
+        "p11-b25",
+        "p11-b26",
+        "p11-b27",
+        "p11-b28"
+      ],
+      "p11-b29-group": [
+        "p11-b29",
+        "p11-b30",
+        "p11-b31",
+        "p11-b32",
+        "p11-b33"
+      ],
+      "p12-b0-group": [
+        "p12-b0",
+        "p12-b1",
+        "p12-b2",
+        "p12-b3",
+        "p12-b4",
+        "p12-b5",
+        "p12-b6",
+        "p12-b7",
+        "p12-b8",
+        "p12-b9",
+        "p12-b10",
+        "p12-b11",
+        "p12-b12",
+        "p12-b13"
+      ],
+      "p12-b15-group": [
+        "p12-b15",
+        "p12-b16",
+        "p12-b17",
+        "p12-b18",
+        "p12-b19",
+        "p12-b20"
+      ],
+      "p12-b21-group": [
+        "p12-b21",
+        "p12-b22",
+        "p12-b23"
+      ],
+      "p12-b24-group": [
+        "p12-b24",
+        "p12-b25",
+        "p12-b26",
+        "p12-b27"
+      ],
+      "p13-b0-group": [
+        "p13-b0",
+        "p13-b1",
+        "p13-b2",
+        "p13-b3",
+        "p13-b4",
+        "p13-b5",
+        "p13-b6",
+        "p13-b7",
+        "p13-b8",
+        "p13-b9",
+        "p13-b10"
+      ],
+      "p13-b11-group": [
+        "p13-b11",
+        "p13-b12",
+        "p13-b13",
+        "p13-b14",
+        "p13-b15",
+        "p13-b16",
+        "p13-b17",
+        "p13-b18"
+      ],
+      "p13-b19-group": [
+        "p13-b19",
+        "p13-b20",
+        "p13-b21",
+        "p13-b22",
+        "p13-b23",
+        "p13-b24",
+        "p13-b25",
+        "p13-b26",
+        "p13-b27"
+      ],
+      "p14-b0-group": [
+        "p14-b0",
+        "p14-b1",
+        "p14-b2",
+        "p14-b3",
+        "p14-b4",
+        "p14-b5",
+        "p14-b6",
+        "p14-b7"
+      ],
+      "p14-b10-group": [
+        "p14-b10",
+        "p14-b11",
+        "p14-b12",
+        "p14-b13",
+        "p14-b14",
+        "p14-b15",
+        "p14-b16",
+        "p14-b17"
+      ],
+      "p14-b18-group": [
+        "p14-b18",
+        "p14-b19",
+        "p14-b20"
+      ],
+      "p15-b0-group": [
+        "p15-b0",
+        "p15-b1",
+        "p15-b2",
+        "p15-b3",
+        "p15-b4",
+        "p15-b5",
+        "p15-b6",
+        "p15-b7",
+        "p15-b8",
+        "p15-b9",
+        "p15-b10",
+        "p15-b11",
+        "p15-b12",
+        "p15-b13",
+        "p15-b14",
+        "p15-b15"
+      ],
+      "p19-b116-group": [
+        "p19-b116",
+        "p19-b119"
+      ]
+    },
+    "raw_block_decisions": [
+      {
+        "block_id": "p1-b0",
+        "page": 1,
+        "reason": "front_matter_metadata_not_evidence"
+      },
+      {
+        "block_id": "p1-b1",
+        "page": 1,
+        "reason": "front_matter_metadata_not_evidence"
+      },
+      {
+        "block_id": "p1-b2",
+        "page": 1,
+        "reason": "front_matter_metadata_not_evidence"
+      },
+      {
+        "block_id": "p1-b3",
+        "page": 1,
+        "reason": "front_matter_metadata_not_evidence"
+      },
+      {
+        "block_id": "p1-b4",
+        "page": 1,
+        "reason": "front_matter_metadata_not_evidence"
+      },
+      {
+        "block_id": "p1-b5",
+        "page": 1,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p1-b7",
+        "page": 1,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p1-b9",
+        "page": 1,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p1-b10",
+        "page": 1,
+        "reason": "arxiv_margin_metadata"
+      },
+      {
+        "block_id": "p2-b7",
+        "page": 2,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p3-b1",
+        "page": 3,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p3-b15",
+        "page": 3,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p4-b0",
+        "page": 4,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p4-b7",
+        "page": 4,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p5-b1",
+        "page": 5,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p5-b20",
+        "page": 5,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p6-b16",
+        "page": 6,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p6-b20",
+        "page": 6,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p7-b12",
+        "page": 7,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p7-b19",
+        "page": 7,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p8-b5",
+        "page": 8,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p8-b25",
+        "page": 8,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p9-b8",
+        "page": 9,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p9-b11",
+        "page": 9,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p9-b15",
+        "page": 9,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p10-b35",
+        "page": 10,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p11-b34",
+        "page": 11,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p12-b14",
+        "page": 12,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p12-b28",
+        "page": 12,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p13-b28",
+        "page": 13,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p14-b8",
+        "page": 14,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p14-b21",
+        "page": 14,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p15-b17",
+        "page": 15,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p15-b19",
+        "page": 15,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p15-b23",
+        "page": 15,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p16-b0",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b1",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b2",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b3",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b4",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b5",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b6",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b7",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b8",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b9",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b10",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b11",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b12",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b13",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b14",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b15",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b16",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b17",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b18",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b19",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b20",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b21",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b22",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b23",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b24",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b25",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b26",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b27",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b28",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b29",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b30",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b31",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b32",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b33",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b34",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b35",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b36",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b37",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b38",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b39",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b40",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b41",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b42",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b43",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b44",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b45",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b46",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b47",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b48",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b49",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b50",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b51",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b52",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b53",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b54",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b55",
+        "page": 16,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p16-b60",
+        "page": 16,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p16-b62",
+        "page": 16,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p17-b0",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b1",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b2",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b3",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b4",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b5",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b6",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b7",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b8",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b9",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b10",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b11",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b12",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b13",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b14",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b15",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b16",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b17",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b18",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b19",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b20",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b21",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b22",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b23",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b24",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b25",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b26",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b27",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b28",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b29",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b30",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b31",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b32",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b33",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b34",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b35",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b36",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b37",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b38",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b39",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b40",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b41",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b42",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b43",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b44",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b45",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b46",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b47",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b48",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b49",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b50",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b51",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b52",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b53",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b54",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b55",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b56",
+        "page": 17,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p17-b62",
+        "page": 17,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p18-b0",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b1",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b2",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b3",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b4",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b5",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b6",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b7",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b8",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b9",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b10",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b11",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b12",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b13",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b14",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b15",
+        "page": 18,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p18-b17",
+        "page": 18,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p18-b21",
+        "page": 18,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p19-b0",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b1",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b2",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b3",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b4",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b5",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b6",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b7",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b8",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b9",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b10",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b11",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b13",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b14",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b15",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b16",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b17",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b18",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b19",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b20",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b21",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b22",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b23",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b24",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b25",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b26",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b27",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b28",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b29",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b30",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b32",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b33",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b34",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b35",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b36",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b37",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b38",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b39",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b40",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b41",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b42",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b43",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b44",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b45",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b46",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b47",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b48",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b49",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b51",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b52",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b53",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b54",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b55",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b56",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b57",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b58",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b59",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b60",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b61",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b62",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b63",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b64",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b65",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b66",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b67",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b68",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b70",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b71",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b72",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b73",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b74",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b75",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b76",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b77",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b78",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b79",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b80",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b81",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b82",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b83",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b84",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b85",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b86",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b87",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b89",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b90",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b91",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b92",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b93",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b94",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b95",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b96",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b97",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b98",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b99",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b100",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b101",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b102",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b103",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b104",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b105",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b106",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b108",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b109",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b110",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b111",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b112",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b113",
+        "page": 19,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p19-b115",
+        "page": 19,
+        "reason": "section_heading_preserved_as_metadata"
+      },
+      {
+        "block_id": "p19-b120",
+        "page": 19,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p20-b0",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b1",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b2",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b3",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b4",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b5",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b6",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b7",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b8",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b9",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b10",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b11",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b12",
+        "page": 20,
+        "reason": "replaced_by_reviewed_table_rows"
+      },
+      {
+        "block_id": "p20-b16",
+        "page": 20,
+        "reason": "page_number"
+      },
+      {
+        "block_id": "p21-b0",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b1",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b2",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b3",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b4",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b5",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b6",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b7",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b8",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b9",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b10",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b11",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b12",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b13",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b14",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b15",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b16",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b17",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b18",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b19",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b20",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b21",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b22",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b23",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b24",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b25",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b26",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b27",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b28",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b29",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b30",
+        "page": 21,
+        "reason": "figure_axis_legend_or_diagram_fragment; retained via caption/context"
+      },
+      {
+        "block_id": "p21-b32",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b33",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b34",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b35",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b36",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b37",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b38",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b39",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b40",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b41",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b42",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b43",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p21-b44",
+        "page": 21,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b0",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b1",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b2",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b3",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b4",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b5",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b6",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b7",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b8",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b9",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b10",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b11",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b12",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b13",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p22-b14",
+        "page": 22,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b0",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b1",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b2",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b3",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b4",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b5",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b6",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b7",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b8",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b9",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b10",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b11",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b12",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b13",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b14",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p23-b15",
+        "page": 23,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b0",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b1",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b2",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b3",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b4",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b5",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b6",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b7",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b8",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b9",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b10",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b11",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b12",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b13",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p24-b14",
+        "page": 24,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b0",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b1",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b2",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b3",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b4",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b5",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b6",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b7",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b8",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b9",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b10",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b11",
+        "page": 25,
+        "reason": "references"
+      },
+      {
+        "block_id": "p25-b12",
+        "page": 25,
+        "reason": "references"
+      }
+    ]
+  }
+}

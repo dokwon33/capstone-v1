@@ -385,7 +385,7 @@ def load_reviewed_structure(
         or not data.get("reviewed_at")
         or data.get("status") != "approved"
     ):
-        raise ValueError("human approval identity/date/status are required")
+        raise ValueError("review identity/date/status are required")
     if not data.get("review_notes"):
         raise ValueError(
             "review notes must explain corrections/exclusions, not just approve"
@@ -413,6 +413,7 @@ def load_reviewed_structure(
         "reviewer": data["reviewer"],
         "reviewed_at": data["reviewed_at"],
         "review_notes": data["review_notes"],
+        "review_method": data.get("review_method", "unspecified"),
         "original_issues": report["issues"],
         "override_sha256": spec.structure_override_sha256,
     }

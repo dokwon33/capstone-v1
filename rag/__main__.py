@@ -44,7 +44,7 @@ def main(argv=None) -> int:
     ing.add_argument("--cache", type=Path)
     ing.add_argument("--report", type=Path, required=True)
     ing.add_argument("--thread-id", required=True)
-    for kind in ("query", "evaluate"):
+    for kind in ("retrieve", "query", "evaluate"):
         p = commands.add_parser(kind)
         p.add_argument("--manifest", type=Path, required=True)
         p.add_argument("--bindings", type=Path, required=True)
@@ -53,7 +53,7 @@ def main(argv=None) -> int:
         p.add_argument("--audit", type=Path, required=True)
         p.add_argument("--thread-id", required=True)
         p.add_argument("--output", type=Path, required=True)
-        if kind == "query":
+        if kind in {"retrieve", "query"}:
             p.add_argument("--request", type=Path, required=True)
         else:
             p.add_argument("--golden", type=Path, required=True)
@@ -103,33 +103,46 @@ def main(argv=None) -> int:
 
             manifest = Manifest.load(args.manifest)
             if args.command == "inspect":
-                from .pdf_parser import inspect_pdf
+                from .pdf_parser import ParseReviewRequired, load_blocks
 
-                reports = [
-                    inspect_pdf(args.manifest.parent / d.path, d)
-                    for d in manifest.documents
-                ]
+                reports = []
+                for document in manifest.documents:
+                    try:
+                        _, report = load_blocks(
+                            args.manifest.parent / document.path,
+                            document,
+                            args.manifest.parent,
+                        )
+                    except ParseReviewRequired as exc:
+                        report = exc.report
+                    reports.append(report)
+                unresolved = sum(
+                    sum(i["severity"] == "blocking" for i in r["issues"])
+                    for r in reports
+                    if r.get("review", {}).get("status") != "approved_override"
+                )
                 write_new(
                     args.output,
                     {
                         "purpose": manifest.purpose,
                         "reports": reports,
-                        "status": "review_required"
-                        if any(r["issues"] for r in reports)
-                        else "parsed",
+                        "status": "review_required" if unresolved else "parsed",
+                        "unresolved_blocking_count": unresolved,
                     },
                 )
+                if unresolved:
+                    return 2
             elif args.command == "prepare-model":
                 from .embeddings import prepare_model
 
                 print(prepare_model(manifest.embedding, args.destination))
             else:
-                from .bootstrap import load_policy
+                from .bootstrap import load_retrieval_policy
                 from .embeddings import E5Tokenizer, LocalE5Encoder
                 from .ingest import ingest
                 from .pdf_parser import ParseReviewRequired
 
-                policy, _ = load_policy(args.bindings)
+                policy, _ = load_retrieval_policy(args.bindings)
                 counter = E5Tokenizer(manifest.embedding)
                 encoder = LocalE5Encoder(manifest.embedding, counter)
                 try:
@@ -149,6 +162,44 @@ def main(argv=None) -> int:
                     )
                     raise
                 write_new(args.report, report)
+        elif args.command == "retrieve":
+            from .bootstrap import build_retriever
+            from .models import RagRequest
+            from .subgraph import JsonlAudit, RetrievalNodes
+
+            request = RagRequest.model_validate_json(
+                args.request.read_text(encoding="utf-8")
+            )
+            retriever, counter, store, policy, _ = build_retriever(
+                args.manifest, args.index, args.bindings, args.cache
+            )
+            nodes = RetrievalNodes(policy, counter, retriever, JsonlAudit(args.audit))
+            result = nodes.retrieve(nodes.initial_state(request, args.thread_id))
+            status = result["queries"][-1]["status"]
+            write_new(
+                args.output,
+                {
+                    "status": status,
+                    "mode": "retrieval_only",
+                    "llm_called": False,
+                    "thread_id": args.thread_id,
+                    "executed_at": datetime.now(timezone.utc).isoformat(),
+                    "index_fingerprint": store.fingerprint,
+                    "config": policy.model_dump(),
+                    "queries": result["queries"],
+                    "traces": result["traces"],
+                    "hits": [
+                        {
+                            "rank": rank,
+                            "score": hit.score,
+                            "scope": hit.scope,
+                            "chunk": hit.chunk.model_dump(mode="json"),
+                        }
+                        for rank, hit in enumerate(result["docs"], 1)
+                    ],
+                },
+            )
+            return 0 if status == "ok" else 2
         elif args.command in {"export-labels", "remap-candidates"}:
             from .store import DenseStore
 

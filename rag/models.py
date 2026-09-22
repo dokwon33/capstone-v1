@@ -145,15 +145,20 @@ class Manifest(StrictModel):
         return cls.model_validate_json(path.read_text(encoding="utf-8"))
 
 
-class RuntimePolicy(StrictModel):
-    """All values are explicitly supplied from config.py, never silently defaulted."""
+class RetrievalPolicy(StrictModel):
+    """Local ingestion/retrieval needs no generative model configuration."""
 
     top_k: Literal[5]
-    max_rewrite: Literal[2]
     search_retries: Literal[2]
+    use_cache: bool
+
+
+class RuntimePolicy(RetrievalPolicy):
+    """All values are explicitly supplied from config.py, never silently defaulted."""
+
+    max_rewrite: Literal[2]
     llm_max_attempts: Literal[3]
     recursion_limit: int = Field(ge=12)
-    use_cache: bool
     generator_model: str = Field(min_length=1)
     judge_model: str = Field(min_length=1)
     grade_temperature: Literal[0]
