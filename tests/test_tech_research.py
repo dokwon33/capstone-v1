@@ -34,10 +34,11 @@ def fake_web(with_results=True):
     def web_search(query, *, tech, intent, round_):
         calls.append((query, tech, intent, round_))
         results = [{"url": f"https://v.example/{tech}", "source_key": f"https://v.example/{tech}",
-                    "title": "가상", "content": "가상", "published_date": None}] if with_results else []
+                    "title": "가상", "content": "가상", "published_date": None,
+                    "document": "<document>가상</document>"}] if with_results else []
         log = {"round": round_, "tech": tech, "intent": intent, "query": query, "tool": "web",
                "status": "ok", "n_results": len(results)}
-        return {"results": results, "documents": "<document>가상</document>" if results else "", "log": log}
+        return results, log
     return web_search, calls
 
 
@@ -55,11 +56,11 @@ class FakeLLM:
         self.calls.append((self.schema, messages))
         if self.schema is tr.WebExtraction:
             return tr.WebExtraction(items=[
-                tr.WebEvidenceItem(query_no=0, doc_index=0, claim="가상 웹 주장", source_type="vendor",
+                tr.WebEvidenceItem(result_index=0, claim="가상 웹 주장", source_type="vendor",
                                    stance="positive", self_reported="unclear", scope="direct"),
-                tr.WebEvidenceItem(query_no=1, doc_index=0, claim="가상 웹 주장", source_type="vendor",
+                tr.WebEvidenceItem(result_index=0, claim="가상 웹 주장", source_type="vendor",
                                    stance="positive", self_reported="unclear", scope="direct"),  # 중복
-                tr.WebEvidenceItem(query_no=9, doc_index=0, claim="없는 문서", source_type="news",
+                tr.WebEvidenceItem(result_index=9, claim="없는 문서", source_type="news",
                                    stance="neutral", self_reported="no", scope="direct"),
             ])
         human = messages[1].content

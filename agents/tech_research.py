@@ -28,8 +28,7 @@ assert len(P.WEB_QUERY_TEMPLATES) <= config.WEB_SEARCH_LIMIT[AGENT_ID], "웹 검
 
 
 class WebEvidenceItem(BaseModel):
-    query_no: int = Field(description="근거가 나온 [쿼리 N]의 N")
-    doc_index: int = Field(description="해당 쿼리 결과 안의 <document index>")
+    result_index: int = Field(description="근거가 나온 [result_index=N]의 N")
     claim: str = Field(description="문서가 실제로 뒷받침하는 단일 주장")
     source_type: Literal["paper", "vendor", "news", "report", "community"]
     stance: Literal["positive", "negative", "neutral"]
@@ -105,30 +104,29 @@ def _collect_rag(tech: str, round_: int, seq: _Seq):
 def _collect_web(tech: str, spec: dict, round_: int, seq: _Seq):
     """웹 3회 → LLM으로 문서별 Evidence 추출. QueryLog는 래퍼가 만든 것을 그대로 쓴다."""
     queries: list[QueryLog] = []
-    responses = []
+    results, seen_keys = [], set()
     for _aspect, intent, template in P.WEB_QUERY_TEMPLATES:
-        resp = web_search(template.format(tech=tech), tech=tech, intent=intent, round_=round_)
-        queries.append(resp["log"])
-        responses.append(resp)
+        hits, log = web_search(template.format(tech=tech), tech=tech, intent=intent, round_=round_)
+        queries.append(log)
+        for h in hits:  # 쿼리 간 같은 문서는 1건만
+            if h["source_key"] not in seen_keys:
+                seen_keys.add(h["source_key"])
+                results.append(h)
 
-    if not any(r["results"] for r in responses):
+    if not results:
         return [], queries
 
-    human = "\n\n".join(
-        f'[쿼리 {i}] {r["log"]["query"]}\n{r["documents"] or "(결과 없음)"}' for i, r in enumerate(responses)
-    )
+    human = "\n\n".join(f"[result_index={i}]\n{r['document']}" for i, r in enumerate(results))
     system = P.WEB_EXTRACT_SYSTEM.format(tech=tech, reason=spec["reason"])
     extraction: WebExtraction = _invoke(WebExtraction, system, human)
 
     evidence: list[Evidence] = []
     seen: set[tuple] = set()
     for item in extraction.items:
-        if not (0 <= item.query_no < len(responses)) or not (
-            0 <= item.doc_index < len(responses[item.query_no]["results"])
-        ):
+        if not 0 <= item.result_index < len(results):
             logger.warning("웹 근거 추출: 존재하지 않는 문서 참조 제외 (%s, %s)", tech, item)
             continue
-        doc = responses[item.query_no]["results"][item.doc_index]
+        doc = results[item.result_index]
         key = (doc["source_key"], item.claim)
         if key in seen:
             continue

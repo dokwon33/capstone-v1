@@ -1,16 +1,16 @@
 """Tavily 웹 검색 래퍼. 트랙 C. 설계서 3-2 '검색 범위 및 재조사 동작', 5장 구현 매핑.
 
 - 웹 검색은 이 모듈의 `web_search`로만 호출한다 (Tavily 직접 호출 금지).
-- 호출마다 QueryLog(`tool="web"`)를 자동 생성해 반환한다. 에이전트는 받은 `log`를 queries에 붙이기만 한다.
+- 반환값은 `(results, log)` 튜플이다. 호출마다 QueryLog(`tool="web"`)를 자동 생성해 `log`로 돌려준다.
 - 실패는 백오프를 두고 최대 config.SEARCH_RETRY회 재시도하고, 그래도 실패하면 status="failed"와
   빈 결과를 반환한다. 이 모듈 밖으로 예외를 던지지 않는다.
-- 검색 결과는 `<document>` 태그로 감싼 문자열(`documents`)로도 반환한다. 에이전트는 이를 그대로 프롬프트에 넣는다.
+- 결과마다 본문을 `<document>` 태그로 감싼 `document`를 담아 반환한다. 에이전트는 이를 그대로 프롬프트에 넣는다.
 - USE_CACHE=True면 Tavily 원본 응답을 outputs/cache/web/에 저장·재사용한다.
 
 호출 측(에이전트) 사용 규칙:
 - `round_`는 state["retry_count"], `intent`는 쿼리 템플릿에서 정한 값을 넘긴다.
 - 반환된 `log`를 결과의 `queries`에 그대로 이어 붙인다. QueryLog를 직접 만들거나 고치지 않는다.
-- `documents`는 프롬프트에 그대로 넣는다. 각 <document>의 index는 `results`의 인덱스와 같다.
+- 각 결과의 `document`는 가공하지 않고 프롬프트에 넣는다.
 - 검색 상한(config.WEB_SEARCH_LIMIT 등) 계산은 호출 측 책임이다. 래퍼는 호출 횟수를 세지 않는다.
 - State 값(근거 claim 등)을 프롬프트에 넣을 때도 `format_document`로 감싼다.
 """
@@ -45,12 +45,7 @@ class WebResult(TypedDict):
     title: str
     content: str
     published_date: str | None  # YYYY-MM-DD. Tavily가 제공할 때만 (주로 topic="news")
-
-
-class WebSearchResponse(TypedDict):
-    results: list[WebResult]  # source_key 기준 중복 제거. 실패 시 []
-    documents: str  # <document> 태그로 감싼 결과. 프롬프트에 그대로 넣는다
-    log: QueryLog  # 실패 시 status="failed", n_results=0
+    document: str  # content를 <document> 태그로 감싼 값. 프롬프트에 그대로 넣는다
 
 
 def normalize_url(url: str) -> str:
@@ -77,15 +72,6 @@ def format_document(content: str, **attrs) -> str:
         f' {k}="{html.escape(str(v), quote=True)}"' for k, v in attrs.items() if v is not None
     )
     return f"<document{attr_str}>\n{html.escape(content, quote=False)}\n</document>"
-
-
-def _to_documents(results: list[WebResult]) -> str:
-    return "\n".join(
-        format_document(
-            r["content"], index=i, source=r["source_key"], title=r["title"], date=r["published_date"]
-        )
-        for i, r in enumerate(results)
-    )
 
 
 def _get_client():
@@ -186,14 +172,16 @@ def _parse_results(response: dict) -> list[WebResult]:
             continue
         seen.add(source_key)
         published = r.get("published_date")
-        published = published if isinstance(published, str) and published else None
+        published = published[:10] if isinstance(published, str) and published else None
+        title, content = str(r.get("title") or ""), str(r.get("content") or "")
         results.append(
             {
                 "url": url,
                 "source_key": source_key,
-                "title": str(r.get("title") or ""),
-                "content": str(r.get("content") or ""),
-                "published_date": published[:10] if published else None,
+                "title": title,
+                "content": content,
+                "published_date": published,
+                "document": format_document(content, source=source_key, title=title, date=published),
             }
         )
     return results
@@ -209,8 +197,10 @@ def web_search(
     include_domains: Sequence[str] | None = None,
     exclude_domains: Sequence[str] | None = None,
     max_results: int = MAX_RESULTS,
-) -> WebSearchResponse:
-    """논리 검색 1회 (상한 1회로 센다). 예외를 던지지 않는다.
+) -> tuple[list[WebResult], QueryLog]:
+    """논리 검색 1회 (상한 1회로 센다). `(results, log)`를 반환하며 예외를 던지지 않는다.
+
+    results: source_key 기준 중복 제거. 실패 시 [] (log.status="failed", n_results=0)
 
     include_domains/exclude_domains: source_imbalance 보완처럼 출처 유형을 바꿔 검색할 때 쓴다.
     """
@@ -233,4 +223,4 @@ def web_search(
         "status": "ok" if response is not None else "failed",
         "n_results": len(results),
     }
-    return {"results": results, "documents": _to_documents(results), "log": log}
+    return results, log
