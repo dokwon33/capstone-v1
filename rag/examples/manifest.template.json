@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "purpose": "production",
+  "embedding": {
+    "model_name": "intfloat/multilingual-e5-base",
+    "revision": null,
+    "dimension": 768,
+    "max_input_tokens": 512,
+    "local_path": null,
+    "device": "cpu",
+    "batch_size": 8
+  },
+  "chunking": {
+    "logical_tokens": 400,
+    "embedding_tokens": 400,
+    "overlap_tokens": 60
+  },
+  "documents": [
+    {
+      "doc_id": "turboquant",
+      "path": "papers/turboquant.pdf",
+      "version": "2504.19874v1",
+      "sha256": null,
+      "pages": 25,
+      "title": "TurboQuant",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "TurboQuant": "direct"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "itme",
+      "path": "papers/itme.pdf",
+      "version": "2606.12556v2",
+      "sha256": null,
+      "pages": 13,
+      "title": "ITME",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "ITME": "direct"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "pagedattention",
+      "path": "papers/pagedattention.pdf",
+      "version": null,
+      "sha256": null,
+      "pages": 16,
+      "title": "PagedAttention / vLLM",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "lmcache",
+      "path": "papers/lmcache.pdf",
+      "version": null,
+      "sha256": null,
+      "pages": 19,
+      "title": "LMCache",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "mooncake",
+      "path": "papers/mooncake.pdf",
+      "version": null,
+      "sha256": null,
+      "pages": 23,
+      "title": "Mooncake",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    },
+    {
+      "doc_id": "kv_survey",
+      "path": "papers/kv_survey.pdf",
+      "version": null,
+      "sha256": null,
+      "pages": 27,
+      "title": "System-Aware KV Cache Optimization Survey",
+      "publication_date": null,
+      "ref": null,
+      "scope_by_tech": {
+        "TurboQuant": "category",
+        "ITME": "category"
+      },
+      "self_reported": true,
+      "structure_override": null,
+      "structure_override_sha256": null,
+      "scope_by_section": {}
+    }
+  ]
+}

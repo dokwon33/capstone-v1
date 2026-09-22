@@ -1,0 +1,21 @@
+{
+  "tech": "ITME",
+  "aspect": "도메인 관련 한계",
+  "round": 0,
+  "agent_id": "domain_eval",
+  "intent": "negative",
+  "filters": {
+    "doc_ids": [
+      "itme",
+      "pagedattention",
+      "lmcache",
+      "mooncake",
+      "kv_survey"
+    ],
+    "scopes": [
+      "direct",
+      "category"
+    ]
+  },
+  "query": null
+}

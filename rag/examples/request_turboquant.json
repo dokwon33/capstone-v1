@@ -1,0 +1,21 @@
+{
+  "tech": "TurboQuant",
+  "aspect": "개요",
+  "round": 0,
+  "agent_id": "tech_research",
+  "intent": "neutral",
+  "filters": {
+    "doc_ids": [
+      "turboquant",
+      "pagedattention",
+      "lmcache",
+      "mooncake",
+      "kv_survey"
+    ],
+    "scopes": [
+      "direct",
+      "category"
+    ]
+  },
+  "query": null
+}

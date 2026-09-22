@@ -1,0 +1,23 @@
+{
+  "runtime_exports": {
+    "top_k": "TOP_K",
+    "max_rewrite": "MAX_REWRITE",
+    "search_retries": "SEARCH_RETRY",
+    "llm_max_attempts": "LLM_RETRY",
+    "recursion_limit": "RECURSION_LIMIT",
+    "use_cache": "USE_CACHE",
+    "generator_model": "GENERATOR_MODEL",
+    "judge_model": "JUDGE_MODEL",
+    "grade_temperature": "JUDGE_TEMPERATURE",
+    "generator_temperature": "JUDGE_TEMPERATURE"
+  },
+  "common_prompt_export": "COMMON_RULES",
+  "id_generator_export": "make_evidence_id",
+  "id_arguments": {
+    "agent_id": "agent",
+    "tech": "tech",
+    "round": "round_",
+    "sequence": "seq"
+  },
+  "chat_factory": "rag.provider:make_chat_model"
+}

@@ -1,0 +1,1631 @@
+{
+  "schema_version": 1,
+  "purpose": "production",
+  "index_fingerprint": null,
+  "questions": [
+    {
+      "qa_id": "B-dev-TQ-01-ko",
+      "leakage_group": "dev-TQ-01",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "개요",
+      "question": "TurboQuant 원문은 KV cache의 어떤 요소를 변경하며, 그 변경을 어떤 원리로 설명하는가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-01-en",
+      "leakage_group": "dev-TQ-01",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "개요",
+      "question": "Which part of the KV cache does TurboQuant change, and what mechanism explains the change in the original paper?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-02-ko",
+      "leakage_group": "dev-TQ-02",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "적용 범위",
+      "question": "TurboQuant 원문이 적용 대상으로 제시한 모델·연산·추론 구성과 적용 전제는 무엇인가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-02-en",
+      "leakage_group": "dev-TQ-02",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "적용 범위",
+      "question": "What models, operations, inference configurations, and prerequisites does the TurboQuant paper identify as applicable?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-03-ko",
+      "leakage_group": "dev-TQ-03",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "한계",
+      "question": "TurboQuant의 저자가 직접 언급한 한계와 추가 비용은 무엇이며 어떤 조건에서 발생하는가?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-03-en",
+      "leakage_group": "dev-TQ-03",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "한계",
+      "question": "What limitations and additional costs do the authors of TurboQuant explicitly discuss, and under what conditions?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-04-ko",
+      "leakage_group": "dev-TQ-04",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실험 조건",
+      "question": "TurboQuant의 실험에 사용한 모델·하드웨어·워크로드 구성은 무엇인가? 관련 조건을 함께 제시한 구간을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-04-en",
+      "leakage_group": "dev-TQ-04",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실험 조건",
+      "question": "Which models, hardware, and workload configurations are used in the TurboQuant experiments? Find passages that preserve the conditions together.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-05-ko",
+      "leakage_group": "dev-TQ-05",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실증 수준",
+      "question": "TurboQuant 원문에서 실제 구현·실험·시연을 수행했다고 설명하는 근거와 검증 환경은 무엇인가? TRL 숫자를 추정하지 마시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-05-en",
+      "leakage_group": "dev-TQ-05",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실증 수준",
+      "question": "What evidence and environments does the TurboQuant paper describe for implementation, experiments, or demonstrations? Do not infer a TRL number.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-06-ko",
+      "leakage_group": "dev-TQ-06",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "TurboQuant를 평가한 문맥 길이·모델 규모·동시 요청 조건은 무엇인가? 기업 문서 질의응답과 연결할 수 있는 실제 실험 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-06-en",
+      "leakage_group": "dev-TQ-06",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "What context lengths, model sizes, and concurrency settings are used to evaluate TurboQuant? Find actual experimental conditions relevant to enterprise document question answering.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-07-ko",
+      "leakage_group": "dev-TQ-07",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "도메인 관련 한계",
+      "question": "TurboQuant를 긴 기업 문서 질의응답에 적용할 때 검토할 메모리·품질·통합 제약은 무엇인가? 직접 근거와 도메인 배경을 구분하시오.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-TQ-07-en",
+      "leakage_group": "dev-TQ-07",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "도메인 관련 한계",
+      "question": "What memory, quality, and integration constraints should be examined for TurboQuant in long enterprise-document question answering? Distinguish direct evidence from domain background.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-01-ko",
+      "leakage_group": "dev-IT-01",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "개요",
+      "question": "ITME 원문은 KV cache의 어떤 요소를 변경하며, 그 변경을 어떤 원리로 설명하는가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-01-en",
+      "leakage_group": "dev-IT-01",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "개요",
+      "question": "Which part of the KV cache does ITME change, and what mechanism explains the change in the original paper?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-02-ko",
+      "leakage_group": "dev-IT-02",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "적용 범위",
+      "question": "ITME 원문이 적용 대상으로 제시한 모델·연산·추론 구성과 적용 전제는 무엇인가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-02-en",
+      "leakage_group": "dev-IT-02",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "적용 범위",
+      "question": "What models, operations, inference configurations, and prerequisites does the ITME paper identify as applicable?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-03-ko",
+      "leakage_group": "dev-IT-03",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "한계",
+      "question": "ITME의 저자가 직접 언급한 한계와 추가 비용은 무엇이며 어떤 조건에서 발생하는가?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-03-en",
+      "leakage_group": "dev-IT-03",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "한계",
+      "question": "What limitations and additional costs do the authors of ITME explicitly discuss, and under what conditions?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-04-ko",
+      "leakage_group": "dev-IT-04",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실험 조건",
+      "question": "ITME의 실험에 사용한 모델·하드웨어·워크로드 구성은 무엇인가? 관련 조건을 함께 제시한 구간을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-04-en",
+      "leakage_group": "dev-IT-04",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실험 조건",
+      "question": "Which models, hardware, and workload configurations are used in the ITME experiments? Find passages that preserve the conditions together.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-05-ko",
+      "leakage_group": "dev-IT-05",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실증 수준",
+      "question": "ITME 원문에서 실제 구현·실험·시연을 수행했다고 설명하는 근거와 검증 환경은 무엇인가? TRL 숫자를 추정하지 마시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-05-en",
+      "leakage_group": "dev-IT-05",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실증 수준",
+      "question": "What evidence and environments does the ITME paper describe for implementation, experiments, or demonstrations? Do not infer a TRL number.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-06-ko",
+      "leakage_group": "dev-IT-06",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "ITME를 평가한 문맥 길이·모델 규모·동시 요청 조건은 무엇인가? 기업 문서 질의응답과 연결할 수 있는 실제 실험 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-06-en",
+      "leakage_group": "dev-IT-06",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "What context lengths, model sizes, and concurrency settings are used to evaluate ITME? Find actual experimental conditions relevant to enterprise document question answering.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-07-ko",
+      "leakage_group": "dev-IT-07",
+      "split": "dev",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "도메인 관련 한계",
+      "question": "ITME를 긴 기업 문서 질의응답에 적용할 때 검토할 메모리·품질·통합 제약은 무엇인가? 직접 근거와 도메인 배경을 구분하시오.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-dev-IT-07-en",
+      "leakage_group": "dev-IT-07",
+      "split": "dev",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "도메인 관련 한계",
+      "question": "What memory, quality, and integration constraints should be examined for ITME in long enterprise-document question answering? Distinguish direct evidence from domain background.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-01-ko",
+      "leakage_group": "test-TQ-01",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "개요",
+      "question": "TurboQuant의 데이터 처리 흐름에서 KV의 생성·보관·사용 단계는 어떻게 연결되는가? 원문이 명시한 단계만 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-01-en",
+      "leakage_group": "test-TQ-01",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "개요",
+      "question": "How does the paper connect KV creation, storage, and use in the TurboQuant data flow? Retrieve only the stages it explicitly describes.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-02-ko",
+      "leakage_group": "test-TQ-02",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "적용 범위",
+      "question": "TurboQuant는 prefill과 decode 중 어떤 과정에 적용되는가? 원문의 명시적 적용 범위와 구분 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-02-en",
+      "leakage_group": "test-TQ-02",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "적용 범위",
+      "question": "Which of prefill and decode does TurboQuant apply to? Find the explicitly stated scope and distinctions in the paper.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-03-ko",
+      "leakage_group": "test-TQ-03",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "한계",
+      "question": "TurboQuant 원문이 검증 범위 밖으로 남겨 놓거나 후속 검토가 필요하다고 밝힌 조건은 무엇인가?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-03-en",
+      "leakage_group": "test-TQ-03",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "한계",
+      "question": "What conditions does the TurboQuant paper explicitly leave outside its validation scope or identify for further study?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-04-ko",
+      "leakage_group": "test-TQ-04",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실험 조건",
+      "question": "TurboQuant 실험의 비교 기준과 정밀도 설정, 측정 지표의 단위는 어떻게 정의되었는가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-04-en",
+      "leakage_group": "test-TQ-04",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실험 조건",
+      "question": "How are the baselines, precision settings, and measurement units defined in the TurboQuant experiments?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-05-ko",
+      "leakage_group": "test-TQ-05",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실증 수준",
+      "question": "TurboQuant의 검증은 이론 분석·시뮬레이션·실제 장비 실험 가운데 무엇을 포함하는가? 각 범위를 원문으로 구분하시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-05-en",
+      "leakage_group": "test-TQ-05",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "TurboQuant",
+      "aspect": "실증 수준",
+      "question": "Which of theoretical analysis, simulation, and physical-hardware experiments are included in the TurboQuant validation? Distinguish each using the paper.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-06-ko",
+      "leakage_group": "test-TQ-06",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "TurboQuant 평가 환경에서 처음 읽는 문서와 재사용 가능한 prefix 또는 반복 요청을 어떻게 구성했는가? 명시된 워크로드 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-06-en",
+      "leakage_group": "test-TQ-06",
+      "split": "test",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "How does the TurboQuant evaluation workload configure first-time document access, reusable prefixes, or repeated requests? Retrieve only explicit workload conditions.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-07-ko",
+      "leakage_group": "test-TQ-07",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "도메인 관련 한계",
+      "question": "TurboQuant 관련 원문은 데이터 변환·이동·재사용 조건이 첫 토큰 지연 또는 요청 처리에 주는 제약을 어떻게 설명하는가? 범주 근거를 기술 자체 성과로 옮기지 마시오.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-TQ-07-en",
+      "leakage_group": "test-TQ-07",
+      "split": "test",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "TurboQuant",
+      "aspect": "도메인 관련 한계",
+      "question": "How do the sources relevant to TurboQuant describe constraints from data conversion, movement, or reuse on first-token latency or request processing? Do not transfer category-level results to the target technology.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "turboquant",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-01-ko",
+      "leakage_group": "test-IT-01",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "개요",
+      "question": "ITME의 데이터 처리 흐름에서 KV의 생성·보관·사용 단계는 어떻게 연결되는가? 원문이 명시한 단계만 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-01-en",
+      "leakage_group": "test-IT-01",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "개요",
+      "question": "How does the paper connect KV creation, storage, and use in the ITME data flow? Retrieve only the stages it explicitly describes.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-02-ko",
+      "leakage_group": "test-IT-02",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "적용 범위",
+      "question": "ITME는 prefill과 decode 중 어떤 과정에 적용되는가? 원문의 명시적 적용 범위와 구분 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-02-en",
+      "leakage_group": "test-IT-02",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "적용 범위",
+      "question": "Which of prefill and decode does ITME apply to? Find the explicitly stated scope and distinctions in the paper.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-03-ko",
+      "leakage_group": "test-IT-03",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "한계",
+      "question": "ITME 원문이 검증 범위 밖으로 남겨 놓거나 후속 검토가 필요하다고 밝힌 조건은 무엇인가?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-03-en",
+      "leakage_group": "test-IT-03",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "한계",
+      "question": "What conditions does the ITME paper explicitly leave outside its validation scope or identify for further study?",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-04-ko",
+      "leakage_group": "test-IT-04",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실험 조건",
+      "question": "ITME 실험의 비교 기준과 정밀도 설정, 측정 지표의 단위는 어떻게 정의되었는가?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-04-en",
+      "leakage_group": "test-IT-04",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실험 조건",
+      "question": "How are the baselines, precision settings, and measurement units defined in the ITME experiments?",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-05-ko",
+      "leakage_group": "test-IT-05",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실증 수준",
+      "question": "ITME의 검증은 이론 분석·시뮬레이션·실제 장비 실험 가운데 무엇을 포함하는가? 각 범위를 원문으로 구분하시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-05-en",
+      "leakage_group": "test-IT-05",
+      "split": "test",
+      "language": "en",
+      "agent_id": "tech_research",
+      "tech": "ITME",
+      "aspect": "실증 수준",
+      "question": "Which of theoretical analysis, simulation, and physical-hardware experiments are included in the ITME validation? Distinguish each using the paper.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-06-ko",
+      "leakage_group": "test-IT-06",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "ITME 평가 환경에서 처음 읽는 문서와 재사용 가능한 prefix 또는 반복 요청을 어떻게 구성했는가? 명시된 워크로드 조건을 찾으시오.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-06-en",
+      "leakage_group": "test-IT-06",
+      "split": "test",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "실험 환경(문맥 길이·모델 규모)",
+      "question": "How does the ITME evaluation workload configure first-time document access, reusable prefixes, or repeated requests? Retrieve only explicit workload conditions.",
+      "intent": "neutral",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-07-ko",
+      "leakage_group": "test-IT-07",
+      "split": "test",
+      "language": "ko",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "도메인 관련 한계",
+      "question": "ITME 관련 원문은 데이터 변환·이동·재사용 조건이 첫 토큰 지연 또는 요청 처리에 주는 제약을 어떻게 설명하는가? 범주 근거를 기술 자체 성과로 옮기지 마시오.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "qa_id": "B-test-IT-07-en",
+      "leakage_group": "test-IT-07",
+      "split": "test",
+      "language": "en",
+      "agent_id": "domain_eval",
+      "tech": "ITME",
+      "aspect": "도메인 관련 한계",
+      "question": "How do the sources relevant to ITME describe constraints from data conversion, movement, or reuse on first-token latency or request processing? Do not transfer category-level results to the target technology.",
+      "intent": "negative",
+      "filters": {
+        "doc_ids": [
+          "itme",
+          "pagedattention",
+          "lmcache",
+          "mooncake",
+          "kv_survey"
+        ],
+        "scopes": [
+          "direct",
+          "category"
+        ]
+      },
+      "answerable": null,
+      "gold": [],
+      "review_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  ]
+}

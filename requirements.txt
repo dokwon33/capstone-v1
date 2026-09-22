@@ -6,3 +6,6 @@ pydantic>=2.13
 python-dotenv
 pytest>=9.0
 tavily-python>=0.7
+
+# Track B: offline RAG ingestion, indexing, and unit-test dependencies.
+-r rag/requirements-core.txt

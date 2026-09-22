@@ -1,0 +1,23 @@
+{
+  "runtime_exports": {
+    "top_k": "TOP_K",
+    "max_rewrite": "MAX_REWRITE",
+    "search_retries": "REPLACE_SEARCH_RETRY_EXPORT",
+    "llm_max_attempts": "REPLACE_LLM_MAX_ATTEMPTS_EXPORT",
+    "recursion_limit": "REPLACE_RECURSION_LIMIT_EXPORT",
+    "use_cache": "USE_CACHE",
+    "generator_model": "GENERATOR_MODEL",
+    "judge_model": "JUDGE_MODEL",
+    "grade_temperature": "REPLACE_GRADE_TEMPERATURE_EXPORT",
+    "generator_temperature": "REPLACE_GENERATOR_TEMPERATURE_EXPORT"
+  },
+  "common_prompt_export": "REPLACE_COMMON_PROMPT_EXPORT",
+  "id_generator_export": "REPLACE_EVIDENCE_ID_GENERATOR_EXPORT",
+  "id_arguments": {
+    "agent_id": "REPLACE_AGENT_ARGUMENT",
+    "tech": "REPLACE_TECH_ARGUMENT",
+    "round": "REPLACE_ROUND_ARGUMENT",
+    "sequence": "REPLACE_SEQUENCE_ARGUMENT"
+  },
+  "chat_factory": "rag.provider:make_chat_model"
+}
