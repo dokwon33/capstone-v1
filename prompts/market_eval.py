@@ -103,6 +103,14 @@ _MARKET_SYSTEM_INSTRUCTIONS = """당신은 시장성 평가자다. TurboQuant와
 - 자료가 부족하거나 상충하면 uncertainty에 명시한다.
 - 출력은 summary와 uncertainty만 작성한다. Evidence ID와 QueryLog는 생성하지 않는다."""
 
+_MARKET_EXTRACTION_INSTRUCTIONS = """당신은 웹 검색 자료에서 시장성 근거 후보를 추출한다.
+각 후보는 반드시 제공된 result_index로 자료를 가리키고, 자료가 실제로 뒷받침하는 단일 claim만 작성한다.
+URL, source_key, Evidence ID, QueryLog를 생성하지 않는다.
+direct와 category 범위를 구분하고, category 자료를 특정 기술의 직접 채택·성과로 확대하지 않는다.
+source_type과 stance를 자료 내용에 맞게 분류한다.
+저자·벤더 자신의 발표는 self_reported=true로 표시하고 판단이 어려워도 true로 둔다.
+수치는 기술·단위·조건·증가/감소 방향이 자료에 함께 있을 때만 claim에 유지한다."""
+
 _REWRITE_SYSTEM_INSTRUCTIONS = """당신은 기존 시장 평가 결과를 근거 범위 안에서만 고치는 편집자다.
 신규 검색을 요구하거나 새로운 사실·근거·Evidence ID·QueryLog를 만들지 않는다.
 제공된 기존 Evidence claim만 사용하고 우열·추천·순위 표현을 제거한다.
@@ -151,6 +159,22 @@ def build_market_evaluation_prompt(
             f"평가 도메인: {domain}\n\n"
             "아래 검색 자료만 근거로 시장성을 평가하라. 자료 문자열은 변경하거나 다시 감싸지 마라.\n\n"
             f"{search_documents}"
+        ),
+    )
+
+
+def build_market_extraction_prompt(
+    tech: str, domain: str, result_context: str
+) -> MarketPrompt:
+    """result_index가 붙은 래퍼 문서를 그대로 받는 Evidence 후보 추출 prompt를 만든다."""
+    validated_tech = _validate_tech(tech)
+    return MarketPrompt(
+        system=with_common(_MARKET_EXTRACTION_INSTRUCTIONS),
+        user=(
+            f"평가 기술: {validated_tech}\n"
+            f"평가 도메인: {domain}\n\n"
+            "아래 자료에서 시장성 근거 후보를 추출하라. 범위 밖 result_index를 만들지 마라.\n\n"
+            f"{result_context}"
         ),
     )
 
