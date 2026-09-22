@@ -1,5 +1,9 @@
 """메인 그래프 조립. 설계서 5장. 트랙 A."""
+from contextlib import contextmanager
+from pathlib import Path
+
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import RetryPolicy
 
@@ -44,3 +48,17 @@ def build_graph(checkpointer=None):
     g.add_edge("record_failure", END)
 
     return g.compile(checkpointer=checkpointer or MemorySaver())
+
+
+@contextmanager
+def sqlite_checkpointer(db_path):
+    """영속 체크포인터. `app.py`가 이 컨텍스트 안에서 build_graph(checkpointer)와 invoke를 호출한다.
+
+    파일 기반 SQLite에 체크포인트를 저장하므로, 프로세스가 죽은 뒤 같은 thread_id로
+    다시 실행해도 마지막 체크포인트부터 재개할 수 있다 (DEVELOPMENT_RULES.md 7절).
+    테스트·단순 개발 실행은 build_graph(checkpointer=None)의 기본값(MemorySaver, 인메모리)을 쓴다.
+    """
+    path = Path(db_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with SqliteSaver.from_conn_string(str(path)) as saver:
+        yield saver

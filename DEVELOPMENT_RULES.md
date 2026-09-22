@@ -128,7 +128,7 @@ RAG:
 - 검색 실패는 래퍼 안에서 처리한다. 백오프를 두고 최대 2회 재시도하고, 그래도 실패하면 `status="failed"`로 기록한 뒤 빈 결과를 반환한다. **노드 밖으로 예외를 던지지 않는다.**
 - LLM 호출 오류는 그래프 등록 시 지정한 `retry_policy`(최대 3회)가 처리한다. 노드 안에서 LLM 예외를 삼키지 않는다.
 - `except: pass`나 조용한 폴백을 쓰지 않는다. 실패는 기록으로 남긴다.
-- **병렬 브랜치 예외 격리와 재개**: 메인 그래프는 `compile(checkpointer=MemorySaver())`로 컴파일한다(`graph/builder.py`, 트랙 A). 평가 3종 중 하나가 `retry_policy` 소진까지 예외를 던지면 해당 슈퍼스텝의 State 업데이트는 적용되지 않지만, 그 이전에 성공한 노드의 쓰기는 체크포인터가 보존한다. 실행은 중단하고 오류를 기록한 뒤, 같은 `thread_id`로 다시 실행해 재개한다(이미 성공한 노드는 재실행하지 않음). 새 `thread_id`로 실행하면 처음부터 다시 돈다.
+- **병렬 브랜치 예외 격리와 재개**: `app.py`는 `graph/builder.py`의 `sqlite_checkpointer`(영속 SQLite, `config.CHECKPOINT_DB`)로 그래프를 컴파일해 실행한다. 평가 3종 중 하나가 `retry_policy` 소진까지 예외를 던지면 해당 슈퍼스텝의 State 업데이트는 적용되지 않지만, 그 이전에 성공한 노드의 쓰기는 체크포인터가 보존한다. `app.py`는 예외를 잡아 `thread_id`를 안내하고 다시 던진다. 같은 `--thread-id`로 재실행하면 `graph.get_state`로 미완료 체크포인트를 확인해 새 입력 없이(`invoke(None, ...)`) 이어서 진행하며, 이미 성공한 노드는 재실행하지 않는다. 새 `thread_id`로 실행하면 처음부터 다시 돈다. `build_graph(checkpointer=None)`의 기본값(`MemorySaver`, 인메모리)은 테스트·단순 개발 실행에만 쓴다.
 
 ## 8. 테스트와 fixture 규칙
 
