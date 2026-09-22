@@ -153,6 +153,7 @@ RAG:
   - 해당 트랙 단위 테스트 통과
   - 전체 파이프라인 1회 실행 성공(stub 포함)
   - 계약 파일을 건드렸으면 A 승인
+- 위 두 조건(단위 테스트, 파이프라인 1회 실행)은 `.github/workflows/ci.yml`이 push·PR마다 자동으로 검사한다. CI가 실패한 PR은 병합하지 않는다.
   - 다른 트랙 파일을 건드렸으면 그 담당자 승인
 - 병합은 A가 한다.
 - 통합 순서는 그래프 흐름을 따른다: tech_research → 평가 3종 → synthesis → judge → report_writer → final_check. stub을 하나 교체할 때마다 전체를 실행한다.

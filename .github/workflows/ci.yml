@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: pytest -q
+
+      - name: Smoke test full pipeline (stub run)
+        # DEVELOPMENT_RULES.md 9절: 병합 전 "전체 파이프라인 1회 실행 성공"을 CI에서 강제한다.
+        # 실제 API 키 없이 도는지만 확인한다 (LLM/웹 호출 노드는 아직 stub).
+        run: python app.py --thread-id ci-smoke
+
+      - name: Check final_report was produced
+        run: test -f outputs/final_report.md
