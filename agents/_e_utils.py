@@ -10,6 +10,8 @@ Evidence 순번·재조사 모드 판정·QueryLog 병합은 agents/_eval_base.p
 import re
 from urllib.parse import urlsplit
 
+import config
+
 RESULT_KEYS = ("market_result", "stakeholder_result", "domain_result")
 KEY_TO_PERSPECTIVE = {"market_result": "market", "stakeholder_result": "stakeholder", "domain_result": "domain"}
 
