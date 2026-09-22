@@ -9,9 +9,10 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 import config
-from agents._e_utils import KEY_TO_PERSPECTIVE, as_document, evidence_index, get_generator, referenced_ids, strip_unknown_cites
+from agents._e_utils import KEY_TO_PERSPECTIVE, evidence_index, get_generator, referenced_ids, strip_unknown_cites
 from prompts import synthesis as P
 from prompts.common import with_common
+from tools.search import format_document
 
 log = logging.getLogger(__name__)
 
@@ -100,7 +101,7 @@ def _build_context(state: dict) -> tuple[str, set[str]]:
         f"{idx[i]['source_type']} | stance={idx[i]['stance']} | self_reported={idx[i]['self_reported']} | {idx[i]['claim']}"
         for i in sorted(allowed)
     ]
-    ev_block = as_document("id | tech | perspective | scope | source_type | stance | self_reported | claim\n" + "\n".join(ev_lines), name="evidence")
+    ev_block = format_document("id | tech | perspective | scope | source_type | stance | self_reported | claim\n" + "\n".join(ev_lines), name="evidence")
     return "\n\n".join(blocks) + "\n\n# 참조 근거\n" + ev_block, allowed
 
 
