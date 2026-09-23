@@ -24,10 +24,11 @@ jobs:
       - name: Run unit tests
         run: pytest -q
 
-      - name: Smoke test full pipeline (stub run)
+      - name: Smoke test full pipeline (offline fixture run)
         # DEVELOPMENT_RULES.md 9절: 병합 전 "전체 파이프라인 1회 실행 성공"을 CI에서 강제한다.
-        # 실제 API 키 없이 도는지만 확인한다 (LLM/웹 호출 노드는 아직 stub).
-        run: python app.py --thread-id ci-smoke
+        # CI에는 API 키·모델 설정·RAG runtime 의존성이 없으므로, LLM/웹/RAG 호출 없이
+        # 고정 fixture로 그래프 전체 흐름을 실행하는 --smoke-fixture 모드를 사용한다.
+        run: python app.py --smoke-fixture --thread-id ci-smoke
 
       - name: Check final_report was produced
-        run: test -f outputs/final_report.md
+        run: test -f outputs/smoke/final_report.md
