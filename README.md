@@ -141,9 +141,8 @@ python app.py --smoke-fixture --thread-id demo   # LLM·웹·RAG 없이 라우�
 
 ## Contributors
 
-- **이도권** : LangGraph State·builder 설계, Supervisor 라우팅·dispatch, 보고서 품질 평가(`report_eval`), 결정 로그(trace), checkpoint 재개, 실패 기록
-- **김보석** : PDF parsing·구조 기반 chunking, E5 embedding, SQLite dense store, RAG subgraph, retrieval 평가
-- **김선주** : Tavily 웹 검색 wrapper, Tech Research Agent, QueryLog, 검색 재시도·캐시·URL 정규화
-- **김주은** : Market/Stakeholder Eval Agent, 평가 공통 로직, 보완 검색·rewrite, Evidence 연결
-- **장인우** : Domain Eval Agent, Synthesis Agent, Report Writer 및 관련 prompt
-- **조영우** : 근거 충분성 Rubric(judge), Final Check의 인용·수치·중립성 검증, CI smoke 실행
+- **김선주** : Tech Research·Market Evaluation Agent 구현, Evidence 수집 및 근거 충분성 판정 연계
+- **김주은** : Supervisor Routing·State Schema 검증, 품질 평가 4항목 및 재작업 Loop 테스트, 종료 조건·Reducer·디렉토리 구조 검수
+- **이도권** : Supervisor Graph 및 Dynamic Routing 구현, 근거 충분성 기반 재작업·종료 제어 로직 개발
+- **장인우** : Stakeholder·Domain Evaluation Agent 및 Synthesis 구현, 다관점 결과 통합 및 재조사 연계
+- **조영우** : Report Writer·Final Check·Report Evaluation 구현, 품질 피드백 연계 및 LangSmith Tracing 검증
