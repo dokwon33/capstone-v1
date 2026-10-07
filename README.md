@@ -11,7 +11,8 @@
 - **동적 처리** : 고정 순서(노드 A → B → C)를 따르지 않는다. `supervisor`가 매 턴 **State의 빈 칸**을 보고 다음 노드를 고른다.
   - 비어 있는 관점 결과만 병렬 dispatch한다 (체크포인트 재개 시 남은 관점만 다시 실행).
   - `supervisor`가 근거 충분성 Rubric을 직접 평가하고, 통과 전에는 보고서 작성으로 넘어가지 않는다 → 보고서까지의 스텝 수가 근거 상태에 따라 달라진다.
-  - 근거 부족 시 **문제 있는 관점 에이전트만** 재조사시키고, 보고서 품질 미달 시 `report_writer`로 되돌아가는 Loop를 돈다.
+  - 근거 부족 시 **문제 있는 관점 에이전트만** 재조사시킨다.
+  - 보고서 품질 미달 시 **미달 구간을 만든 노드**로 되돌린다 — SUMMARY → `report_writer`, 시사점 → `synthesis`, 근거 편중·관점 누락 → 해당 평가 에이전트. 재작업 노드는 자기 몫의 실패 사유를 받아 프롬프트에 반영한다.
   - 모든 분기 사유는 `outputs/trace/{thread_id}.jsonl`에 사람이 읽을 수 있는 문장으로 남는다.
 
 ## Selected Technologies
@@ -27,7 +28,7 @@
 - **웹 조사** : Tavily 검색 결과를 정규화·캐시하고, 모든 호출을 `QueryLog`로 기록
 - **근거 추적** : LLM은 URL을 생성하지 않고 `result_index`로 검색 결과를 선택하며, 코드가 이를 실제 출처(`source_key`)와 `Evidence`로 연결. 근거가 부족하면 임의 사실 대신 uncertainty를 남김
 - **확증 편향 방지 전략** : 두 기술에 같은 query template 적용, positive·negative·neutral 의도를 균등 배분한 검색 (Market 기술별 최대 6회, Stakeholder는 경쟁사/도입사·개발자/투자·산업 3그룹 × 3의도 최대 9회), 부정 근거·비자가보고 출처 포함 여부를 Rubric으로 검증
-- **보고서 품질 평가** : 보고서 생성 후 `report_eval`이 4항목을 Hybrid(rule + LLM) 방식으로 판정하고, 미달 시 재작성 Loop
+- **보고서 품질 평가** : 보고서 생성 후 `report_eval`이 4항목을 Hybrid(rule + LLM) 방식으로 판정하고, 미달 시 해당 구간의 담당 노드로 Loop (상한 전에는 최소 1회 재작업)
 
   | 항목 | 방식 | 판정 근거 |
   |---|---|---|
@@ -61,13 +62,23 @@
 
 ## State Schema
 
-- **제어 vs 페이로드 분리** : State를 두 블록으로 분리. 작업 페이로드(`tech_profiles`, `trl`, `*_result`, `evidence`, `synthesis`, `report`, `final_report`)는 하위 에이전트만 생산하고, 제어 메타데이터(`trace_id`, `step_count`, `retry_count`, `rewrite_count`, `node_status`, `last_error`, `last_decision`)는 supervisor의 라우팅 판단용 최소치만 둔다. supervisor는 재작업 시 낡은 산출물을 빈 값으로 무효화할 뿐이다 (테스트로 강제).
+- **제어 vs 페이로드 분리 (레이어드 구성)** : 상위 State를 세 TypedDict로 나누고 `class State(PayloadState, ControlState, VerdictState)`로 합성한다.
+
+  | 블록 | 키 | 쓰는 주체 |
+  |---|---|---|
+  | `PayloadState` 작업 페이로드 | `selected_techs`, `domain`, `tech_profiles`, `trl`, `*_result`, `evidence`, `synthesis`, `report`, `final_report`, `final_check_log` | 하위 에이전트 |
+  | `ControlState` 제어 메타데이터 | `trace_id`, `step_count`, `retry_count`, `rewrite_count`, `node_status`, `last_error`, `last_decision` | supervisor (`node_status`/`last_error`는 `graph/dispatch.py` 래퍼) |
+  | `VerdictState` 판정 결과 | `validation`, `report_quality`, `failure_record` | supervisor, `report_eval`, `record_failure` |
+
+  supervisor는 페이로드를 **생산하지 않고**, 재작업으로 낡게 되는 산출물을 빈 값으로 **무효화**할 뿐이다 (근거 재조사 → `synthesis`, 보고서 재작성 → `report`/`final_report`, 품질 미달로 평가 에이전트 재작업 → 세 가지 모두). `tests/test_graph.py::test_supervisor_never_produces_payload_only_invalidates`가 검증한다.
+
+  계층은 둘이다. **상위**는 위의 `State`, **하위**는 `rag/subgraph.py`의 `RagState`(검색 질의·문서 목록·관련성 판정·재작성 횟수 등 RAG 루프 내부 상태)다. `RagState`는 상위로 병합되지 않고 `RagResult`(`evidence`, `grade`, `uncertainty`, `confidence`)만 올라온다. 평가 3종·`synthesis`·`report_writer`는 내부 루프가 없는 단일 호출 노드라 별도 하위 State를 두지 않았다.
 - **관측성 위치** : 결정 로그 본문은 State에 쌓지 않고 `common/trace.py`가 `outputs/trace/{trace_id}.jsonl`에 적재. State에는 재개 시 필요한 **최신 결정 1건**(`last_decision`)만 남긴다.
 - **지속성 비용** : 체크포인트마다 State 전체가 직렬화되므로 무한 증식 필드를 두지 않는다. 문서·검색 본문은 저장하지 않고 `Evidence`는 `claim`/`ref`/`source_key` 등 추적 메타만 보관, `evidence`는 id 기준 교체 병합, `report`는 최신본만 덮어쓴다.
 - **상관** : `trace_id`가 State와 외부 로그(결정 JSONL, RAG 감사 로그, LangSmith run)를 잇는 키. `app.py`가 `thread_id`와 같은 값을 넣어 재개한 실행의 로그가 흩어지지 않는다.
 - **재개/복구** : 재개 최소치는 `node_status` + `retry_count`/`rewrite_count` + `last_error` + `last_decision`. 같은 `thread_id`로 재실행하면 SQLite 체크포인트에서 이어간다. `graph/dispatch.py`의 `as_subagent` 래퍼가 하위 에이전트 실패를 예외 대신 State로 보고해, 계속/제외 여부를 supervisor가 정한다.
 - **동시 처리** : 병렬 dispatch로 같은 턴에 여러 노드가 쓰는 필드에 reducer 적용 — `evidence`(`merge_by_id`), `node_status`(`merge_status`, 키 단위 병합), `last_error`(`keep_latest_error`). 관점별 결과는 키가 달라 충돌하지 않는다.
-- **종료 보장** : 세 겹의 상한 — `MAX_STEPS=20`(supervisor 방문), `MAX_RETRY=2`(근거 부족 재조사), `MAX_REWRITE=2`(품질 미달 재작성). LangGraph `recursion_limit=60`은 마지막 안전망. `report_eval`이 재작성으로 해소되지 않는 미달이라 판정하면 상한까지 헛돌지 않고 즉시 종료한다.
+- **종료 보장** : 세 겹의 상한 — `MAX_STEPS=20`(supervisor 방문), `MAX_RETRY=2`(근거 부족 재조사), `MAX_REWRITE=2`(품질 미달 재작성). LangGraph `recursion_limit=60`은 마지막 안전망. 상한을 소진하면 미달 항목을 기록한 채 보고서를 낸다 (soft-fail).
 
 ## Architecture
 
@@ -78,7 +89,7 @@
 
 ```
 기술 조사 → 관점 수집(병렬) → 종합 → 근거 충분성 평가 ─(부족)→ 해당 관점만 재조사
-                                            └(통과)→ 보고서 작성 → 검수 → 품질 평가 ─(미달)→ 재작성
+                                            └(통과)→ 보고서 작성 → 검수 → 품질 평가 ─(미달)→ 담당 노드 재작업
                                                                               └(통과)→ END
 상한 초과 / 진행 불가 → record_failure → END
 ```
