@@ -1,0 +1,41 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	supervisor(supervisor)
+	tech_research(tech_research)
+	market_eval(market_eval)
+	stakeholder_eval(stakeholder_eval)
+	domain_eval(domain_eval)
+	synthesis(synthesis)
+	report_writer(report_writer)
+	final_check(final_check)
+	report_eval(report_eval)
+	record_failure(record_failure)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> supervisor;
+	domain_eval --> supervisor;
+	final_check --> supervisor;
+	market_eval --> supervisor;
+	report_eval --> supervisor;
+	report_writer --> supervisor;
+	stakeholder_eval --> supervisor;
+	supervisor -.-> __end__;
+	supervisor -.-> domain_eval;
+	supervisor -.-> final_check;
+	supervisor -.-> market_eval;
+	supervisor -.-> record_failure;
+	supervisor -.-> report_eval;
+	supervisor -.-> report_writer;
+	supervisor -.-> stakeholder_eval;
+	supervisor -.-> synthesis;
+	supervisor -.-> tech_research;
+	synthesis --> supervisor;
+	tech_research --> supervisor;
+	record_failure --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

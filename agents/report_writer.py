@@ -16,6 +16,8 @@ from agents._e_utils import (
     evidence_index,
     format_cite,
     get_generator,
+    format_quality_feedback,
+    quality_feedback,
     referenced_ids,
     strip_unknown_cites,
 )
@@ -95,6 +97,19 @@ def _summary_context(state: dict) -> str:
     return "\n".join(lines)
 
 
+def _quality_revision(state: dict) -> str:
+    """직전 품질 평가에서 SUMMARY가 걸린 항목을 재작성 지시로 만든다.
+
+    품질 루프가 '평가 → 재생성'이 아니라 '평가 → 개선'이 되려면, 재작성 요청을 받은 쪽이
+    왜 다시 불렸는지 알아야 한다. SUMMARY는 이 노드가 LLM으로 쓰는 유일한 구간이므로,
+    report_eval이 report_writer를 담당으로 지목한 미달만 여기로 들어온다.
+    """
+    failures = quality_feedback(state, "report_writer")
+    if not failures:
+        return ""
+    return "\n" + P.QUALITY_REVISION.format(issues=format_quality_feedback(failures))
+
+
 def _write_summary(state: dict, llm, allowed: set[str]) -> str:
     if not allowed:
         # 참조 근거가 없으면 요약할 평가도 없다. 새 주장을 만들지 않도록 LLM을 부르지 않는다
@@ -102,7 +117,11 @@ def _write_summary(state: dict, llm, allowed: set[str]) -> str:
     model = llm or get_generator()
     messages = [
         ("system", with_common(P.SUMMARY_SYSTEM)),
-        ("human", P.SUMMARY_HUMAN.format(domain=state.get("domain", config.DOMAIN), context=_summary_context(state))),
+        ("human", P.SUMMARY_HUMAN.format(
+            domain=state.get("domain", config.DOMAIN),
+            context=_summary_context(state),
+            quality_feedback=_quality_revision(state),
+        )),
     ]
     text = model.invoke(messages).content.strip()
     text, removed = strip_unknown_cites(text, allowed)

@@ -260,13 +260,23 @@ def test_evidence_ids_use_contract_generator_and_findings_reference_real_ids():
         assert result["market_result"][tech]["findings"] == [expected_id]
 
 
-def test_missing_published_date_is_excluded_instead_of_inventing_date():
+def test_missing_published_date_is_kept_as_nd_without_inventing_a_date():
+    """발행일이 없어도 근거를 버리지 않는다. 다만 날짜를 지어내지도 않는다.
+
+    2026-10-07 실제 실행에서 이 관점이 검색 결과를 전부 폐기해 근거 0건이 됐고, judge가
+    "공개 정보 부재"로 조기 종료했다. Tavily는 topic="news"에서만 published_date를 주므로
+    날짜 없음이 정상에 가깝다. domain_eval과 같이 "n.d."로 보존하고, 최신성을 판단할 수
+    없다는 사실만 uncertainty에 남긴다.
+    """
     result = build_market_eval(
         llm=_llm(), search_fn=ContractFakeSearch(missing_dates=True)
     )(_initial_state())
-    assert result["evidence"] == []
+
+    assert result["evidence"], "발행일이 없다고 근거를 버리면 안 된다"
+    assert all(item["date"] == "n.d." for item in result["evidence"])  # 날짜를 지어내지 않았다
+    assert all("발행일 미상" in item["ref"] for item in result["evidence"])
     assert all(
-        "YYYY-MM-DD 계약을 충족하지 못한" in item["uncertainty"]
+        "n.d.로 기록한 근거" in item["uncertainty"]
         for item in result["market_result"].values()
     )
 

@@ -1,7 +1,12 @@
-"""judge — 트랙 F. validation과 retry_count를 쓰는 유일한 노드 (설계서 4장 'Judge 판정 Rubric', 5장 'judge 판정 로직').
+"""근거 충분성 판정 Rubric (설계서 4장 'Judge 판정 Rubric', 5장 'judge 판정 로직').
+
+Supervisor 패턴에서 이 모듈은 **그래프 노드가 아니라 판정 라이브러리**다. graph/supervisor.py가
+evaluate_sufficiency()로 Rubric을 돌리고 decide_retry()로 재작업 대상을 정한다. 충분성 평가의
+주체를 supervisor로 두어야 "Supervisor가 근거 충분성을 평가한 후에 보고서 작성이 진행된다"는
+제약이 코드로 성립하기 때문이다.
 
 읽는 키: trl, market_result, stakeholder_result, domain_result, synthesis, evidence, retry_count, validation(이전 라운드)
-쓰는 키: validation, retry_count
+만드는 값: validation (passed/issues/retry_targets/closed/round), 다음 라운드 번호
 
 판정 흐름
 1) 조기 종료: 직전 라운드에 보완 검색을 실제 수행한 (에이전트, 기술)의 신규 출처 수를 확인한다 (collect_closed).
@@ -368,33 +373,68 @@ def select_targets(blocking: list[dict], closed: list[dict]) -> list[str]:
     return targets
 
 
-# ---------------------------------------------------------------- 노드
+# ---------------------------------------------------------------- 평가 / 결정 (supervisor가 호출)
+
+
+def evaluate_sufficiency(state: dict, llm=None) -> tuple[list[dict], list[dict]]:
+    """근거 충분성을 평가해 (issues, closed)를 반환한다. 라우팅 결정은 하지 않는다.
+
+    supervisor가 "근거가 충분한가"를 판단할 때 호출하는 평가 함수다 (Agent 과제 B장
+    'Supervisor가 근거 충분성을 평가한 후에 최종 보고서 작성이 진행'). 평가와 결정을
+    나눈 이유는 결정(어느 에이전트에게 재작업을 시킬지, 상한에 닿았는지)이 조정 계층의
+    책임이고, 평가(Rubric 판정)는 이 모듈의 책임이기 때문이다.
+    """
+    round_ = state["retry_count"]
+    prev = state.get("validation") or {"retry_targets": [], "closed": []}
+    closed = collect_closed(state, prev, round_)
+    issues = check_rubric(state, closed, llm)
+    return issues, closed
+
+
+def decide_retry(issues: list[dict], closed: list[dict], round_: int) -> tuple[dict, int]:
+    """평가 결과로 (validation, 다음 라운드 번호)를 정한다.
+
+    - 차단 이슈 없음 → 통과
+    - 재시도 소진(round >= MAX_RETRY) → 이슈 유형을 가리지 않고 통과시킨다(soft-fail).
+      남은 이슈는 report_writer가 6장 한계점에 "마지막 라운드까지 남은 검증 이슈"로 명시한다.
+      2026-09-22: 이전엔 self_reported_only 밖의 이슈가 남으면 보고서 자체를 내보내지
+      않아, 재시도를 반복해도 출력이 보장되지 않았다.
+    - 대상이 있고 상한 전 → 해당 에이전트에게 재작업 요청 (라운드 +1)
+    - 그 외 → 상한 소진으로 종료 (정상 보고서 미생성)
+    """
+    blocking = [i for i in issues if i["type"] not in NON_BLOCKING]
+    targets = select_targets(blocking, closed)
+
+    if not blocking:
+        passed, retry_targets, next_round = True, [], round_
+    elif round_ >= config.MAX_RETRY:
+        passed, retry_targets, next_round = True, [], round_
+    elif targets and round_ < config.MAX_RETRY:
+        passed, retry_targets, next_round = False, targets, round_ + 1
+    else:
+        passed, retry_targets, next_round = False, [], round_
+
+    validation = {
+        "passed": passed,
+        "issues": issues,
+        "retry_targets": retry_targets,
+        "closed": closed,
+        "round": round_,  # 이 판정이 어느 라운드의 것인지. supervisor가 재평가 필요 여부를 판단한다
+    }
+    return validation, next_round
 
 
 def build_judge(llm=None):
+    """평가+결정을 합성한 어댑터.
+
+    그래프에는 judge 노드가 없다 (Supervisor 패턴에서 충분성 평가는 supervisor의 책임).
+    supervisor도 evaluate_sufficiency + decide_retry를 같은 순서로 호출하므로, 이 어댑터를
+    통한 테스트는 supervisor가 실제로 쓰는 판정 경로를 그대로 검증한다.
+    """
+
     def judge(state: dict) -> dict:
-        round_ = state["retry_count"]
-        prev = state.get("validation") or {"retry_targets": [], "closed": []}
-
-        closed = collect_closed(state, prev, round_)
-        issues = check_rubric(state, closed, llm)
-        blocking = [i for i in issues if i["type"] not in NON_BLOCKING]
-        targets = select_targets(blocking, closed)
-
-        if not blocking:
-            passed, retry_targets, next_round = True, [], round_
-        elif round_ >= config.MAX_RETRY:
-            # 재시도 소진(마지막 라운드): 이슈 유형을 가리지 않고 보고서를 낸다(soft-fail).
-            # 남은 이슈는 report_writer가 6장 한계점에 "마지막 라운드까지 남은 검증 이슈"로 명시한다.
-            # 2026-09-22: 이전엔 REPORTABLE_AFTER_RETRY(self_reported_only만) 밖의 이슈가 남으면
-            # 보고서 자체를 내보내지 않아, 데모 직전 재시도를 반복해도 출력이 보장되지 않았다.
-            passed, retry_targets, next_round = True, [], round_
-        elif targets and round_ < config.MAX_RETRY:
-            passed, retry_targets, next_round = False, targets, round_ + 1
-        else:
-            passed, retry_targets, next_round = False, [], round_
-
-        validation = {"passed": passed, "issues": issues, "retry_targets": retry_targets, "closed": closed}
+        issues, closed = evaluate_sufficiency(state, llm)
+        validation, next_round = decide_retry(issues, closed, state["retry_count"])
         return {"validation": validation, "retry_count": next_round}
 
     return judge

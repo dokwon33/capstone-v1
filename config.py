@@ -14,6 +14,7 @@ ROOT = Path(__file__).parent
 OUTPUT_DIR = ROOT / "outputs"
 CACHE_DIR = OUTPUT_DIR / "cache"
 CHECKPOINT_DB = OUTPUT_DIR / "checkpoints.sqlite"  # 영속 체크포인터. 재시도 소진 후 같은 thread_id로 재개하는 데 사용
+TRACE_DIR = OUTPUT_DIR / "trace"  # supervisor 결정 로그(JSONL). State 대신 여기에 이력을 쌓는다
 
 # 평가 대상 (입력 config로 주입: 기술 선정은 사람이 수행)
 DOMAIN = "GPU 데이터센터에서 운영하는 기업 문서 질의응답 서비스"
@@ -31,10 +32,11 @@ SELECTED_TECHS = {
 }
 TECHS = tuple(SELECTED_TECHS)
 
-# 반복 상한
-MAX_RETRY = 2
-MAX_REWRITE = 2
-RECURSION_LIMIT = 25
+# 반복 상한 (State Schema 설계 원칙 7 '종료 보장')
+MAX_RETRY = 2  # 근거 부족 재조사 라운드 상한
+MAX_REWRITE = 2  # 보고서 품질 미달 재작성 상한
+MAX_STEPS = 20  # supervisor 방문 상한. 라우팅이 어떤 이유로든 제자리를 돌면 여기서 끊는다
+RECURSION_LIMIT = 60  # LangGraph 마지막 안전망. supervisor 왕복(노드당 2홉)이라 상한보다 넉넉히 둔다
 
 # RAG
 TOP_K = 5
@@ -66,6 +68,11 @@ JUDGE_MODEL = os.getenv("JUDGE_MODEL", "")
 JUDGE_TEMPERATURE = 0  # judge, RAG grade, final_check
 
 USE_CACHE = os.getenv("USE_CACHE", "true").lower() == "true"
+
+# LangSmith 트레이싱. 값 자체는 LangChain이 환경 변수에서 직접 읽으므로 여기서는 기록용으로만 쓴다
+# (run_meta.json에 "이 실행이 트레이스로 남았는가"를 남겨, 제출한 캡처와 실행을 대조할 수 있게 한다).
+LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "false").lower() == "true"
+LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "")
 
 # 고정 문구 (코드에서 삽입)
 TRL_NOTE = "공개 정보 기반 추정"
