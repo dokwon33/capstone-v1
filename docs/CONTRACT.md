@@ -57,8 +57,17 @@ State를 두 블록으로 나눴다. **작업 페이로드**(`tech_profiles`, `t
 `synthesis`, `report`, `final_report`)는 하위 에이전트의 산출물이고, **제어 메타데이터**
 (`trace_id`, `step_count`, `retry_count`, `rewrite_count`, `node_status`, `last_error`,
 `last_decision`)는 supervisor가 다음 노드를 고르는 데 필요한 최소치다.
-supervisor는 페이로드를 **생산하지 않는다**. 재작업을 지시할 때 낡은 산출물을 빈 값으로
-**무효화**할 뿐이다(관점 재조사 시 `synthesis`, 보고서 재작성 시 `report`/`final_report`).
+supervisor는 페이로드를 **생산하지 않는다**. 재작업을 지시할 때, 그 재작업으로 낡게 되는
+산출물을 빈 값으로 **무효화**할 뿐이다.
+
+| 재작업 지시 | 무효화하는 산출물 |
+|---|---|
+| 근거 부족으로 평가 에이전트 재조사 | `synthesis` |
+| 품질 미달로 보고서 재작성 | `report`, `final_report` |
+| 품질 미달로 평가 에이전트 재작업 | `report`, `final_report`, `synthesis` |
+
+하위 에이전트 간 직접 간선을 없앤 대가로, "A가 다시 돌면 A에 의존하는 B도 다시 돌아야
+한다"는 의존 관계를 조정 계층이 명시적으로 관리하는 것이다.
 `tests/test_graph.py::test_supervisor_never_produces_payload_only_invalidates`가 검증한다.
 
 ### 관측성 위치
@@ -108,8 +117,11 @@ supervisor가 평가 에이전트를 병렬 dispatch하므로 같은 턴에 여�
 | `MAX_REWRITE` | 2 | 보고서 품질 미달 재작성 |
 
 LangGraph `recursion_limit`(60)은 마지막 안전망이고, 정상 실행에서는 위 셋이 먼저 걸린다.
-추가로 `report_eval`이 "재작성으로 해소되지 않는 미달"을 구분해 `rewrite_targets`를 비우면,
-supervisor는 상한까지 헛돌지 않고 즉시 종료한다.
+
+품질 미달은 **상한에 닿기 전에는 반드시 재작업을 거친다**. 미달인데 재작업 0회로 끝나는
+경로는 없다(과제 요구: "평가 결과 미달 시 Loop 처리"). 대신 재작업 대상을 실패 구간의
+산출 주체로 좁혀 헛도는 횟수를 줄인다(3절). 상한을 소진하면 미달 항목을 기록한 채 보고서를
+낸다 — 근거 재조사 상한과 같은 soft-fail이다.
 
 ---
 
@@ -174,6 +186,23 @@ python app.py --thread-id demo
 | `outputs/run_meta.json` | 실행 요약 (스텝 수, 재조사·재작성 횟수, node_status) |
 | `outputs/validation_failure.json` | 보고서를 낼 수 없었을 때의 실패 기록 |
 
+### 실제 실행 기록 (README·보고서에 쓸 수치)
+
+`real-run-2` (2026-10-07, `GENERATOR_MODEL=gpt-4.1-mini` / `JUDGE_MODEL=gpt-4.1`, RAG 색인 사용)
+
+| 항목 | 값 |
+|---|---|
+| supervisor 스텝 | 14 |
+| 근거 재조사 | 2라운드 (7건 → 4건 → 통과) |
+| 보고서 재작성 | 1회 (groundedness 미달 → 통과) |
+| 품질 평가 | 4항목 전부 통과 |
+| 인용 근거 | 76건 / 출처 55건 / 유형 5종 |
+| 관점별 인용 | TRL 71 · 시장성 63 · 이해관계자 73 · 도메인 36 |
+| 노드 실패 | 없음 |
+
+주의: 이 수치는 품질 루프를 원인별 라우팅으로 바꾸기 **전**에 돌린 실행이다. 라우팅 변경은
+오프라인(단위 테스트 + smoke)으로만 검증했으므로, 다시 실행하면 재작성 경로가 달라질 수 있다.
+
 ### 트레이싱 담당자에게
 
 LangSmith는 `.env`에만 설정하면 켜진다 (코드 변경 불필요).
@@ -188,7 +217,8 @@ LANGSMITH_PROJECT=capstone-supervisor
 1. `supervisor`가 여러 번 반복 등장하고, 매번 다른 노드로 분기하는 구간
 2. `market_eval`·`stakeholder_eval`·`domain_eval`이 한 superstep에 **병렬**로 뜨는 구간
 3. 재조사가 걸린 실행이라면, 특정 평가 에이전트 **하나만** 다시 도는 구간
-4. `report_eval` → `report_writer` 되돌아가는 품질 루프 (걸린 경우)
+4. `report_eval` 이후 품질 루프가 걸린 구간. 되돌아가는 노드가 실패 항목에 따라 달라진다
+   (`report_writer` / `synthesis` / 평가 에이전트) — 이게 "원인별 동적 라우팅"의 증거다
 
 같은 `thread_id`의 `outputs/trace/{thread_id}.jsonl`에 각 분기의 **사유**가 적혀 있으므로,
 캡처 이미지와 짝지어 제출하면 라우팅 근거까지 보여줄 수 있다.
