@@ -145,22 +145,33 @@ def _next_ids(existing_evidence: list[Evidence], tech: TechName, round_: int):
         sequence += 1
 
 
-def _published_date(result: WebResult) -> str | None:
-    """공개일을 Evidence 계약의 YYYY-MM-DD 형식으로 검증한다."""
+UNKNOWN_DATE = "n.d."  # 발행일을 확인하지 못한 근거. domain_eval과 같은 표기
+
+
+def _published_date(result: WebResult) -> str:
+    """공개일을 Evidence 계약 형식으로 정규화한다. 확인되지 않으면 UNKNOWN_DATE를 쓴다.
+
+    Tavily는 topic="news"일 때만 published_date를 준다 (tools/search.py). 일반 웹 결과에는
+    대부분 없으므로, 날짜가 없다고 근거를 버리면 관점 자체가 통째로 비어버린다.
+    2026-10-07 실제 실행에서 시장성·이해관계자가 검색 14건을 전부 폐기해 근거 0건이 됐고,
+    judge는 이를 "공개 정보 부재"로 조기 종료했다. 실제로는 자료를 찾았으나 날짜가 없었을 뿐이다.
+    domain_eval과 같은 규칙("n.d."로 보존)으로 맞추고, 날짜 미상이라는 사실은 REFERENCE에 드러낸다.
+    """
     published_date = result.get("published_date")
     if not published_date:
-        return None
+        return UNKNOWN_DATE
     value = str(published_date)[:10]
     try:
         calendar_date.fromisoformat(value)
     except ValueError:
-        return None
+        return UNKNOWN_DATE
     return value
 
 
 def _reference(result: WebResult, date: str) -> str:
     title = str(result.get("title") or "제목 미상")
-    return f"{title}. {date}. {result['url']}"
+    stamp = "발행일 미상" if date == UNKNOWN_DATE else date
+    return f"{title}. {stamp}. {result['url']}"
 
 
 def _extract_evidence(
@@ -185,7 +196,7 @@ def _extract_evidence(
     )
     evidence: list[Evidence] = []
     notes: list[str] = []
-    excluded_no_date = 0
+    unknown_date = 0
     for item in output.items:
         if not 0 <= item.result_index < len(results):
             log.warning("stakeholder_eval: 범위 밖 result_index 무시: %s", item.result_index)
@@ -193,12 +204,10 @@ def _extract_evidence(
         result = results[item.result_index]
         source_key = result["source_key"]
         date = _published_date(result)
-        if date is None:
-            # 제외 사유를 URL마다 한 줄씩 쌓으면 보고서 "불확실성"에 그대로 실려 수십 줄이 된다.
-            # 로그는 여기서만(개수) 남기고, source_key별 상세는 log.info로 뺀다.
-            log.info("stakeholder_eval: 공개일 없어 제외 (%s): %s", tech, source_key)
-            excluded_no_date += 1
-            continue
+        if date == UNKNOWN_DATE:
+            # 근거는 보존하고 "날짜 미상"이라는 사실만 센다 (market_eval과 같은 규칙).
+            log.info("stakeholder_eval: 공개일 미상 (%s): %s", tech, source_key)
+            unknown_date += 1
         evidence.append(
             {
                 "id": next(ids),
@@ -217,9 +226,9 @@ def _extract_evidence(
                 "ref": _reference(result, date),
             }
         )
-    if excluded_no_date:
+    if unknown_date:
         notes.append(
-            f"공개일이 없거나 유효하지 않아 YYYY-MM-DD 계약을 충족하지 못한 검색 결과 {excluded_no_date}건을 Evidence에서 제외함"
+            f"발행일을 확인하지 못해 n.d.로 기록한 근거 {unknown_date}건이 포함되어 있다 (최신성 판단 불가)"
         )
     return evidence, notes
 

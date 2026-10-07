@@ -315,13 +315,21 @@ def test_out_of_range_result_index_does_not_create_evidence():
 
 
 @pytest.mark.parametrize("published_date", [None, "invalid-date"])
-def test_missing_or_invalid_date_excludes_evidence_and_records_uncertainty(published_date):
+def test_missing_or_invalid_date_is_kept_as_nd_without_inventing_a_date(published_date):
+    """발행일이 없거나 파싱되지 않아도 근거를 버리지 않는다 (market_eval과 같은 규칙).
+
+    근거를 폐기하면 이해관계자 관점이 통째로 비어 보고서의 관점 커버리지가 깨진다.
+    날짜를 지어내지 않는다는 원래 제약은 "n.d." 표기로 그대로 지킨다.
+    """
     result = build_stakeholder_eval(
         llm=_llm(), search_fn=ContractFakeSearch(published_date=published_date)
     )(_initial_state())
-    assert result["evidence"] == []
+
+    assert result["evidence"], "발행일이 없다고 근거를 버리면 안 된다"
+    assert all(item["date"] == "n.d." for item in result["evidence"])
+    assert all("발행일 미상" in item["ref"] for item in result["evidence"])
     assert all(
-        "YYYY-MM-DD 계약을 충족하지 못한" in item["uncertainty"]
+        "n.d.로 기록한 근거" in item["uncertainty"]
         for item in result["stakeholder_result"].values()
     )
 
