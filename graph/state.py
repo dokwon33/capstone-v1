@@ -1,11 +1,16 @@
 """메인 State와 공통 타입. 계약 파일: 조정 계층(Supervisor) 담당만 수정.
 
 설계 원칙 (Agent 과제 C장 'State Schema' 7항목에 대한 이 프로젝트의 답)
-  1. 제어 vs 페이로드 분리
-     State를 두 블록으로 나눈다. 아래쪽 "제어 메타데이터"는 supervisor가 다음 노드를
-     고르는 데 필요한 최소치만 담고, 위쪽 "작업 페이로드"는 하위 에이전트의 산출물만 담는다.
+  1. 제어 vs 페이로드 분리 (레이어드 구성)
+     상위 State를 세 TypedDict로 나누고 합성한다: PayloadState(하위 에이전트 산출물),
+     ControlState(supervisor가 다음 노드를 고르는 데 필요한 최소치), VerdictState(판정 결과).
      supervisor는 페이로드를 쓰지 않고(읽기만), 하위 에이전트는 제어 메타를 쓰지 않는다
-     (node_status/last_error 제외 — 자기 자신의 실행 상태만 보고한다).
+     (node_status/last_error 제외 — graph/dispatch.py 래퍼가 에이전트 대신 기록한다).
+     계층은 둘이다. 상위 = 이 파일의 State(조정 계층과 하위 에이전트가 공유하는 전체 상태).
+     하위 = rag/subgraph.py의 RagState(검색 질의·문서·판정·재작성 횟수·trace 등 RAG 루프의
+     내부 상태). 하위 상태는 상위로 병합되지 않고 RagResult(4개 키)만 올라온다.
+     평가 3종·synthesis·report_writer는 내부 루프가 없는 단일 호출 노드라 별도 하위 State를
+     두지 않는다. 루프가 있는 하위 작업(RAG)에만 하위 State가 있다.
   2. 관측성 위치
      결정 로그 본문은 State에 쌓지 않는다. {trace_id, step, node, action, reason, ts}를
      common/trace.py가 외부 JSONL(outputs/trace/{trace_id}.jsonl)로 적재하고, State에는
@@ -224,9 +229,9 @@ def keep_latest_error(old: str | None, new: str | None) -> str | None:
     return new if new is not None else old
 
 
-class State(TypedDict, total=False):
-    # ── 작업 페이로드 ─────────────────────────────────────────────
-    # 하위 에이전트의 산출물. supervisor는 읽기만 하고 쓰지 않는다 (설계 원칙 1).
+class PayloadState(TypedDict, total=False):
+    """작업 페이로드 — 하위 에이전트의 산출물. supervisor는 읽기만 하고 쓰지 않는다 (설계 원칙 1)."""
+
     selected_techs: dict[str, TechSpec]
     domain: str
     tech_profiles: dict[str, Profile]
@@ -240,8 +245,14 @@ class State(TypedDict, total=False):
     final_report: str
     final_check_log: list[dict]
 
-    # ── 제어 메타데이터 ───────────────────────────────────────────
-    # supervisor가 다음 노드를 고르는 데 필요한 최소치 (설계 원칙 1).
+
+class ControlState(TypedDict, total=False):
+    """제어 메타데이터 — supervisor가 다음 노드를 고르는 데 필요한 최소치 (설계 원칙 1).
+
+    하위 에이전트는 이 블록을 쓰지 않는다. node_status/last_error만 graph/dispatch.py의
+    래퍼가 에이전트 대신 기록한다.
+    """
+
     trace_id: str  # 상관 키. 외부 결정 로그·RAG 감사 로그·LangSmith run과 잇는다 (원칙 4)
     step_count: int  # supervisor 방문 횟수. 종료 가드 (원칙 7)
     retry_count: int  # 근거 재조사 라운드. judge rubric이 쓰는 라운드 번호도 이 값
@@ -250,7 +261,19 @@ class State(TypedDict, total=False):
     last_error: Annotated[str | None, keep_latest_error]  # 마지막 실패 사유. 재개·fallback 판단 (원칙 5, 6)
     last_decision: Decision  # 직전 supervisor 결정 1건. 이력은 외부 JSONL (원칙 2)
 
-    # ── 판정 결과 (조정 계층이 생산, 하위 에이전트가 소비) ────────
+
+class VerdictState(TypedDict, total=False):
+    """판정 결과 — 조정 계층이 생산하고 하위 에이전트가 소비한다."""
+
     validation: Validation  # 근거 충분성 판정. supervisor가 rubric 호출로 생산
     report_quality: ReportQuality  # 보고서 품질 판정. report_eval이 생산
     failure_record: FailureRecord
+
+
+class State(PayloadState, ControlState, VerdictState):
+    """상위 계층 State. 세 블록을 합성한 것으로, 키는 각 블록에만 선언한다.
+
+    그래프(graph/builder.py)와 노드 시그니처는 이 이름만 쓴다. 블록을 나눈 이유는
+    supervisor가 쓰는 키(ControlState·VerdictState)와 하위 에이전트가 쓰는 키(PayloadState)의
+    경계를 타입으로 드러내기 위함이다 (설계 원칙 1).
+    """

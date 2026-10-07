@@ -52,11 +52,15 @@ START → supervisor → ┬→ tech_research ──┐
 
 README의 `## State Schema` 섹션에 이 내용을 옮기면 된다. 원문 주석은 `graph/state.py` 상단에 있다.
 
-### 제어 vs 페이로드 분리
-State를 두 블록으로 나눴다. **작업 페이로드**(`tech_profiles`, `trl`, `*_result`, `evidence`,
-`synthesis`, `report`, `final_report`)는 하위 에이전트의 산출물이고, **제어 메타데이터**
-(`trace_id`, `step_count`, `retry_count`, `rewrite_count`, `node_status`, `last_error`,
-`last_decision`)는 supervisor가 다음 노드를 고르는 데 필요한 최소치다.
+### 제어 vs 페이로드 분리 (레이어드 구성)
+상위 State를 세 TypedDict로 나누고 `class State(PayloadState, ControlState, VerdictState)`로 합성한다.
+
+| 블록 | 키 | 쓰는 주체 |
+|---|---|---|
+| `PayloadState` 작업 페이로드 | `selected_techs`, `domain`, `tech_profiles`, `trl`, `*_result`, `evidence`, `synthesis`, `report`, `final_report`, `final_check_log` | 하위 에이전트 |
+| `ControlState` 제어 메타데이터 | `trace_id`, `step_count`, `retry_count`, `rewrite_count`, `node_status`, `last_error`, `last_decision` | supervisor (`node_status`/`last_error`는 `graph/dispatch.py` 래퍼) |
+| `VerdictState` 판정 결과 | `validation`, `report_quality`, `failure_record` | supervisor, `report_eval`, `record_failure` |
+
 supervisor는 페이로드를 **생산하지 않는다**. 재작업을 지시할 때, 그 재작업으로 낡게 되는
 산출물을 빈 값으로 **무효화**할 뿐이다.
 
@@ -69,6 +73,11 @@ supervisor는 페이로드를 **생산하지 않는다**. 재작업을 지시할
 하위 에이전트 간 직접 간선을 없앤 대가로, "A가 다시 돌면 A에 의존하는 B도 다시 돌아야
 한다"는 의존 관계를 조정 계층이 명시적으로 관리하는 것이다.
 `tests/test_graph.py::test_supervisor_never_produces_payload_only_invalidates`가 검증한다.
+
+계층은 둘이다. **상위**는 위의 `State`이고, **하위**는 `rag/subgraph.py`의 `RagState`다.
+`RagState`는 검색 질의·문서 목록·관련성 판정·재작성 횟수·trace 같은 RAG 루프의 내부 상태를 담고,
+상위로 병합되지 않는다. 상위에는 `RagResult`(`evidence`, `grade`, `uncertainty`, `confidence`)만 올라온다.
+평가 3종·`synthesis`·`report_writer`는 내부 루프가 없는 단일 호출 노드라 별도 하위 State를 두지 않았다.
 
 ### 관측성 위치
 결정 로그 본문은 State에 쌓지 않는다. `common/trace.py`가
