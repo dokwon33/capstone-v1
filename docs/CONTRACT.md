@@ -125,8 +125,32 @@ supervisor는 상한까지 헛돌지 않고 즉시 종료한다.
 | `bias_control` | rule | 인용 출처 4건↑·유형 2종↑, 부정 근거 포함, 비자가보고 포함, 양쪽 기술 근거 포함 |
 | `perspective_coverage` | rule | 4개 관점(기술 성숙도·시장성·이해관계자·도메인 적용)의 섹션과 인용 근거가 모두 있는가 |
 
-미달 시 supervisor가 `report_writer`로 Loop를 돌린다(`MAX_REWRITE`까지).
-결과는 `outputs/report_quality.json`에 저장된다.
+### 미달 시 어디로 되돌리나
+
+`report_writer`가 LLM으로 쓰는 구간은 **SUMMARY뿐**이고, 1~6장과 REFERENCE는 State에서 코드로
+조립한다. State가 그대로면 재작성해도 SUMMARY 말고는 글자 하나 바뀌지 않는다. 그래서 미달
+항목마다 **그 구간을 만든 노드**를 지목한다.
+
+| 보고서 구간 | 산출 주체 | 걸리는 항목 |
+|---|---|---|
+| SUMMARY | `report_writer` | groundedness, neutrality |
+| 5장 시사점 | `synthesis` | groundedness, neutrality |
+| 4장 관점별 평가·인용 | 해당 `*_eval` | bias_control, perspective_coverage |
+| 섹션 구조·REFERENCE | `report_writer` | 섹션 누락, 미등록 인용 |
+
+판정마다 `owners`에 담당을 싣고, 재작업을 받은 노드는 `agents/_e_utils.quality_feedback()`으로
+**자기 몫의 실패 사유만** 읽어 프롬프트에 넣는다. 사유 없이 다시 부르면 같은 결과가 나오므로,
+이 전달이 있어야 Loop가 '평가 → 재생성'이 아니라 '평가 → 개선'이 된다.
+
+- 미달이면 `rewrite_targets`를 **절대 비우지 않는다**. 담당을 특정하지 못해도 `report_writer`로
+  최소 한 번은 돌린다 (과제 요구: "평가 결과 미달 시 Loop 처리").
+- 단, 이번 실행에서 재시도 상한까지 실패해 제외된 노드(`node_status=failed`)는 지목하지 않는다.
+  수집 단계(`missing_evals`)와 같은 fallback 정책이다.
+- 평가 에이전트로 되돌릴 때는 `synthesis`도 함께 무효화한다 (관점이 바뀌면 종합도 낡는다).
+- `tech_research`는 지목하지 않는다 (근거 충분성 루프에서도 재조사 대상이 아니다).
+
+무한 루프는 `rewrite_count < MAX_REWRITE`가 막고, 상한을 소진하면 미달 항목을 기록한 채
+보고서를 낸다(soft-fail). 결과는 `outputs/report_quality.json`에 저장된다.
 
 ---
 

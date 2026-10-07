@@ -319,8 +319,12 @@ def test_quality_loop_stops_at_rewrite_limit(monkeypatch):
     assert "상한" in result["last_decision"]["reason"]
 
 
-def test_unfixable_quality_failure_does_not_loop(monkeypatch):
-    """재작성으로 해소되지 않는 미달이면 루프를 돌지 않고 바로 끝낸다 (헛된 재작성 방지)."""
+def test_quality_failure_always_loops_at_least_once(monkeypatch):
+    """과제 D장: 품질 미달이면 담당을 특정하지 못해도 최소 한 번은 Loop를 돈다.
+
+    담당을 지목하지 못했다고 곧장 END로 가면, 트레이스에 '미달 판정 후 재작업 0회'가
+    남아 "평가 결과 미달 시 Loop 처리" 요구를 만족하지 못한다.
+    """
     writes = {"n": 0}
     real_writer = builder.smoke_report_writer
 
@@ -328,26 +332,101 @@ def test_unfixable_quality_failure_does_not_loop(monkeypatch):
         writes["n"] += 1
         return real_writer(state)
 
-    def unfixable(state):
+    def failing_without_owner(state):
         return {
             "report_quality": {
                 "passed": False,
-                "checks": [{"criterion": "bias_control", "passed": False, "method": "rule",
-                            "detail": "수집된 근거 자체로는 기준을 충족할 수 없다"}],
-                "rewrite_targets": [],  # 재작성해도 못 고침
+                "checks": [{"criterion": "bias_control", "passed": False, "method": "rule", "detail": "테스트"}],
+                "rewrite_targets": [],  # 담당 미상
                 "round": state.get("rewrite_count", 0),
             }
         }
 
     monkeypatch.setattr(builder, "smoke_report_writer", counting_writer)
-    monkeypatch.setattr(builder, "smoke_report_eval", unfixable)
+    monkeypatch.setattr(builder, "smoke_report_eval", failing_without_owner)
 
-    result = invoke(cfg=run_cfg("unfixable"))
+    result = invoke(cfg=run_cfg("always-loop"))
 
-    assert writes["n"] == 1  # 재작성하지 않았다
-    assert result["rewrite_count"] == 0
+    assert result["rewrite_count"] == config.MAX_REWRITE  # 상한까지 돌고 종료
+    assert writes["n"] == config.MAX_REWRITE + 1
     assert result["final_report"]
-    assert "해소되지 않는" in result["last_decision"]["reason"]
+    rework = [r for r in trace.read("always-loop") if r["phase"] == "quality" and r["targets"] != ["report_eval"]]
+    assert len(rework) == config.MAX_REWRITE
+    assert all(r["targets"] == ["report_writer"] for r in rework)
+
+
+def test_quality_failure_routes_to_the_node_that_produced_the_bad_section(monkeypatch):
+    """미달 구간의 산출 주체로 재작업을 보낸다 (요약→report_writer, 시사점→synthesis,
+    근거 편중·관점 누락→해당 eval agent). report_writer는 SUMMARY만 LLM으로 쓰므로,
+    4·5장 문제를 report_writer에 되돌리면 같은 보고서가 다시 나올 뿐이다."""
+    dispatched = []
+    for name in ("synthesis", "market_eval"):
+        real = getattr(builder, f"smoke_{name}")
+
+        def track(state, _name=name, _real=real):
+            dispatched.append(_name)
+            return _real(state)
+
+        monkeypatch.setattr(builder, f"smoke_{name}", track)
+
+    evals = {"n": 0}
+
+    def failing_then_passing(state):
+        evals["n"] += 1
+        passed = evals["n"] > 1
+        return {
+            "report_quality": {
+                "passed": passed,
+                "checks": [{"criterion": "perspective_coverage", "passed": passed, "method": "rule", "detail": "테스트"}],
+                "rewrite_targets": [] if passed else ["market_eval"],
+                "round": state.get("rewrite_count", 0),
+            }
+        }
+
+    monkeypatch.setattr(builder, "smoke_report_eval", failing_then_passing)
+    monkeypatch.setattr(sup, "evaluate_sufficiency", lambda state, llm=None: ([], []))
+
+    result = invoke(cfg=run_cfg("route"))
+
+    assert result["final_report"]
+    assert dispatched.count("market_eval") == 2  # 초기 수집 + 품질 루프 재작업
+    # 관점 평가를 다시 돌렸으므로 그것을 종합한 결과도 다시 만들어야 한다
+    assert dispatched.count("synthesis") == 2
+
+
+def test_quality_loop_skips_nodes_already_excluded_by_fallback(monkeypatch):
+    """재시도 상한까지 실패해 제외된 노드에는 품질 루프도 재작업을 보내지 않는다.
+
+    collect 단계(missing_evals)와 같은 fallback 정책이다. 제외된 노드를 품질 루프가
+    다시 부르면 같은 실행에서 제외와 재시도가 뒤섞인다.
+    """
+    attempts = {"n": 0}
+
+    def boom(state):
+        attempts["n"] += 1
+        raise RuntimeError("검색 API 장애")
+
+    def coverage_blames_market(state):
+        return {
+            "report_quality": {
+                "passed": False,
+                "checks": [{"criterion": "perspective_coverage", "passed": False, "method": "rule", "detail": "시장성 누락"}],
+                "rewrite_targets": ["market_eval"],  # 그러나 market_eval은 이미 제외됨
+                "round": state.get("rewrite_count", 0),
+            }
+        }
+
+    monkeypatch.setattr(builder, "smoke_market_eval", boom)
+    monkeypatch.setattr(builder, "smoke_report_eval", coverage_blames_market)
+    monkeypatch.setattr(sup, "evaluate_sufficiency", lambda state, llm=None: ([], []))
+
+    result = invoke(cfg=run_cfg("excluded"))
+
+    assert attempts["n"] == config.LLM_RETRY  # 최초 1회 dispatch의 재시도뿐
+    assert result["node_status"]["market_eval"] == "failed"
+    rework = [r for r in trace.read("excluded") if r["phase"] == "quality" and r["targets"] != ["report_eval"]]
+    assert rework, "품질 미달인데 재작업 결정이 하나도 없다"
+    assert all(r["targets"] == ["report_writer"] for r in rework)  # 제외된 market_eval 대신
 
 
 # ---------------------------------------------------------------- fallback (노드 실패)
@@ -364,6 +443,11 @@ def test_failed_eval_agent_is_excluded_and_run_continues(monkeypatch):
     monkeypatch.setattr(builder, "smoke_market_eval", boom)
     # 실패한 관점 때문에 근거 부족 판정이 끝없이 돌지 않도록 충분성 평가는 통과시킨다
     monkeypatch.setattr(sup, "evaluate_sufficiency", lambda state, llm=None: ([], []))
+    # 품질 평가도 통과시켜, 이 테스트가 보는 것이 수집 단계의 fallback만이 되게 한다
+    monkeypatch.setattr(builder, "smoke_report_eval", lambda state: {
+        "report_quality": {"passed": True, "checks": [], "rewrite_targets": [],
+                           "round": state.get("rewrite_count", 0)},
+    })
 
     result = invoke(cfg=run_cfg("fallback"))
 

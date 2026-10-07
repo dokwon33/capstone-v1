@@ -8,6 +8,7 @@ import config
 from graph.smoke import StubJudgeLLM, smoke_report_writer
 from nodes.judge import GroundednessJudge, NeutralityJudge
 from common.ids import make_evidence_id
+import nodes.report_eval as R
 from nodes.report_eval import build_report_eval
 from tests.e_fakes import FakeLLM
 
@@ -152,7 +153,7 @@ def test_llm_judges_summary_against_cited_evidence():
 
 
 def test_superiority_wording_fails_neutrality():
-    """기술 평가 목적 = 우열 판정이 아니다."""
+    """기술 평가 목적 = 우열 판정이 아니다. 걸린 구간의 산출 주체가 담당이 된다."""
     evidence = balanced_evidence()
     llm = FakeLLM(structured={
         "GroundednessJudge": GroundednessJudge(supported="yes"),
@@ -163,7 +164,29 @@ def test_superiority_wording_fails_neutrality():
     neutrality = check_of(quality, "neutrality")
     assert neutrality["passed"] is False
     assert neutrality["method"] == "llm"
-    assert quality["rewrite_targets"] == ["report_writer"]  # 표현 재작성으로 고칠 수 있다
+    # 요약과 시사점 둘 다 우열 표현으로 판정됐으므로 두 산출 주체가 모두 지목된다
+    assert set(quality["rewrite_targets"]) == {"report_writer", "synthesis"}
+
+
+def test_neutrality_failure_in_implications_routes_to_synthesis():
+    """시사점(5장)은 synthesis 산출물이다. report_writer를 다시 돌려도 바뀌지 않는다."""
+    evidence = balanced_evidence()
+
+    def by_section(messages):
+        text = "\n".join(c for _, c in messages)
+        offending = "5. 시사점" in text and "# SUMMARY" not in text
+        return NeutralityJudge(superiority_wording="yes" if offending else "no",
+                               span="대체 관계로 단정", detail="우열 단정")
+
+    llm = FakeLLM(structured={
+        "GroundednessJudge": GroundednessJudge(supported="yes"),
+        "NeutralityJudge": by_section,
+    })
+    quality = result(state_with(evidence, full_report(evidence)), llm=llm)
+
+    assert check_of(quality, "neutrality")["passed"] is False
+    assert quality["rewrite_targets"] == ["synthesis"]
+    assert "5. 시사점" in check_of(quality, "neutrality")["detail"]
 
 
 # ---------------------------------------------------------------- 3) 편향 통제
@@ -183,8 +206,8 @@ def test_single_source_fails_bias_control():
     assert "출처 수 1건" in bias["detail"]
 
 
-def test_omitting_negative_evidence_fails_bias_control_and_is_fixable():
-    """유리한 근거만 인용하면 미달이고, State에 부정 근거가 있으니 재작성으로 고쳐진다."""
+def test_omitting_negative_evidence_fails_bias_control_and_routes_to_eval_agents():
+    """유리한 근거만 인용하면 미달이다. 어떤 근거를 들지는 평가 에이전트가 정하므로 담당도 그쪽이다."""
     evidence = balanced_evidence()
     positive_only = [e for e in evidence if e["stance"] != "negative"]
     report = full_report(positive_only)  # 부정 근거를 인용하지 않은 보고서
@@ -193,19 +216,19 @@ def test_omitting_negative_evidence_fails_bias_control_and_is_fixable():
     bias = check_of(quality, "bias_control")
     assert bias["passed"] is False
     assert "부정·유보 근거" in bias["detail"]
-    assert "해소되지 않는다" not in bias["detail"]
-    assert quality["rewrite_targets"] == ["report_writer"]
+    assert "수집된 근거를 더 인용하면 해소 가능" in bias["detail"]
+    assert quality["rewrite_targets"] == list(R.EVAL_AGENTS)
 
 
-def test_bias_failure_is_unfixable_when_evidence_itself_is_biased():
-    """수집된 근거 자체에 부정 근거가 없으면 재작성으로 해소되지 않으므로 루프를 걸지 않는다."""
+def test_bias_failure_needing_more_search_still_routes_to_eval_agents():
+    """수집된 근거 자체에 부정 근거가 없으면 보완 검색이 필요하다고 알리고 평가 에이전트로 보낸다."""
     evidence = [e for e in balanced_evidence() if e["stance"] != "negative"]
     quality = result(state_with(evidence, full_report(evidence)))
 
     bias = check_of(quality, "bias_control")
     assert bias["passed"] is False
-    assert "해소되지 않는다" in bias["detail"]
-    assert quality["rewrite_targets"] == []  # supervisor가 헛된 재작성을 돌리지 않는다
+    assert "보완 검색으로 근거 자체를 넓혀야 해소 가능" in bias["detail"]
+    assert quality["rewrite_targets"] == list(R.EVAL_AGENTS)
 
 
 def test_one_sided_tech_citation_fails_bias_control():
@@ -232,7 +255,7 @@ def test_missing_perspective_section_fails_coverage():
     assert coverage["passed"] is False
     assert coverage["method"] == "rule"
     assert "이해관계자" in coverage["detail"]
-    assert quality["rewrite_targets"] == ["report_writer"]
+    assert quality["rewrite_targets"] == ["report_writer"]  # 섹션 제목은 report_writer가 만든다
 
 
 def test_perspective_without_cited_evidence_fails_coverage():
@@ -245,18 +268,34 @@ def test_perspective_without_cited_evidence_fails_coverage():
     coverage = check_of(quality, "perspective_coverage")
     assert coverage["passed"] is False
     assert "도메인 적용" in coverage["detail"]
-    assert quality["rewrite_targets"] == ["report_writer"]  # State에 domain 근거가 있으므로 고칠 수 있다
+    assert "수집된 근거를 인용하면 해소 가능" in coverage["detail"]
+    # findings를 고르는 주체가 담당이다. report_writer는 findings를 그대로 옮길 뿐이다
+    assert quality["rewrite_targets"] == ["domain_eval"]
 
 
-def test_coverage_failure_is_unfixable_without_that_perspectives_evidence():
-    """해당 관점의 근거를 아예 수집하지 못했으면 재작성으로 해소되지 않는다."""
+def test_coverage_failure_without_evidence_routes_to_that_perspectives_agent():
+    """해당 관점의 근거를 수집하지 못했으면 그 관점의 평가 에이전트가 보완 검색을 해야 한다."""
     evidence = [e for e in balanced_evidence() if e["perspective"] != "stakeholder"]
     quality = result(state_with(evidence, full_report(evidence)))
 
     coverage = check_of(quality, "perspective_coverage")
     assert coverage["passed"] is False
-    assert "해소되지 않는다" in coverage["detail"]
-    assert quality["rewrite_targets"] == []
+    assert "해당 관점의 보완 검색이 필요" in coverage["detail"]
+    assert quality["rewrite_targets"] == ["stakeholder_eval"]
+
+
+def test_failed_criteria_always_name_a_rework_target():
+    """과제 D장: 미달이면 담당을 반드시 지목한다. 빈 rewrite_targets는 Loop 없는 종료가 된다."""
+    cases = {
+        "근거 없는 보고서": ([], "# SUMMARY\n\n근거 없음\n\n# 5. 시사점\n\n유보\n\n# REFERENCE\n\n- 없음\n"),
+        "관점 전부 누락": ([e for e in balanced_evidence() if e["perspective"] == "TRL"],
+                      full_report([e for e in balanced_evidence() if e["perspective"] == "TRL"])),
+        "빈 보고서": (balanced_evidence(), "   "),
+    }
+    for label, (evidence, report) in cases.items():
+        quality = result(state_with(evidence, report))
+        assert quality["passed"] is False, label
+        assert quality["rewrite_targets"], f"{label}: 미달인데 재작업 대상이 비었다"
 
 
 # ---------------------------------------------------------------- 경계

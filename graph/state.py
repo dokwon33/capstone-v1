@@ -184,6 +184,7 @@ class QualityCheck(TypedDict):
     passed: bool
     method: Literal["rule", "llm"]  # Hybrid(3안): 어느 방식으로 판정했는지 기록
     detail: str
+    owners: list[str]  # 이 미달을 고칠 수 있는 노드. 재작업을 받은 노드가 사유를 읽는 키
 
 
 class ReportQuality(TypedDict):

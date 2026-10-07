@@ -10,7 +10,16 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 import config
-from agents._e_utils import KEY_TO_PERSPECTIVE, cited_ids, evidence_index, get_generator, referenced_ids, strip_unknown_cites
+from agents._e_utils import (
+    KEY_TO_PERSPECTIVE,
+    cited_ids,
+    evidence_index,
+    format_quality_feedback,
+    get_generator,
+    quality_feedback,
+    referenced_ids,
+    strip_unknown_cites,
+)
 from prompts import synthesis as P
 from prompts.common import with_common
 from tools.search import format_document
@@ -99,11 +108,24 @@ def _build_context(state: dict) -> tuple[str, set[str]]:
 
 
 def _revision_text(state: dict) -> str:
+    """재작성 지시. 근거 충분성 판정과 보고서 품질 판정 두 경로에서 들어온다.
+
+    - validation.issues: judge Rubric이 synthesis를 지목한 근거 충실도·표현 문제
+    - report_quality: 보고서 5장 시사점이 품질 평가에 걸린 경우. 5장은 이 종합 결과를
+      코드로 옮긴 것이라 report_writer를 다시 돌려도 바뀌지 않는다 (nodes/report_eval.py).
+    """
+    parts = []
+
     issues = [i for i in (state.get("validation") or {}).get("issues", []) if i.get("target") == "synthesis"]
-    if not issues:
-        return ""
-    body = "\n".join(f"- [{i['type']}] {i.get('tech') or '전체'}: {i['detail']}" for i in issues)
-    return P.REVISION.format(issues=body)
+    if issues:
+        body = "\n".join(f"- [{i['type']}] {i.get('tech') or '전체'}: {i['detail']}" for i in issues)
+        parts.append(P.REVISION.format(issues=body))
+
+    failures = quality_feedback(state, "synthesis")
+    if failures:
+        parts.append(P.QUALITY_REVISION.format(issues=format_quality_feedback(failures)))
+
+    return "\n".join(parts)
 
 
 def validate_synthesis(out: SynthesisOut, allowed: set[str], idx: dict[str, dict]) -> dict:

@@ -107,3 +107,26 @@ def web_ref(title: str, url: str, date: str | None, publisher: str | None = None
     """웹 자료 REFERENCE 표기: 발행처 (날짜). 제목. URL"""
     pub = publisher or urlsplit(url).netloc.removeprefix("www.")
     return f"{pub} ({date or 'n.d.'}). {title}. {url}"
+
+def quality_feedback(state: dict, owner: str) -> list[dict]:
+    """직전 품질 평가에서 이 노드가 담당으로 지목된 미달 항목 (nodes/report_eval.py).
+
+    품질 루프가 '평가 → 재생성'이 아니라 '평가 → 개선'이 되려면, 재작업을 받은 노드가
+    무엇이 왜 걸렸는지 알아야 한다. supervisor는 대상만 고르고 사유는 State에 남기므로,
+    각 노드가 여기서 자기 몫을 읽는다.
+
+    owners가 비어 있던 과거 판정(스키마 이전)이나 통과 판정에서는 빈 목록을 돌려준다.
+    """
+    quality = state.get("report_quality") or {}
+    if quality.get("passed"):
+        return []
+    return [
+        check
+        for check in quality.get("checks", [])
+        if not check.get("passed") and owner in (check.get("owners") or [])
+    ]
+
+
+def format_quality_feedback(checks: list[dict]) -> str:
+    """품질 미달 항목을 프롬프트에 넣을 한 줄씩의 목록으로 만든다."""
+    return "\n".join(f"- [{c['criterion']}] {c['detail']}" for c in checks)

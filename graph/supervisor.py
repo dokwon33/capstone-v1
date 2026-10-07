@@ -20,6 +20,12 @@ Agent 과제 B장 'Supervisor' 필수 항목에 대한 구현 지점:
      decide_retry()가 고른 retry_targets를 그대로 dispatch한다. 전체 재실행이 아니라
      문제가 있는 관점만 다시 돈다.
 
+보고서 품질 루프 (Agent 과제 D장 '평가 결과 미달 시 Loop 처리')
+  report_eval이 미달 항목마다 **그 구간을 만든 노드**를 지목한다 (요약→report_writer,
+  시사점→synthesis, 근거 편중·관점 누락→해당 eval agent). supervisor는 지목된 노드로
+  재작업을 보내고, 그 재작업으로 낡는 산출물(report/final_report, eval이면 synthesis까지)을
+  비운다. 미달인데 한 번도 돌지 않고 끝나는 경로는 없다. 루프는 rewrite_count가 막는다.
+
 종료 보장 (State Schema 설계 원칙 7)
   step_count > MAX_STEPS / retry_count >= MAX_RETRY / rewrite_count >= MAX_REWRITE
   세 상한 중 하나라도 닿으면 루프를 끊는다. 어떤 분기도 상한 없이 되돌아가지 않는다.
@@ -227,21 +233,27 @@ def decide(state: dict, step: int, llm=None) -> tuple[dict, dict]:
     if not quality["passed"]:
         failed = [c["criterion"] for c in quality["checks"] if not c["passed"]]
         rewrite_count = state.get("rewrite_count", 0)
-        targets = quality["rewrite_targets"]
-
-        if not targets:
-            # report_eval이 "재작성으로는 해소되지 않는다"고 판정한 미달 (예: 수집된 근거
-            # 자체에 부정 근거가 없음). 다시 쓰게 해도 같은 결과이므로 루프를 돌지 않는다.
-            reason = f"품질 미달({', '.join(failed)})이 보고서 재작성으로 해소되지 않는 유형이어서 종료한다. 미달 항목은 보고서 한계점과 report_quality에 남는다."
-            return _decision(step, [DONE], reason, "terminal"), {}
+        # 이번 실행에서 재시도 상한까지 실패한 노드는 제외한다. collect 단계(missing_evals)와
+        # 같은 fallback 정책이다 — 한 노드가 이 실행에서 제외됐으면 품질 루프에서도 제외다.
+        # 전부 제외되면 report_writer로 보내 최소 한 번은 루프를 돌린다 (과제 D장).
+        excluded = failed_nodes(state)
+        targets = [t for t in quality["rewrite_targets"] if t not in excluded] or ["report_writer"]
 
         if rewrite_count < config.MAX_REWRITE:
-            # 미달 시 Loop. 보고서 본문을 비워 report_writer가 다시 쓰게 한다 (phase 5·6 재진입).
-            reason = f"보고서 품질 미달({', '.join(failed)})로 재작성을 요청한다 ({rewrite_count}→{rewrite_count + 1}회차, 상한 {config.MAX_REWRITE})."
-            return (
-                _decision(step, targets, reason, "quality"),
-                {"rewrite_count": rewrite_count + 1, "report": "", "final_report": ""},
+            # 미달 시 Loop (과제 D장). 어느 노드로 보낼지는 실패 구간의 산출 주체가 정한다
+            # (nodes/report_eval.py 모듈 docstring의 '누가 고칠 수 있는가').
+            #
+            # 재작업으로 낡게 되는 산출물을 함께 무효화한다. 보고서 본문은 언제나 다시 쓰고,
+            # 관점 평가를 다시 돌리면 그것을 종합한 결과도 낡으므로 synthesis까지 비운다.
+            update = {"rewrite_count": rewrite_count + 1, "report": "", "final_report": ""}
+            if set(targets) & set(EVAL_AGENTS):
+                update["synthesis"] = {}
+
+            reason = (
+                f"보고서 품질 미달({', '.join(failed)})로 {', '.join(targets)}에 재작업을 요청한다 "
+                f"({rewrite_count}→{rewrite_count + 1}회차, 상한 {config.MAX_REWRITE})."
             )
+            return _decision(step, targets, reason, "quality"), update
 
         # 재작성 상한 소진: 미달 항목을 기록한 채 종료한다 (근거 재조사 상한과 같은 soft-fail).
         reason = f"품질 미달({', '.join(failed)})이 남았으나 재작성 상한({config.MAX_REWRITE}) 소진으로 종료한다."
