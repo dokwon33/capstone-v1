@@ -149,6 +149,36 @@ def test_llm_judges_summary_against_cited_evidence():
     assert "근거에 없는 수치" in grounded["detail"]
 
 
+def test_trl_assessment_is_part_of_groundedness_input(monkeypatch):
+    """SUMMARY가 요약하는 TRL 추정(state.trl)은 인용 evidence가 아니므로, 판정 입력에 따로 넣어야
+    "TRL 4"라는 서술이 근거 없음으로 판정되지 않는다 (2026-10-07 sup-run-1 soft-fail 원인)."""
+    evidence = balanced_evidence()
+    state = state_with(evidence, full_report(evidence))
+    state["trl"] = {
+        "TurboQuant": {"level": 4, "range": None, "rationale": "H100 실험 환경 검증"},
+        "ITME": {"level": None, "range": "3-4", "rationale": ""},
+    }
+    seen = []
+
+    def capture(llm, summary, findings, tech, perspective):
+        seen.append([f["id"] for f in findings])
+        return GroundednessJudge(supported="yes")
+
+    monkeypatch.setattr(R, "check_groundedness", capture)
+    result(state)
+
+    assert seen, "LLM 판정이 호출되지 않았다"
+    ids = seen[0]
+    assert "TRL-TurboQuant" in ids and "TRL-ITME" in ids
+    assert any(i.startswith("MK-") for i in ids)  # 기존 인용 evidence도 그대로 들어간다
+
+    items = {i["id"]: i for i in R.trl_assessments(state)}
+    assert "TRL 4" in items["TRL-TurboQuant"]["claim"] and config.TRL_NOTE in items["TRL-TurboQuant"]["claim"]
+    assert "판단 이유: H100" in items["TRL-TurboQuant"]["claim"]
+    assert "TRL 3-4" in items["TRL-ITME"]["claim"] and "판단 이유" not in items["TRL-ITME"]["claim"]
+    assert R.trl_assessments({"trl": {"X": {"level": None, "range": None}}}) == []  # 미확정은 넣지 않는다
+
+
 # ---------------------------------------------------------------- 2) 중립성
 
 

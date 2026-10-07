@@ -139,8 +139,35 @@ def cited_evidence(report: str, state: dict) -> tuple[list[dict], list[str]]:
 # ---------------------------------------------------------------- 1) Groundedness
 
 
+def trl_assessments(state: dict) -> list[dict]:
+    """state.trl의 TRL 추정을 판정자가 읽는 evidence와 같은 모양(id/scope/source_type/claim)으로 만든다.
+
+    SUMMARY는 4.1절의 TRL 추정을 요약하는데, 그 추정은 tech_research의 평가 결과이지 검색된
+    출처가 아니라서 본문 인용(cited)에는 들어오지 않는다. 판정자에게 cited만 주면 "TRL 4"라는
+    서술을 근거 없음으로 보게 되고, 재작성 루프로는 해소되지 않는다 (2026-10-07 sup-run-1).
+    """
+    items = []
+    for tech, trl in (state.get("trl") or {}).items():
+        level = trl.get("range") or trl.get("level")
+        if level is None:
+            continue
+        rationale = (trl.get("rationale") or "").strip()
+        items.append(
+            {
+                "id": f"TRL-{tech}",
+                "scope": "direct",
+                "source_type": "assessment",
+                "claim": f"{tech}의 기술 성숙도는 TRL {level}로 추정된다 ({config.TRL_NOTE})." + (f" 판단 이유: {rationale}" if rationale else ""),
+            }
+        )
+    return items
+
+
 def check_report_groundedness(report: str, state: dict, cited: list[dict], unknown: list[str], get_llm) -> dict:
-    """주장이 검색된 출처로 추적되는가 (Reference 연결성, Hallucination 통제)."""
+    """주장이 검색된 출처로 추적되는가 (Reference 연결성, Hallucination 통제).
+
+    판정 입력은 본문이 인용한 evidence에 TRL 추정(trl_assessments)을 더한 것이다.
+    """
     if unknown:
         return _check("groundedness", False, "rule", f"evidence에 없는 인용 {len(unknown)}건: {', '.join(unknown[:5])}", [REPORT_WRITER])
     if not cited:
@@ -155,9 +182,10 @@ def check_report_groundedness(report: str, state: dict, cited: list[dict], unkno
         return _check("groundedness", False, "rule", f"판정 대상 구간({', '.join(SECTION_OWNER)})이 없다", [REPORT_WRITER])
 
     # 구간을 나눠 판정해야 어느 노드에 재작업을 맡길지 정할 수 있다
+    context = cited + trl_assessments(state)
     offenders, details = [], []
     for owner, title, body in owned:
-        verdict = check_groundedness(get_llm(), body, cited, "보고서 전체", "report")
+        verdict = check_groundedness(get_llm(), body, context, "보고서 전체", "report")
         if verdict.supported == "no":
             offenders.append(owner)
             details.append(f"{title} — {verdict.detail or verdict.unsupported_span}")

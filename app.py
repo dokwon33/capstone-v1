@@ -150,7 +150,7 @@ def main() -> None:
         )
         if not quality.get("passed"):
             failed = [c["criterion"] for c in quality.get("checks", []) if not c["passed"]]
-            print(f"품질 미달 항목(보고서 한계점에 기록): {', '.join(failed)}")
+            print(f"품질 미달 항목(report_quality.json에 기록): {', '.join(failed)}")
         print(f"결정 로그: {trace.trace_path(args.thread_id)}")
     else:
         print(f"validation failed: {result['failure_record']['path']}")
