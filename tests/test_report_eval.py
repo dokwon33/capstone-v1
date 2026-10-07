@@ -1,0 +1,286 @@
+"""nodes/report_eval.py 단위 테스트 — Agent 과제 D장 '보고서 품질 평가' 4개 항목.
+
+항목마다 통과 경로와 미달 경로를 모두 확인하고, 미달이 '보고서 재작성으로 고칠 수 있는
+유형'인지(rewrite_targets)까지 본다. 재작성으로 고칠 수 없는 미달에 루프를 돌리면
+상한까지 헛돌기 때문이다.
+"""
+import config
+from graph.smoke import StubJudgeLLM, smoke_report_writer
+from nodes.judge import GroundednessJudge, NeutralityJudge
+from common.ids import make_evidence_id
+from nodes.report_eval import build_report_eval
+from tests.e_fakes import FakeLLM
+
+OK_LLM = StubJudgeLLM()
+CRITERIA = ("groundedness", "neutrality", "bias_control", "perspective_coverage")
+
+
+def ev(id_, tech, perspective, *, origin=None, source_type="paper", stance="neutral", self_reported=False):
+    return {
+        "id": id_,
+        "round": 0,
+        "source_key": origin or id_,
+        "locator": None,
+        "origin_key": origin or id_,
+        "claim": f"{tech} {perspective} 관측값",
+        "tech": tech,
+        "perspective": perspective,
+        "scope": "direct",
+        "source_type": source_type,
+        "stance": stance,
+        "self_reported": self_reported,
+        "date": "2026-01-01",
+        "ref": f"{id_} 출처. 2026-01-01.",
+    }
+
+
+# 인용 id는 common.ids의 정규 형식이어야 agents._e_utils.cited_ids가 인용으로 인식한다.
+# 관점 → 그 근거를 만드는 에이전트 (common.ids.AGENT_ABBR의 접두어가 결정된다)
+PERSPECTIVE_AGENT = {
+    "TRL": "tech_research",
+    "market": "market_eval",
+    "stakeholder": "stakeholder_eval",
+    "domain": "domain_eval",
+}
+
+
+def balanced_evidence() -> list[dict]:
+    """4개 관점 × 2기술, 출처 유형 3종·부정 근거·비자가보고를 모두 포함한 근거 묶음."""
+    items = []
+    for perspective, agent in PERSPECTIVE_AGENT.items():
+        for tech in config.TECHS:
+            for seq, (stype, stance, self_rep) in enumerate(
+                [("paper", "neutral", False), ("vendor", "positive", True), ("news", "negative", False)], 1
+            ):
+                items.append(
+                    ev(make_evidence_id(agent, tech, 0, seq), tech, perspective,
+                       source_type=stype, stance=stance, self_reported=self_rep)
+                )
+    return items
+
+
+def state_with(evidence: list[dict], report: str, rewrite_count: int = 0) -> dict:
+    return {"evidence": evidence, "final_report": report, "rewrite_count": rewrite_count}
+
+
+def full_report(evidence: list[dict]) -> str:
+    """4개 관점 섹션과 양쪽 기술 인용을 모두 갖춘 보고서를 smoke writer로 만든다."""
+    return smoke_report_writer({"evidence": evidence})["report"]
+
+
+def result(state: dict, llm=OK_LLM) -> dict:
+    return build_report_eval(llm)(state)["report_quality"]
+
+
+def check_of(quality: dict, criterion: str) -> dict:
+    return next(c for c in quality["checks"] if c["criterion"] == criterion)
+
+
+# ---------------------------------------------------------------- 통과 경로
+
+
+def test_all_four_criteria_pass_on_a_complete_report():
+    evidence = balanced_evidence()
+    quality = result(state_with(evidence, full_report(evidence)))
+
+    assert quality["passed"] is True
+    assert [c["criterion"] for c in quality["checks"]] == list(CRITERIA)
+    assert all(c["passed"] for c in quality["checks"])
+    assert quality["rewrite_targets"] == []
+    assert quality["round"] == 0
+
+
+def test_round_records_the_rewrite_attempt_it_judged():
+    """supervisor가 '이 판정이 몇 회차 것인가'로 재평가 필요 여부를 가린다."""
+    evidence = balanced_evidence()
+    quality = result(state_with(evidence, full_report(evidence), rewrite_count=2))
+    assert quality["round"] == 2
+
+
+# ---------------------------------------------------------------- 1) Groundedness
+
+
+def test_unregistered_citation_fails_groundedness_by_rule():
+    """evidence에 없는 인용은 LLM을 부르지 않고 규칙으로 잡는다 (Hallucination 통제)."""
+    evidence = balanced_evidence()
+    orphan = make_evidence_id("market_eval", config.TECHS[0], 9, 99)  # 형식은 맞지만 evidence에 없다
+    report = full_report(evidence).replace("# 5. 시사점", f"추가 서술 [{orphan}]\n\n# 5. 시사점")
+    quality = result(state_with(evidence, report))
+
+    grounded = check_of(quality, "groundedness")
+    assert grounded["passed"] is False
+    assert grounded["method"] == "rule"
+    assert orphan in grounded["detail"]
+    assert quality["rewrite_targets"] == ["report_writer"]  # 인용 제거로 고칠 수 있다
+
+
+def test_report_without_citations_fails_groundedness():
+    evidence = balanced_evidence()
+    quality = result(state_with(evidence, "# SUMMARY\n\n근거 없이 단정한다.\n\n# REFERENCE\n\n- 없음\n"))
+
+    grounded = check_of(quality, "groundedness")
+    assert grounded["passed"] is False
+    assert "인용이 하나도 없다" in grounded["detail"]
+
+
+def test_missing_reference_section_fails_groundedness():
+    evidence = balanced_evidence()
+    report = full_report(evidence).split("# REFERENCE")[0]
+    quality = result(state_with(evidence, report))
+
+    grounded = check_of(quality, "groundedness")
+    assert grounded["passed"] is False
+    assert "REFERENCE" in grounded["detail"]
+
+
+def test_llm_judges_summary_against_cited_evidence():
+    """규칙을 통과한 보고서는 LLM이 근거 범위를 넘는 서술을 잡는다."""
+    evidence = balanced_evidence()
+    llm = FakeLLM(structured={
+        "GroundednessJudge": GroundednessJudge(supported="no", unsupported_span="3배 빠르다", detail="근거에 없는 수치"),
+        "NeutralityJudge": NeutralityJudge(superiority_wording="no"),
+    })
+    quality = result(state_with(evidence, full_report(evidence)), llm=llm)
+
+    grounded = check_of(quality, "groundedness")
+    assert grounded["passed"] is False
+    assert grounded["method"] == "llm"
+    assert "근거에 없는 수치" in grounded["detail"]
+
+
+# ---------------------------------------------------------------- 2) 중립성
+
+
+def test_superiority_wording_fails_neutrality():
+    """기술 평가 목적 = 우열 판정이 아니다."""
+    evidence = balanced_evidence()
+    llm = FakeLLM(structured={
+        "GroundednessJudge": GroundednessJudge(supported="yes"),
+        "NeutralityJudge": NeutralityJudge(superiority_wording="yes", span="TurboQuant가 더 우수하다", detail="우열 단정"),
+    })
+    quality = result(state_with(evidence, full_report(evidence)), llm=llm)
+
+    neutrality = check_of(quality, "neutrality")
+    assert neutrality["passed"] is False
+    assert neutrality["method"] == "llm"
+    assert quality["rewrite_targets"] == ["report_writer"]  # 표현 재작성으로 고칠 수 있다
+
+
+# ---------------------------------------------------------------- 3) 편향 통제
+
+
+def test_single_source_fails_bias_control():
+    """단일 출처 편중을 규칙으로 잡는다 (확증편향 방지)."""
+    only_id = make_evidence_id("market_eval", config.TECHS[0], 0, 1)
+    single = [ev(only_id, config.TECHS[0], "market", origin="same-origin")]
+    report = (f"# SUMMARY\n\n기술 성숙도 시장성 이해관계자 도메인 적용 [{only_id}]\n\n"
+              f"# 5. 시사점\n\n유보 [{only_id}]\n\n# REFERENCE\n\n- x\n")
+    quality = result(state_with(single, report))
+
+    bias = check_of(quality, "bias_control")
+    assert bias["passed"] is False
+    assert bias["method"] == "rule"
+    assert "출처 수 1건" in bias["detail"]
+
+
+def test_omitting_negative_evidence_fails_bias_control_and_is_fixable():
+    """유리한 근거만 인용하면 미달이고, State에 부정 근거가 있으니 재작성으로 고쳐진다."""
+    evidence = balanced_evidence()
+    positive_only = [e for e in evidence if e["stance"] != "negative"]
+    report = full_report(positive_only)  # 부정 근거를 인용하지 않은 보고서
+    quality = result(state_with(evidence, report))  # State에는 부정 근거가 있다
+
+    bias = check_of(quality, "bias_control")
+    assert bias["passed"] is False
+    assert "부정·유보 근거" in bias["detail"]
+    assert "해소되지 않는다" not in bias["detail"]
+    assert quality["rewrite_targets"] == ["report_writer"]
+
+
+def test_bias_failure_is_unfixable_when_evidence_itself_is_biased():
+    """수집된 근거 자체에 부정 근거가 없으면 재작성으로 해소되지 않으므로 루프를 걸지 않는다."""
+    evidence = [e for e in balanced_evidence() if e["stance"] != "negative"]
+    quality = result(state_with(evidence, full_report(evidence)))
+
+    bias = check_of(quality, "bias_control")
+    assert bias["passed"] is False
+    assert "해소되지 않는다" in bias["detail"]
+    assert quality["rewrite_targets"] == []  # supervisor가 헛된 재작성을 돌리지 않는다
+
+
+def test_one_sided_tech_citation_fails_bias_control():
+    """한쪽 기술 근거만으로는 비교 평가가 성립하지 않는다."""
+    evidence = balanced_evidence()
+    one_tech = [e for e in evidence if e["tech"] == config.TECHS[0]]
+    quality = result(state_with(evidence, full_report(one_tech)))
+
+    bias = check_of(quality, "bias_control")
+    assert bias["passed"] is False
+    assert config.TECHS[1] in bias["detail"]
+
+
+# ---------------------------------------------------------------- 4) 관점 커버리지
+
+
+def test_missing_perspective_section_fails_coverage():
+    """4개 관점(기술 성숙도·시장성·이해관계자·도메인 적용)을 포괄해야 한다."""
+    evidence = balanced_evidence()
+    report = full_report(evidence).replace("## 4.3 이해관계자", "## 4.3 기타")
+    quality = result(state_with(evidence, report))
+
+    coverage = check_of(quality, "perspective_coverage")
+    assert coverage["passed"] is False
+    assert coverage["method"] == "rule"
+    assert "이해관계자" in coverage["detail"]
+    assert quality["rewrite_targets"] == ["report_writer"]
+
+
+def test_perspective_without_cited_evidence_fails_coverage():
+    """섹션 제목만 있고 그 관점의 근거를 인용하지 않으면 커버리지로 보지 않는다."""
+    evidence = balanced_evidence()
+    without_domain = [e for e in evidence if e["perspective"] != "domain"]
+    report = full_report(without_domain)  # 섹션은 있으나 domain 인용이 없다
+    quality = result(state_with(evidence, report))
+
+    coverage = check_of(quality, "perspective_coverage")
+    assert coverage["passed"] is False
+    assert "도메인 적용" in coverage["detail"]
+    assert quality["rewrite_targets"] == ["report_writer"]  # State에 domain 근거가 있으므로 고칠 수 있다
+
+
+def test_coverage_failure_is_unfixable_without_that_perspectives_evidence():
+    """해당 관점의 근거를 아예 수집하지 못했으면 재작성으로 해소되지 않는다."""
+    evidence = [e for e in balanced_evidence() if e["perspective"] != "stakeholder"]
+    quality = result(state_with(evidence, full_report(evidence)))
+
+    coverage = check_of(quality, "perspective_coverage")
+    assert coverage["passed"] is False
+    assert "해소되지 않는다" in coverage["detail"]
+    assert quality["rewrite_targets"] == []
+
+
+# ---------------------------------------------------------------- 경계
+
+
+def test_empty_report_fails_every_criterion_without_calling_llm():
+    """평가할 본문이 없으면 LLM을 부르지 않고 전 항목 미달로 둔다."""
+    llm = FakeLLM(structured={})  # 호출되면 KeyError로 터진다
+    quality = result(state_with(balanced_evidence(), "   "), llm=llm)
+
+    assert quality["passed"] is False
+    assert [c["criterion"] for c in quality["checks"]] == list(CRITERIA)
+    assert all(not c["passed"] for c in quality["checks"])
+    assert quality["rewrite_targets"] == ["report_writer"]
+    assert llm.calls == []
+
+
+def test_reference_section_is_not_counted_as_citation():
+    """REFERENCE는 인용의 결과 목록이므로 본문 근거 집계에 넣지 않는다."""
+    evidence = balanced_evidence()
+    ref_id = make_evidence_id("tech_research", config.TECHS[0], 0, 1)
+    body_only = f"# SUMMARY\n\n요약\n\n# 5. 시사점\n\n유보\n\n# REFERENCE\n\n- [{ref_id}] 출처\n"
+    quality = result(state_with(evidence, body_only))
+
+    grounded = check_of(quality, "groundedness")
+    assert grounded["passed"] is False
+    assert "인용이 하나도 없다" in grounded["detail"]

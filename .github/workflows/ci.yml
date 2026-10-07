@@ -32,3 +32,22 @@ jobs:
 
       - name: Check final_report was produced
         run: test -f outputs/smoke/final_report.md
+
+      - name: Check supervisor routing and quality gate ran
+        # Supervisor 패턴의 동적 동작이 실제로 수행됐는지 산출물로 확인한다.
+        # 결정 로그는 라우팅 사유가 매 스텝 기록됐음을, report_quality는 보고서 생성 후
+        # 품질 평가 4항목이 모두 판정됐음을 보장한다.
+        run: |
+          test -f outputs/trace/ci-smoke.jsonl
+          test -f outputs/smoke/report_quality.json
+          python - <<'PY'
+          import json, pathlib
+          decisions = [json.loads(l) for l in pathlib.Path("outputs/trace/ci-smoke.jsonl").read_text().splitlines() if l.strip()]
+          assert len(decisions) > 1, "supervisor 결정이 기록되지 않았다"
+          assert all(d["reason"] for d in decisions), "사유 없는 라우팅 결정이 있다"
+          quality = json.loads(pathlib.Path("outputs/smoke/report_quality.json").read_text())
+          assert [c["criterion"] for c in quality["checks"]] == [
+              "groundedness", "neutrality", "bias_control", "perspective_coverage"
+          ], quality
+          print(f"supervisor 결정 {len(decisions)}건, 품질 평가 {len(quality['checks'])}항목 확인")
+          PY
